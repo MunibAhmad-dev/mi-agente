@@ -229,3 +229,11 @@ output/
 .env.local
 .env.production
 .env.docker
+
+# Internal planning & audit docs — kept on disk, not in public repo
+/*.md
+!/README.md
+!/AGENTS.md
+!/CLAUDE.md
+/docs/
+/AGENT_RUNTIME_GAP_ANALYSIS.md

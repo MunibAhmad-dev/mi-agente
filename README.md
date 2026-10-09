@@ -1,569 +1,286 @@
-# 🧠 AI-OS — Universal AI Platform
+# Mi Agente — Autonomous AI Agent OS
 
 <p align="center">
-  <strong>Plataforma de IA autónoma, modular y open-source que rivaliza con los mejores agentes comerciales de 2026</strong>
+  <strong>An AI agent that actually runs on your computer.<br>
+  Takes screenshots. Creates files. Browses the web. Opens apps. Generates images.<br>
+  No simulations. Real tools. Real results.</strong>
 </p>
 
 <p align="center">
-  <a href="#-arquitectura">Arquitectura</a> •
-  <a href="#-capacidades">Capacidades</a> •
-  <a href="#-herramientas-55">Tools</a> •
-  <a href="#-módulos-cognitivos-107">Cognitive</a> •
-  <a href="#-instalación">Instalación</a> •
-  <a href="#-dashboard">Dashboard</a> •
-  <a href="#-docker">Docker</a>
+  <a href="#-what-it-does">What it does</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-agent-tools">Agent Tools</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-configuration">Configuration</a> •
+  <a href="#-projects">Projects</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License MIT" />
+  <img src="https://img.shields.io/badge/node-%3E%3D18-green.svg" alt="Node 18+" />
+  <img src="https://img.shields.io/badge/self--hosted-yes-brightgreen.svg" alt="Self Hosted" />
+  <img src="https://img.shields.io/badge/open--source-100%25-orange.svg" alt="Open Source" />
 </p>
 
 ---
 
-## 📋 Descripción
+## What it does
 
-**AI-OS** es una plataforma de IA autónoma construida desde cero que integra:
+Mi Agente transforms [LibreChat](https://github.com/danny-avila/LibreChat) into a fully autonomous AI coding agent with real desktop capabilities:
 
-- **41+ herramientas** de ejecución registradas (filesystem, shell, browser, computer use, video, MCP, etc.) — 56 archivos en Harness/tools/
-- **107 módulos cognitivos** (memoria, RAG, aprendizaje, conocimiento, routing, etc.)
-- **DSHAgentLoop** (loop real de ejecución, 292 líneas) + **AgentLoop** (implementación extendida, 773 líneas, integrable opcionalmente)
-- **6 servicios Docker** en docker-compose.aios.yml + **8 servicios** en docker-compose.yml (API, RAG, MongoDB, Meilisearch, pgvector, computer-use, etc.)
-- **Dashboard UI profesional** con 22 secciones
-- **Local-first** — compatible con Ollama sin APIs de pago; proveedores cloud (OpenAI, Anthropic, xAI) son opcionales
+| Capability | How |
+|---|---|
+| **Screenshot the desktop** | Takes real PNG screenshots of your screen |
+| **Create files & folders** | Writes directly to your Desktop, Documents, or any path |
+| **Copy images & binaries** | True binary copy — real PNG files, not placeholders |
+| **Browse the web** | Opens real browser, searches Bing/Yahoo/DuckDuckGo |
+| **Open applications** | Launches Explorer, Notepad, Chrome, etc. silently |
+| **Generate images** | ComfyUI integration for txt2img and txt2vid |
+| **Execute shell commands** | Background process manager with retry & priority queue |
+| **Analyze images** | Vision LLM (MiniCPM-V/LLaVA) for OCR and description |
+
+All agent operations run **silently in the background** — no CMD or PowerShell windows pop up.
 
 ---
 
-## 🏗️ Arquitectura
+## Architecture
+
+Built on a **15-phase agent runtime** that goes well beyond a simple LLM wrapper:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  DASHBOARD UI                        │
-│         22 secciones • HTML + LibreChat React        │
-└───────────────────────┬─────────────────────────────┘
-                        │
-┌───────────────────────▼─────────────────────────────┐
-│                  API SERVER                           │
-│            Express.js — 115+ rutas                    │
-└───────────────────────┬─────────────────────────────┘
-                        │
-┌───────────────────────▼─────────────────────────────┐
-│              AGENT LOOP (750 líneas)                  │
-│   while(tool_call) → reason → execute → observe       │
-│   + AutoLauncher + MCP + VisionRouter + SelfHealing   │
-└──────┬──────────┬──────────┬──────────┬─────────────┘
-       │          │          │          │
-┌──────▼──┐ ┌─────▼────┐ ┌──▼─────┐ ┌──▼──────┐
-│  TOOLS  │ │ COGNITIV │ │ MEMORY │ │   RAG   │
-│   55    │ │   107    │ │ 8 tipos│ │ 7 comps │
-└─────────┘ └──────────┘ └────────┘ └─────────┘
-       │          │          │          │
-┌──────▼──────────▼──────────▼──────────▼─────────────┐
-│              DOCKER INFRASTRUCTURE                    │
-│   LibreChat • MongoDB • Redis • pgvector • Ollama    │
-│   MeiliSearch • OpenCode • Admin Panel                │
-└─────────────────────────────────────────────────────┘
+User Message
+     │
+     ▼
+┌─────────────────────────────────────────┐
+│           HarnessEngine                 │  ← OPENDEV paper (arxiv 2603.05344)
+│  Scaffolding → Injection → Compaction   │
+└─────────────────────────────────────────┘
+     │
+     ▼
+┌─────────────────────────────────────────┐
+│          Agent Runtime Hooks            │
+│                                         │
+│  F5  CodeIntelligence   symbol index    │
+│  F7  Verification       lint/test/build │
+│  F8  Repair             rewind/retry    │
+│  F9  AgentFirewall      policy engine   │
+│  F10 Memory             5-layer store   │
+│  F11 SubAgents          6 roles         │
+│  F12 AdaptiveRouter     latency/cost    │
+│  F13 Observability      trace + replay  │
+│  F14 Evaluation         benchmark 1-10  │
+│  F15 Optimization       6 dimensions    │
+└─────────────────────────────────────────┘
+     │
+     ▼
+┌─────────────────────────────────────────┐
+│           Agent Tools                   │
+│  BrowserTool  FilesystemOps  Computer   │
+│  ImageGenerator  VideoGenerator         │
+│  WebSearch  ApplyPatch  BackgroundExec  │
+└─────────────────────────────────────────┘
 ```
 
 ---
 
-## ⚡ Capacidades
+## Agent Tools
 
-### 🤖 Agent Loop
-| Feature | Estado |
-|---------|--------|
-| while(tool_call) pattern | ✅ |
-| Self-healing (error → classify → fix → retry) | ✅ |
-| Auto-checkpoint on error | ✅ |
-| Context compaction automática | ✅ |
-| Auto-launch de servicios | ✅ |
-| MCP integration | ✅ |
-| Vision routing inteligente | ✅ |
-| Rate limiting y quotas | ✅ |
-| Distributed tracing | ✅ |
-| Ask User (human-in-the-loop) | ✅ |
-| Replan dinámico | ✅ |
-| Rollback (git) | ✅ |
+### `computer_control`
+Control the desktop from the agent:
+- `screenshot` — capture the screen as PNG
+- `open_app` — launch any application (silent, no window flash)
+- `list_windows` — enumerate open windows
+- `click`, `type_text`, `press_key`, `scroll` — full input control
+- `clipboard_read` / `clipboard_write`
+- `screen_size` — get resolution
 
-### 🧠 Sistema de Memoria (8 tipos)
-| Tipo | Descripción |
-|------|-------------|
-| Long-term Memory | Persistencia entre sesiones |
-| Short-term Memory | Contexto de sesión actual |
-| Working Memory | Estado activo del agente |
-| Episodic Memory | Experiencias pasadas |
-| Semantic Memory | Conocimiento factual |
-| Procedural Memory | Cómo hacer cosas |
-| User Memory | Preferencias del usuario |
-| Cross-session Memory | Datos entre sesiones |
+### `filesystem_ops`
+Real file system access:
+- `read` — read text files
+- `write` — create or overwrite files
+- `copy` — true binary copy (handles PNG, images, any file)
+- `list` — directory listing
+- `create_dir`, `delete`, `exists`
+- Paths: `Desktop/file.txt`, `~/Documents/`, or absolute
 
-### 🔍 Sistema RAG
-| Componente | Función |
-|-----------|---------|
-| RAGEngine | Motor principal de RAG |
-| AdaptiveRAG | Selección adaptativa de estrategia |
-| HybridSearch | Búsqueda híbrida (vectorial + BM25) |
-| SmartChunker | Chunking inteligente con consciencia semántica |
-| SemanticCompressor | Compresión semántica de contexto |
-| ContextualRetriever | Enriquecimiento contextual |
-| FactChecker | Verificación de hechos |
+### `browser_use`
+Real browser control via Playwright:
+- `navigate` — open any URL
+- `search` — multi-engine search (Bing → Yahoo → DuckDuckGo fallback)
+- `extract` — get page text content
+- Bot detection: automatically falls back to next engine
 
-### 📚 Sistema de Aprendizaje
-| Componente | Función |
-|-----------|---------|
-| LearningEngine | Motor de aprendizaje principal |
-| ErrorLearningSystem | Aprende de errores |
-| FailureMemory | Memoria de fracasos |
-| LoopDetector | Detecta loops infinitos |
-| RootCauseAnalyzer | Análisis de causa raíz |
-| LessonEngine | Extracción de lecciones |
-| ExperienceReplay | Reproducción de experiencias |
-| SelfImprovementEngine | Auto-mejora continua |
+### `image_generator`
+ComfyUI txt2img:
+- Uses local ComfyUI server (no cloud API)
+- Checkpoint: `sd-v1-5-tiny` (low-RAM default)
+- Returns markdown with embedded image
+
+### `video_generator`
+ComfyUI txt2vid:
+- AnimateDiff / SVD workflows
+- 16 frames default, SaveAnimatedWEBP output
+
+### `image_analyzer`
+Vision LLM (Ollama):
+- OCR, description, object detection
+- Models: MiniCPM-V, LLaVA (configurable)
 
 ---
 
-## 🛠️ Herramientas (55)
+## Memory System (5 Layers)
 
-### Core Agent (P0)
-| Tool | Función |
-|------|---------|
-| FilesystemTools | Leer/escribir/editar archivos |
-| ShellTool | Ejecutar comandos shell |
-| SearchTools | Grep/Glob/Find |
+```
+SHORT      → current conversation context
+SESSION    → within this agent session
+PROJECT    → per-repository persistent knowledge
+HISTORICAL → long-term cross-session memory
+ARTIFACT   → generated files, outputs, results
+```
 
-### Computer Use (16 tools)
-| Tool | Función |
-|------|---------|
-| computer_screenshot | Capturar pantalla |
-| computer_click | Clic en coordenadas |
-| computer_double_click | Doble clic |
-| computer_move_mouse | Mover mouse |
-| computer_scroll | Scroll |
-| computer_type | Escribir texto |
-| computer_press_key | Presionar tecla |
-| computer_hotkey | Combinación de teclas |
-| computer_drag | Arrastrar |
-| computer_clipboard_read | Leer portapapeles |
-| computer_clipboard_write | Escribir portapapeles |
-| computer_window_list | Listar ventanas |
-| computer_window_focus | Enfocar ventana |
-| computer_window_resize | Redimensionar ventana |
-| computer_mouse_position | Posición del mouse |
-| computer_screen_size | Tamaño de pantalla |
-
-### Video (10 tools)
-| Tool | Función |
-|------|---------|
-| video_convert | Convertir formatos (mp4, webm, gif, etc.) |
-| video_trim | Recortar video |
-| video_compress | Comprimir video |
-| video_thumbnail | Extraer miniaturas |
-| video_extract_audio | Extraer audio |
-| video_info | Información del video |
-| video_to_gif | Convertir a GIF |
-| video_concat | Concatenar videos |
-| video_watermark | Agregar marca de agua |
-| video_frames_extract | Extraer frames |
-
-### Browser & Web
-| Tool | Función |
-|------|---------|
-| BrowserManager | Automatización con Playwright |
-| WebScraper | Scraping web |
-| DeeperSearchV2 | Investigación profunda |
-| SocialScraper | Scraping de redes sociales |
-| RSSAggregator | Feeds RSS |
-
-### Code & Git
-| Tool | Función |
-|------|---------|
-| CodeExecutor | Ejecutar Python/JS |
-| GitWorktreeManager | Git worktrees |
-| GitRollback | Git rollback |
-| GitIntegration | Operaciones Git |
-| LSPIntegration | Language Server Protocol |
-
-### AI & Media
-| Tool | Función |
-|------|---------|
-| ImageGenerator | Generación de imágenes |
-| TTSManager | Text-to-speech |
-| STTManager | Speech-to-text |
-| MultiModalLocal | Visión/STT via Ollama |
-| ComputerUseVision | Screenshot + análisis LLM |
-
-### Infrastructure
-| Tool | Función |
-|------|---------|
-| DockerSandbox | Sandbox Docker |
-| CICDIntegration | Pipelines CI/CD |
-| DeploymentEngine | Deploy automático |
-| BackupManager | Gestión de backups |
-| CloudAgent | Ejecución en cloud |
-
-### Communication
-| Tool | Función |
-|------|---------|
-| EmailManager | Email (IMAP/SMTP, $0) |
-| CalendarManager | Calendario (CalDAV, $0) |
-| DriveManager | Drive (WebDAV, $0) |
-| WebhookManager | Webhooks |
-| CrossSessionMessaging | Mensajes entre sesiones |
-
-### Management
-| Tool | Función |
-|------|---------|
-| AgentTeams | Equipos de agentes |
-| CompanionManager | Compañeros IA |
-| PlaybookManager | Playbooks ejecutables |
-| GoalManager | Seguimiento de metas |
-| DoctorModule | Salud del sistema |
-
-### Security
-| Tool | Función |
-|------|---------|
-| CredentialVault | Almacenamiento seguro |
-| PolicyEngine | Políticas de seguridad |
-| RateLimiter | Limitación de tasa |
-| ApprovalGates | Puertas de aprobación |
-
-### Utilities
-| Tool | Función |
-|------|---------|
-| CanvasManager | Editor Canvas/Tiptap |
-| PluginMarketplace | Marketplace de plugins |
-| PlanModeManager | Modo planificación |
-| CollectionsEngine | Gestión de colecciones |
-| PresentationGenerator | Generador de presentaciones |
-| WebsiteGenerator | Generador de sitios web |
-| DiagramGenerator | Generador de diagramas |
-| ClipboardManager | Portapapeles |
-| LogManager | Gestión de logs |
-| MetricsCollector | Recolección de métricas |
-| QueueManager | Cola de tareas |
-| CacheManager | Caché |
-| AlertManager | Alertas |
-| HealthDashboard | Dashboard de salud |
-| ProtocolConfigWizard | Asistente de protocolos |
+Retrieval uses embedding similarity with keyword fallback.
 
 ---
 
-## 🧩 Módulos Cognitivos (107)
+## Security Policy Engine
 
-### Core Engine
-CognitiveEngine, ExecutiveBrain, EventBus, EventStream
+Agent Firewall with Cedar-based policy evaluation:
 
-### Memory System
-MemoryEngine, CrossSessionMemory, ExperienceReplay, ConsolidationEngine, UserProfileMemory, PersistentStorage
+| Preset | Allows |
+|---|---|
+| `restricted` | Read-only filesystem, no shell |
+| `standard` | Read/write workspace, no deployment |
+| `full` | All operations including git and deploy |
 
-### RAG System
-RAGEngine, AdaptiveRAG, HybridSearch, SmartChunker, SemanticCompressor, ContextualRetriever, RAGOptimizer
-
-### Learning System
-LearningEngine, LessonEngine, ErrorLearningSystem, FailureMemory, LoopDetector, RootCauseAnalyzer, SelfImprovementEngine, LearningMetrics
-
-### Knowledge System
-KnowledgeEngine, KnowledgeGraph, KnowledgeGapDetector, CausalMemory
-
-### Evidence System
-EvidenceEngine, FactChecker, SourceEvaluator, PeerReviewer
-
-### LLM Routing
-UniversalLLMRouter, IntelligentRouter, ResponseNormalizer, LLMGateway, LocalLLMManager, CostOptimizer, NLPTokenizer
-
-### Vision
-VisionComplexityRouter (Simple: Moondream 1.8B, Medium: LLaVA 7B, Hard: LLaVA 13B+)
-
-### MCP
-MCPClient (stdio + SSE transports)
-
-### Token Optimization
-TokenAnalyzer, TokenBudgetManager, TokenCostOptimizer, TokenOptimizationEngine, PromptCompressor, AdaptiveCompressor, ContextPruner, ConversationCompressor, MemoryCompressor
-
-### Caching
-PromptCache, SemanticCache, ExactCache, PrefixCacheManager
-
-### Planning
-PlanMode, DAGScheduler, DynamicWorkflows, TaskClassifier
-
-### Security
-ApprovalGates, PromptInjectionDetector, QualityGate, MultiUserIsolation
-
-### Providers
-ProviderHealthChecker, APIKeyRotation, QuotaManager
-
-### Monitoring
-DistributedTracer, ModelEvaluator, RAGEvaluator, CodebaseForensics
-
-### New Integrations
-AutoLauncher, WebLLMManager, FineTuningManager, MCPClient
+Policy enforcement runs before every mutating tool call.
 
 ---
 
-## 🖥️ Dashboard
+## Sub-Agents (6 Roles)
 
-Dashboard HTML profesional con **22 secciones**:
+Each sub-agent has its own context and filtered tool access:
 
-| Sección | Función |
-|---------|---------|
-| Overview | Stats, actividad general |
-| Chat | Interfaz de conversación |
-| Agents | Sub-agentes disponibles |
-| Models | Proveedores y rendimiento |
-| Routing | Router inteligente |
-| Pipelines | Pipelines de modelos |
-| Memory | Sistema de memoria (8 tipos) |
-| RAG | Sistema RAG |
-| Knowledge | Knowledge Graph |
-| Tools | 55 herramientas |
-| Browser | Automatización web |
-| Terminal | Terminal embebido |
-| Workflows | Workflows dinámicos |
-| Security | Seguridad |
-| Monitoring | Monitoreo en tiempo real |
-| Settings | Configuración |
-| **Computer Use** | 16 tools de control de escritorio |
-| **MCP Servers** | Servidores MCP |
-| **Vision Router** | 3 niveles de complejidad |
-| **WebLLM** | Modelos en el browser |
-| **Fine-Tuning** | LoRA/QLoRA training |
-| **Auto Launcher** | Auto-inicio de servicios |
+| Role | Tools | Purpose |
+|---|---|---|
+| Explorer | read-only | Codebase mapping |
+| Researcher | browser | Web research |
+| Coder | filesystem + shell | Implementation |
+| Tester | test runner | Verification |
+| Reviewer | read-only | Code review |
+| Security | scanner | Vulnerability audit |
 
 ---
 
-## 🐳 Docker
+## Quick Start
 
-### 10 Contenedores
-| Servicio | Puerto | Descripción |
-|----------|--------|-------------|
-| LibreChat | 3080 | UI principal (React) |
-| Admin Panel | 3000 | Panel de administración |
-| MongoDB | 27017 | Base de datos documentos |
-| Redis | 6379 | Caché en memoria |
-| pgvector | 5432 | Vector database |
-| Ollama | 11434 | LLM local |
-| MeiliSearch | 7700 | Búsqueda full-text |
-| OpenCode | 4096 | Code editor |
-| OpenCode Bridge | 8787 | Bridge |
-| RAG API | — | API de RAG |
+### Prerequisites
+- Node.js 18+
+- MongoDB
+- Docker (optional, for ComfyUI)
 
-### Iniciar con Docker
+### Install
+
+```bash
+git clone https://github.com/MunibAhmad-dev/mi-agente.git
+cd mi-agente
+cp .env.example .env
+npm install
+npm run backend
+```
+
+### Environment
+
+```env
+# Required
+MONGO_URI=mongodb://localhost:27017/mi-agente
+JWT_SECRET=your-secret-here
+
+# Agent Runtime
+AGENT_RUNTIME_WIRED=true
+HARNESS_ENGINE_ENABLED=true
+
+# ComfyUI (optional — for image/video generation)
+COMFYUI_URL=http://localhost:8188
+
+# Browser (optional — for browser_use tool)
+BROWSER_HEADLESS=true
+
+# Vision LLM (optional — for image_analyzer)
+VISION_LLM_URL=http://localhost:11434
+VISION_LLM_MODEL=minicpm-v
+```
+
+### Docker (full stack)
+
 ```bash
 docker compose up -d
 ```
 
----
-
-## 📦 Instalación
-
-### Requisitos
-- **Docker Desktop** — [Descargar](https://www.docker.com/products/docker-desktop/) (Windows/Mac/Linux)
-- **Git** — [Descargar](https://git-scm.com/downloads)
-- **MongoDB Compass** (opcional) — [Descargar](https://www.mongodb.com/products/compass) para inspeccionar la BD
-
-### ⚡ Setup One-Click (Recomendado)
-
-**Windows:**
-```bat
-# 1. Clonar el repositorio
-git clone https://github.com/proyectos-aoi/mi-agente.git
-cd mi-agente
-
-# 2. Ejecutar setup (genera .env, inicia Docker, todo automatico)
-setup.bat
-```
-
-**Linux / Mac:**
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/proyectos-aoi/mi-agente.git
-cd mi-agente
-
-# 2. Ejecutar setup (genera .env, inicia Docker, todo automatico)
-chmod +x setup.sh
-./setup.sh
-```
-
-### 🗄️ Acceso a MongoDB (para auditoria)
-
-| Dato | Valor |
-|------|-------|
-| **Host** | `localhost` |
-| **Port** | `27017` |
-| **Database** | `LibreChat` |
-| **Auth** | Ninguna (`--noauth`) |
-| **URL completa** | `mongodb://localhost:27017/LibreChat` |
-
-**Para conectar con MongoDB Compass:**
-1. Abrir MongoDB Compass
-2. Pegar: `mongodb://localhost:27017/LibreChat`
-3. Click "Connect"
-
-### URLs de acceso
-| Servicio | URL | Puerto |
-|----------|-----|--------|
-| **LibreChat (Chat UI)** | http://localhost:3080 | 3080 |
-| **Admin Panel** | http://localhost:3000 | 3000 |
-| **AI Model Browser** | http://localhost:3456 | 3456 |
-| **MongoDB** | localhost:27017 | 27017 |
-| **Ollama (LLM local)** | http://localhost:11434 | 11434 |
-| **Dashboard** | `client/dashboard.html` (abrir archivo) | — |
-| **OpenCode** | http://localhost:4096 | 4096 |
+Includes: API, MongoDB, Meilisearch, pgvector, ComfyUI.
 
 ---
 
-## 🔧 Configuración
+## Configuration
 
-### LLM Local (gratis)
-```bash
-# Instalar Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+Feature flags in `.env`:
 
-# Descargar modelo
-ollama pull qwen3:1.7b
-
-# Verificar
-curl http://localhost:11434/api/tags
-```
-
-### Vision Models
-```bash
-# Simple (1.8B, MIT)
-ollama pull moondream
-
-# Medium (7B, Apache-2.0)
-ollama pull llava:7b
-
-# Hard (13B, Apache-2.0)
-ollama pull llava:13b
-```
-
-### Face 9 — Visual Intelligence (Playwright)
-
-Browser automation and screenshot comparison require Playwright. Install it once after `npm install`:
-
-```bash
-# Install Playwright browsers (required for BrowserManager + VisualQA screenshot diff)
-npx playwright install chromium
-
-# Optional: install all browsers
-npx playwright install
-```
-
-If Playwright is not installed, the system degrades gracefully — `VisualQAAgent.compare()` falls back to HTML-only risk analysis without pixel diffing. All other Visual Intelligence features remain fully operational.
-
-### Face 14 — DeepSeek Harness
-
-DeepSeek integration is flag-gated. To enable it, add your API key to `.env`:
-
-```env
-DEEPSEEK_API_KEY=sk-your-deepseek-api-key-here
-```
-
-Once set, the `DeepSeekProvider` in `api/server/services/LLMGateway/providers/DeepSeekProvider.js` is activated automatically. Supported models: `deepseek-chat`, `deepseek-coder`, `deepseek-reasoner`. If the key is absent, the harness silently falls back to other configured providers.
-
-### Social Intelligence Connectors
-
-All 8 social connectors work without API keys (public endpoints). Optional keys unlock higher rate limits:
-
-| Connector | Optional env var | Benefit |
-|-----------|-----------------|---------|
-| YouTube | `YOUTUBE_API_KEY` | Search + profiles (Piped API used as fallback) |
-| Reddit | *(no key needed)* | Public JSON API |
-| Bluesky | *(no key needed)* | Public AT Protocol API |
-| Mastodon | *(no key needed)* | Public Mastodon API |
-| HackerNews | *(no key needed)* | Public Algolia HN API |
-| GitHub | `GITHUB_TOKEN` | Higher rate limits (60 → 5000 req/hr) |
-| RSS | *(no key needed)* | Direct feed fetch |
-| DuckDuckGo | *(no key needed)* | Lite search endpoint |
+| Flag | Default | Effect |
+|---|---|---|
+| `AGENT_RUNTIME_WIRED` | `false` | Enable all 15 runtime phases |
+| `HARNESS_ENGINE_ENABLED` | `false` | Enable HarnessEngine (OPENDEV pattern) |
+| `BROWSER_HEADLESS` | `true` | `false` = visible browser window |
+| `COMFYUI_URL` | — | Enable image/video generation |
 
 ---
 
-## 📊 Comparación vs Competencia
+## Projects
 
-| Capacidades | GPT | Grok | Claude Code | Manus | Copilot | **AI-OS** |
-|------------|-----|------|-------------|-------|---------|----------|
-| Agent Loop | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 55+ Tools | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 107 Cognitive Modules | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Computer Use | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ |
-| MCP Protocol | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| Vision Routing (3 tiers) | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| WebLLM (browser) | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Fine-Tuning (LoRA) | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Memory System (8 tipos) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| RAG Completo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Learning System | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Multi-LLM Routing | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ |
-| Dashboard UI | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
-| **100% Gratis** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **100% Local** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+Included standalone projects built with the agent:
+
+| Project | Language | Description |
+|---|---|---|
+| `reduccion-de-tokens` | Python | Token optimization pipeline with 60-90% compression |
+| `cerebro-investigacion-rag` | JS | Deep research engine with hybrid RAG |
+| `dashboard-memoria-y-rag` | Python | Memory + RAG dashboard with embeddings |
+| `creative-ai-orchestrator` | TS/Go | ComfyUI orchestration with multi-runtime support |
+| `ai-video-editor` | TS | AI video editor with 14 adapter engines |
+| `ia-cripto` | Python | Evolutionary crypto trading agents |
+| `clonacion-y-creacion-de-paginas-web` | JS | Multi-agent web page cloning |
+| `judeojuegos-animacion-personajes-musica` | Python | Game/animation/character/music engine |
 
 ---
 
-## 🛡️ Seguridad
-
-- **Docker Sandbox** — Aislamiento de código ejecutado
-- **CredentialVault** — Almacenamiento seguro de credenciales
-- **AgentFirewall** — Bloqueo de operaciones peligrosas
-- **PromptInjectionDetector** — Detección de inyección de prompts
-- **ApprovalGates** — Puertas de aprobación para operaciones sensibles
-- **Audit Logs** — Registro completo de actividades
-- **Rate Limiting** — Control de tasa de solicitudes
-
----
-
-## 📁 Estructura del Proyecto
+## REST API (Agent Runtime)
 
 ```
-mi-agente/
-├── api/                        # Backend API
-│   ├── server/
-│   │   ├── controllers/        # Controladores Express
-│   │   ├── routes/             # Rutas API (115+)
-│   │   └── services/
-│   │       └── Harness/        # 🧠 Core del agente
-│   │           ├── DSHAgentLoop.js        # Loop de ejecución real (usado en producción)
-│   │           ├── AgentLoop.js          # Implementación extendida (opcional)
-│   │           ├── ComputerUse.js        # Control de escritorio
-│   │           ├── tools/                # 55 herramientas
-│   │           └── cognitive/            # 107 módulos cognitivos
-│   │               ├── memory/           # Sistema de memoria
-│   │               ├── rag/              # Sistema RAG
-│   │               ├── learning/         # Sistema de aprendizaje
-│   │               ├── knowledge/        # Sistema de conocimiento
-│   │               ├── llm/              # Routing LLM
-│   │               ├── vision/           # Vision router
-│   │               ├── mcp/              # MCP client
-│   │               └── optimization/     # Optimización de tokens
-│   └── app/                    # LibreChat app
-├── client/                     # Frontend
-│   ├── dashboard.html          # Dashboard principal
-│   ├── ai-model-browser.html   # Buscador de modelos
-│   └── src/                    # React components (LibreChat)
-├── packages/                   # Packages monorepo
-├── docker-compose.aios.yml     # 6 servicios Docker (Ollama, MongoDB, Meilisearch, LibreChat, admin, browser)
-├── docker-compose.yml          # 8 servicios Docker (API, RAG, MongoDB, Meilisearch, pgvector, computer-use, admin, browser)
-├── Dockerfile                  # Build principal
-├── .mcp.json                   # Config MCP servers
-├── .env.example                # Variables de entorno
-└── docs/                       # Documentación
+GET  /api/agent-runtime/code-intelligence
+GET  /api/agent-runtime/memory
+GET  /api/agent-runtime/observability
+POST /api/agent-runtime/verification
+POST /api/agent-runtime/security/check
+GET  /api/harness/status
+POST /api/harness/scaffold
+POST /api/harness/issue-to-pr
+GET  /api/harness/rag/audit
+POST /api/harness/diff/propose
 ```
 
 ---
 
-## 📄 Licencia
+## License
 
-**Propietaria** — © 2026 Proyectos AOI. Todos los derechos reservados.
-
-Este software es propietario y confidencial. No está permitido copiar, modificar, distribuir, vender, hacer ingeniería inversa ni divulgar el código fuente a terceros.
-
-Ver [LICENSE](LICENSE) para detalles completos.
+MIT — free to use, modify, and distribute.
 
 ---
 
-## 🤝 Soporte
+## Based On
 
-Para soporte o consultas, contacta a Proyectos AOI.
+- [LibreChat](https://github.com/danny-avila/LibreChat) — MIT
+- [OPENDEV Paper](https://arxiv.org/abs/2603.05344) — HarnessEngine architecture
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) — MIT
 
 ---
 
 <p align="center">
-  <strong>🧠 AI-OS — Universal AI Platform</strong><br>
-  <em>Construido con ❤️ por Proyectos AOI</em>
+  Built by <a href="https://github.com/MunibAhmad-dev">Munib Ahmad</a>
 </p>
