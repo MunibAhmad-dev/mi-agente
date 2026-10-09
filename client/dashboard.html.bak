@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal AI Agent Platform — Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --bg-card: #16161f;
+            --border: #1e1e2e;
+            --border-hover: #2e2e3e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --text-muted: #555;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-dark: #5b21b6;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --gradient-1: linear-gradient(135deg, #7c3aed, #a78bfa);
+            --gradient-2: linear-gradient(135deg, #3b82f6, #06b6d4);
+            --gradient-3: linear-gradient(135deg, #22c55e, #10b981);
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ── Scrollbar ─────────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* ── Layout ────────────────────────────────────── */
+        .app { display: flex; height: 100vh; }
+
+        /* ── Sidebar ───────────────────────────────────── */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.6); }
+        }
+
+        .sidebar-logo h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .version {
+            font-size: 11px;
+            color: var(--accent-light);
+            font-weight: 400;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 8px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-light);
+        }
+
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i { width: 18px; text-align: center; font-size: 14px; }
+
+        /* ── Main Content ──────────────────────────────── */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Top Bar ───────────────────────────────────── */
+        .topbar {
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .topbar-breadcrumb {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .topbar-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        .topbar-btn .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--success);
+        }
+
+        .status-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ── Content Area ──────────────────────────────── */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ── Cards ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card:hover::before { opacity: 1; }
+
+        .stat-card .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .icon.purple { background: rgba(124, 58, 237, 0.15); color: var(--accent-light); }
+        .stat-card .icon.blue { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .stat-card .icon.green { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .stat-card .icon.orange { background: rgba(234, 179, 8, 0.15); color: var(--warning); }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-card .change {
+            font-size: 12px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-card .change.up { color: var(--success); }
+        .stat-card .change.down { color: var(--danger); }
+
+        /* ── Grid Layouts ──────────────────────────────── */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body { padding: 16px 20px; }
+
+        /* ── Status Items ──────────────────────────────── */
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .status-item:last-child { border-bottom: none; }
+        .status-item:hover { padding-left: 8px; }
+
+        .status-item .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+        .status-dot.yellow { background: var(--warning); box-shadow: 0 0 8px rgba(234, 179, 8, 0.4); }
+        .status-dot.red { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+        .status-dot.gray { background: #666; }
+        .status-dot.blue { background: var(--info); box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+
+        .status-item .name { font-size: 13px; color: var(--text-primary); }
+        .status-item .meta { font-size: 11px; color: var(--text-muted); }
+        .status-item .value { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+
+        /* ── Progress Bar ──────────────────────────────── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.purple { background: var(--gradient-1); }
+        .progress-fill.blue { background: var(--gradient-2); }
+        .progress-fill.green { background: var(--gradient-3); }
+
+        /* ── Tables ────────────────────────────────────── */
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* ── Buttons ───────────────────────────────────── */
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+        /* ── Tags ──────────────────────────────────────── */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .tag.green { background: rgba(34,197,94,0.15); color: var(--success); }
+        .tag.yellow { background: rgba(234,179,8,0.15); color: var(--warning); }
+        .tag.red { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .tag.blue { background: rgba(59,130,246,0.15); color: var(--info); }
+        .tag.purple { background: rgba(124,58,237,0.15); color: var(--accent-light); }
+
+        /* ── Chat ──────────────────────────────────────── */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user { display: flex; justify-content: flex-end; }
+
+        .message .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .avatar { background: var(--gradient-1); }
+        .message.user .avatar { background: var(--gradient-2); }
+
+        .message .bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.assistant .bubble {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            margin-left: 10px;
+        }
+
+        .message.user .bubble {
+            background: var(--accent);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .message .tools-used {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .message .tool-tag {
+            padding: 2px 8px;
+            background: rgba(124,58,237,0.2);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--accent-light);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .chat-input button {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-input button:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ── Modal ─────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 { font-size: 16px; }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: white; }
+
+        .modal-body { padding: 20px; overflow-y: auto; max-height: 60vh; }
+
+        /* ── Tool Grid ─────────────────────────────────── */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        }
+
+        .tool-card .tool-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(124, 58, 237, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--accent-light);
+            margin-bottom: 10px;
+        }
+
+        .tool-card .tool-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .tool-card .tool-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ── Activity Feed ─────────────────────────────── */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child { border-bottom: none; }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.success { background: rgba(34,197,94,0.15); color: var(--success); }
+        .activity-icon.error { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .activity-icon.info { background: rgba(59,130,246,0.15); color: var(--info); }
+        .activity-icon.warning { background: rgba(234,179,8,0.15); color: var(--warning); }
+
+        .activity-content { flex: 1; }
+        .activity-text { font-size: 13px; color: var(--text-primary); }
+        .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* ── Tabs ──────────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { background: var(--accent); color: white; }
+
+        /* ── Chart Placeholder ─────────────────────────── */
+        .chart-area {
+            height: 200px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 160px;
+            padding: 0 20px;
+        }
+
+        .chart-bar {
+            width: 30px;
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover { opacity: 0.8; }
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ── Loading Animation ─────────────────────────── */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Typing Animation ──────────────────────────── */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 12px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* ── Toast Notifications ───────────────────────── */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 3s forwards;
+            min-width: 300px;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="icon">🤖</div>
+                    <div>
+                        <h1>Universal AI Agent</h1>
+                        <div class="version">v1.0.0 — AI-OS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item active" onclick="showSection('overview')">
+                        <i class="fas fa-chart-pie"></i> Overview
+                    </div>
+                    <div class="nav-item" onclick="showSection('chat')">
+                        <i class="fas fa-comments"></i> Chat
+                        <span class="badge">Live</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('agents')">
+                        <i class="fas fa-robot"></i> Agents
+                        <span class="badge">53</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">AI & Models</div>
+                    <div class="nav-item" onclick="showSection('models')">
+                        <i class="fas fa-brain"></i> Models
+                    </div>
+                    <div class="nav-item" onclick="showSection('routing')">
+                        <i class="fas fa-route"></i> Routing
+                    </div>
+                    <div class="nav-item" onclick="showSection('pipelines')">
+                        <i class="fas fa-layer-group"></i> Pipelines
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Data & Knowledge</div>
+                    <div class="nav-item" onclick="showSection('memory')">
+                        <i class="fas fa-database"></i> Memory
+                    </div>
+                    <div class="nav-item" onclick="showSection('rag')">
+                        <i class="fas fa-search"></i> RAG
+                    </div>
+                    <div class="nav-item" onclick="showSection('knowledge')">
+                        <i class="fas fa-project-diagram"></i> Knowledge Graph
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools & Execution</div>
+                    <div class="nav-item" onclick="showSection('tools')">
+                        <i class="fas fa-wrench"></i> Tools
+                        <span class="badge">54</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('browser')">
+                        <i class="fas fa-globe"></i> Browser
+                    </div>
+                    <div class="nav-item" onclick="showSection('terminal')">
+                        <i class="fas fa-terminal"></i> Terminal
+                    </div>
+                    <div class="nav-item" onclick="showSection('workflows')">
+                        <i class="fas fa-project-diagram"></i> Workflows
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">System</div>
+                    <div class="nav-item" onclick="showSection('security')">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </div>
+                    <div class="nav-item" onclick="showSection('monitoring')">
+                        <i class="fas fa-heartbeat"></i> Monitoring
+                    </div>
+                    <div class="nav-item" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-title" id="pageTitle">Overview</span>
+                    <span class="topbar-breadcrumb" id="pageBreadcrumb">Dashboard / Overview</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-indicator">
+                        <span class="dot"></span>
+                        <span>System Online</span>
+                    </div>
+                    <button class="topbar-btn" onclick="showToast('info', 'Refreshing data...')">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="topbar-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="topbar-btn" onclick="openModal('settingsModal')">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- ═══ OVERVIEW ═══ -->
+                <div id="overview" class="section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="icon purple"><i class="fas fa-wrench"></i></div>
+                            <div class="label">Tools</div>
+                            <div class="value">54</div>
+                            <div class="change up"><i class="fas fa-arrow-up"></i> All functional</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon blue"><i class="fas fa-brain"></i></div>
+                            <div class="label">Cognitive Modules</div>
+                            <div class="value">58</div>
+                            <div class="change up"><i class="fas fa-arrow-up"></i> +16 this session</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon green"><i class="fas fa-check-circle"></i></div>
+                            <div class="label">Coverage</div>
+                            <div class="value">98%</div>
+                            <div class="progress-bar"><div class="progress-fill green" style="width: 98%"></div></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon orange"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="label">Total Cost</div>
+                            <div class="value">$0</div>
+                            <div class="change up"><i class="fas fa-check"></i> 100% Free</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-bar" style="color: var(--accent-light)"></i> System Performance</h3>
+                                <button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Refreshing...')">Refresh</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <div class="chart-bars" id="performanceChart">
+                                        <div class="chart-bar" style="height: 80%; background: var(--gradient-1);" data-value="80%"></div>
+                                        <div class="chart-bar" style="height: 65%; background: var(--gradient-2);" data-value="65%"></div>
+                                        <div class="chart-bar" style="height: 90%; background: var(--gradient-3);" data-value="90%"></div>
+                                        <div class="chart-bar" style="height: 75%; background: var(--gradient-1);" data-value="75%"></div>
+                                        <div class="chart-bar" style="height: 85%; background: var(--gradient-2);" data-value="85%"></div>
+                                        <div class="chart-bar" style="height: 70%; background: var(--gradient-3);" data-value="70%"></div>
+                                        <div class="chart-bar" style="height: 95%; background: var(--gradient-1);" data-value="95%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-stream" style="color: var(--info)"></i> Recent Activity</h3>
+                            </div>
+                            <div class="card-body" style="max-height: 240px; overflow-y: auto;">
+                                <div class="activity-item">
+                                    <div class="activity-icon success"><i class="fas fa-check"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Task completed: Code refactoring</div>
+                                        <div class="activity-time">2 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info"><i class="fas fa-search"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Research: 5 sources analyzed</div>
+                                        <div class="activity-time">5 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Loop detected and recovered</div>
+                                        <div class="activity-time">8 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon success"><i class="fas fa-check"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Lesson learned: Tool timeout handling</div>
+                                        <div class="activity-time">12 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info"><i class="fas fa-brain"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Model routed: GPT-4o → coding task</div>
+                                        <div class="activity-time">15 min ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cogs" style="color: var(--success)"></i> Cognitive Modules (58)</h3>
+                            <div class="tabs" style="margin: 0;">
+                                <div class="tab active" onclick="filterModules('all', this)">All</div>
+                                <div class="tab" onclick="filterModules('core', this)">Core</div>
+                                <div class="tab" onclick="filterModules('memory', this)">Memory</div>
+                                <div class="tab" onclick="filterModules('learning', this)">Learning</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="tools-grid" id="modulesGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ CHAT ═══ -->
+                <div id="chat" class="section">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message assistant">
+                                <div class="avatar"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <div class="bubble">Hello! I'm your Universal AI Agent with 54 tools and 58 cognitive modules. I can help you with coding, research, file operations, web browsing, and much more. What would you like to do?</div>
+                                    <div class="tools-used">
+                                        <span class="tool-tag">AgentLoop</span>
+                                        <span class="tool-tag">IntelligentRouter</span>
+                                        <span class="tool-tag">MemoryEngine</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Type your message... (Press Enter to send)" onkeypress="if(event.key==='Enter')sendMessage()">
+                            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MODELS ═══ -->
+                <div id="models" class="section">
+                    <h2 style="margin-bottom: 20px;">Model Providers</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-server" style="color: var(--info)"></i> Provider Status</h3></div>
+                            <div class="card-body">
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">OpenAI (GPT)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">xAI (Grok)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">Ollama (Local)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">LM Studio</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot gray"></span><span class="name">Anthropic</span></div>
+                                    <span class="tag yellow">Not Configured</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-line" style="color: var(--success)"></i> Model Performance</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="name">GPT-4o</span></div><span class="value">92% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">Grok-2</span></div><span class="value">89% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">llama3.1:8b</span></div><span class="value">78% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">qwen2.5:7b</span></div><span class="value">75% success</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ TOOLS ═══ -->
+                <div id="tools" class="section">
+                    <h2 style="margin-bottom: 20px;">Tools (54)</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-wrench" style="color: var(--accent-light)"></i> All Tools</h3>
+                            <button class="btn btn-sm btn-primary" onclick="openModal('toolInfoModal')"><i class="fas fa-info-circle"></i> Tool Info</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="tools-grid" id="toolsGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MEMORY ═══ -->
+                <div id="memory" class="section">
+                    <h2 style="margin-bottom: 20px;">Memory System</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-memory" style="color: var(--accent-light)"></i> Memory Types</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Working Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Episodic Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Semantic Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Procedural Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Long-term Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">User Preferences</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Cross-Session Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Experience Replay</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--info)"></i> Memory Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Total Memories</span><span class="value">2,847</span></div>
+                                <div class="status-item"><span class="name">Recall Operations</span><span class="value">15,234</span></div>
+                                <div class="status-item"><span class="name">Consolidations</span><span class="value">456</span></div>
+                                <div class="status-item"><span class="name">Lessons Learned</span><span class="value">156</span></div>
+                                <div class="status-item"><span class="name">Avg Recall Time</span><span class="value">12ms</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ RAG ═══ -->
+                <div id="rag" class="section">
+                    <h2 style="margin-bottom: 20px;">RAG System</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-layer-group" style="color: var(--accent-light)"></i> RAG Components</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Smart Chunker</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Semantic Compressor</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Vector Store</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">BM25 Search</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Hybrid Search</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Adaptive RAG</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Contextual Retriever</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-line" style="color: var(--success)"></i> RAG Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Documents Ingested</span><span class="value">1,234</span></div>
+                                <div class="status-item"><span class="name">Total Chunks</span><span class="value">15,678</span></div>
+                                <div class="status-item"><span class="name">Retrievals</span><span class="value">8,901</span></div>
+                                <div class="status-item"><span class="name">Avg Retrieval Time</span><span class="value">45ms</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ AGENTS ═══ -->
+                <div id="agents" class="section">
+                    <h2 style="margin-bottom: 20px;">Sub-Agents</h2>
+                    <div class="card">
+                        <div class="card-header"><h3><i class="fas fa-robot" style="color: var(--accent-light)"></i> Available Agents</h3></div>
+                        <div class="card-body">
+                            <table>
+                                <tr><th>Agent</th><th>Type</th><th>Status</th><th>Tasks</th><th>Actions</th></tr>
+                                <tr><td>Code Reviewer</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>234</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Code Reviewer...')">Launch</button></td></tr>
+                                <tr><td>Debugger</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>156</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Debugger...')">Launch</button></td></tr>
+                                <tr><td>Test Writer</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>89</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Test Writer...')">Launch</button></td></tr>
+                                <tr><td>Security Auditor</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>67</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Security Auditor...')">Launch</button></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ SECURITY ═══ -->
+                <div id="security" class="section">
+                    <h2 style="margin-bottom: 20px;">Security</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-shield-alt" style="color: var(--success)"></i> Security Features</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Docker Sandbox</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Approval Gates</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Credential Vault</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Audit Logging</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Agent Firewall</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--info)"></i> Security Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Blocked Commands</span><span class="value">45</span></div>
+                                <div class="status-item"><span class="name">Approval Requests</span><span class="value">234</span></div>
+                                <div class="status-item"><span class="name">Audit Events</span><span class="value">12,456</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MONITORING ═══ -->
+                <div id="monitoring" class="section">
+                    <h2 style="margin-bottom: 20px;">System Monitoring</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="icon green"><i class="fas fa-microchip"></i></div><div class="label">CPU</div><div class="value">15%</div><div class="progress-bar"><div class="progress-fill green" style="width: 15%"></div></div></div>
+                        <div class="stat-card"><div class="icon blue"><i class="fas fa-memory"></i></div><div class="label">RAM</div><div class="value">950MB</div><div class="progress-bar"><div class="progress-fill blue" style="width: 6%"></div></div></div>
+                        <div class="stat-card"><div class="icon purple"><i class="fas fa-hdd"></i></div><div class="label">Disk</div><div class="value">200MB</div><div class="progress-bar"><div class="progress-fill purple" style="width: 2%"></div></div></div>
+                        <div class="stat-card"><div class="icon orange"><i class="fas fa-network-wired"></i></div><div class="label">Network</div><div class="value">Active</div></div>
+                    </div>
+                </div>
+
+                <!-- ═══ SETTINGS ═══ -->
+                <div id="settings" class="section">
+                    <h2 style="margin-bottom: 20px;">Settings</h2>
+                    <div class="card">
+                        <div class="card-header"><h3><i class="fas fa-cog" style="color: var(--accent-light)"></i> System Configuration</h3></div>
+                        <div class="card-body">
+                            <div class="status-item"><span class="name">Max Iterations</span><span class="value">20</span></div>
+                            <div class="status-item"><span class="name">Max Retries</span><span class="value">3</span></div>
+                            <div class="status-item"><span class="name">Timeout</span><span class="value">300s</span></div>
+                            <div class="status-item"><span class="name">Self-healing</span><span class="tag green">Enabled</span></div>
+                            <div class="status-item"><span class="name">Auto-checkpoint</span><span class="tag green">Enabled</span></div>
+                            <div class="status-item"><span class="name">Tool Compression</span><span class="tag green">Enabled</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder sections -->
+                <div id="routing" class="section"><h2>Intelligent Routing</h2><p style="color: var(--text-secondary); margin-top: 16px;">Model routing based on task complexity, cost, and performance.</p></div>
+                <div id="pipelines" class="section"><h2>Model Pipelines</h2><p style="color: var(--text-secondary); margin-top: 16px;">Sequential, parallel, fallback, and voting pipelines.</p></div>
+                <div id="knowledge" class="section"><h2>Knowledge Graph</h2><p style="color: var(--text-secondary); margin-top: 16px;">Causal relationships between concepts.</p></div>
+                <div id="browser" class="section"><h2>Browser Engine</h2><p style="color: var(--text-secondary); margin-top: 16px;">Playwright-based browser automation.</p></div>
+                <div id="terminal" class="section"><h2>Terminal</h2><p style="color: var(--text-secondary); margin-top: 16px;">Shell command execution.</p></div>
+                <div id="workflows" class="section"><h2>Workflows</h2><p style="color: var(--text-secondary); margin-top: 16px;">Dynamic workflow engine.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal: Tool Info -->
+    <div class="modal-overlay" id="toolInfoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Tool Information</h3>
+                <button class="modal-close" onclick="closeModal('toolInfoModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">Click on any tool to see details.</p>
+                <div class="status-item"><span class="name">Total Tools</span><span class="value">54</span></div>
+                <div class="status-item"><span class="name">Core Tools</span><span class="value">13</span></div>
+                <div class="status-item"><span class="name">Cognitive Modules</span><span class="value">58</span></div>
+                <div class="status-item"><span class="name">Verification</span><span class="value">2</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Settings -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Quick Settings</h3>
+                <button class="modal-close" onclick="closeModal('settingsModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="status-item"><span class="name">Max Iterations</span><span class="value">20</span></div>
+                <div class="status-item"><span class="name">Self-healing</span><span class="tag green">Enabled</span></div>
+                <div class="status-item"><span class="name">Auto-checkpoint</span><span class="tag green">Enabled</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Navigation ──────────────────────────────────
+        const titles = {
+            overview: 'Overview', chat: 'Chat', agents: 'Agents', models: 'Models',
+            routing: 'Intelligent Routing', pipelines: 'Model Pipelines', memory: 'Memory',
+            rag: 'RAG System', knowledge: 'Knowledge Graph', tools: 'Tools',
+            browser: 'Browser Engine', terminal: 'Terminal', workflows: 'Workflows',
+            security: 'Security', monitoring: 'Monitoring', settings: 'Settings'
+        };
+
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const section = document.getElementById(name);
+            if (section) section.classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('pageTitle').textContent = titles[name] || name;
+            document.getElementById('pageBreadcrumb').textContent = `Dashboard / ${titles[name] || name}`;
+        }
+
+        // ── Toast Notifications ─────────────────────────
+        function showToast(type, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle', warning: 'exclamation-triangle' };
+            const colors = { success: 'var(--success)', error: 'var(--danger)', info: 'var(--info)', warning: 'var(--warning)' };
+            toast.innerHTML = `<i class="fas fa-${icons[type]}" style="color: ${colors[type]}; font-size: 16px;"></i><span style="font-size: 13px;">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        // ── Modal ───────────────────────────────────────
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
+        });
+
+        // ── Chat ────────────────────────────────────────
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML += `<div class="message user"><div class="avatar"><i class="fas fa-user"></i></div><div><div class="bubble">${message}</div></div></div>`;
+            input.value = '';
+            
+            // Typing indicator
+            const typingId = 'typing-' + Date.now();
+            messagesDiv.innerHTML += `<div class="message assistant" id="${typingId}"><div class="avatar"><i class="fas fa-robot"></i></div><div><div class="bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div></div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            setTimeout(() => {
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+                messagesDiv.innerHTML += `<div class="message assistant"><div class="avatar"><i class="fas fa-robot"></i></div><div><div class="bubble">I received your message: "${message}". Processing with my 54 tools and 58 cognitive modules.</div><div class="tools-used"><span class="tool-tag">AgentLoop</span><span class="tool-tag">IntelligentRouter</span></div></div></div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1500);
+        }
+
+        // ── Populate Grids ──────────────────────────────
+        const modules = [
+            { name: 'AgentLoop', icon: '🔄', desc: 'Core agent loop', cat: 'core' },
+            { name: 'IntelligentRouter', icon: '🧠', desc: 'Model routing', cat: 'core' },
+            { name: 'ContextCompactor', icon: '📦', desc: 'Context compression', cat: 'core' },
+            { name: 'DAGScheduler', icon: '📊', desc: 'DAG execution', cat: 'core' },
+            { name: 'ProviderHealthChecker', icon: '💓', desc: 'Provider health', cat: 'core' },
+            { name: 'APIKeyRotation', icon: '🔑', desc: 'Key rotation', cat: 'core' },
+            { name: 'QuotaManager', icon: '📋', desc: 'Quota management', cat: 'core' },
+            { name: 'MemoryEngine', icon: '💾', desc: '8 memory types', cat: 'memory' },
+            { name: 'CrossSessionMemory', icon: '🔗', desc: 'Cross-session', cat: 'memory' },
+            { name: 'ExperienceReplay', icon: '🔁', desc: 'Experience replay', cat: 'memory' },
+            { name: 'RAGEngine', icon: '📚', desc: 'RAG retrieval', cat: 'memory' },
+            { name: 'HybridSearch', icon: '🔍', desc: 'Hybrid search', cat: 'memory' },
+            { name: 'AdaptiveRAG', icon: '🎯', desc: 'Adaptive RAG', cat: 'memory' },
+            { name: 'LearningEngine', icon: '📖', desc: 'Learning system', cat: 'learning' },
+            { name: 'LoopDetector', icon: '🔁', desc: 'Loop detection', cat: 'learning' },
+            { name: 'RootCauseAnalyzer', icon: '🔍', desc: 'Root cause', cat: 'learning' },
+            { name: 'LessonEngine', icon: '📝', desc: 'Lesson extraction', cat: 'learning' },
+            { name: 'FactChecker', icon: '✅', desc: 'Fact verification', cat: 'learning' },
+            { name: 'SourceEvaluator', icon: '📰', desc: 'Source evaluation', cat: 'learning' },
+            { name: 'ModelPipeline', icon: '🔗', desc: 'Multi-model pipeline', cat: 'core' },
+            { name: 'WorkspaceManager', icon: '📁', desc: 'Workspaces', cat: 'core' },
+            { name: 'DistributedTracer', icon: '📡', desc: 'Tracing', cat: 'core' },
+            { name: 'ModelEvaluator', icon: '📊', desc: 'Model evaluation', cat: 'learning' },
+            { name: 'RAGEvaluator', icon: '📈', desc: 'RAG evaluation', cat: 'learning' },
+            { name: 'PeerReviewer', icon: '👥', desc: 'Peer review', cat: 'learning' },
+            { name: 'AccessibilityTree', icon: '🌳', desc: 'A11y tree', cat: 'core' },
+            { name: 'GhostDetector', icon: '👻', desc: 'Ghost detection', cat: 'learning' },
+            { name: 'DuplicateDetector', icon: '📋', desc: 'Duplicate detection', cat: 'learning' },
+            { name: 'MicroVMManager', icon: '🖥️', desc: 'MicroVM', cat: 'core' },
+            { name: 'RemoteExecutor', icon: '🌐', desc: 'Remote execution', cat: 'core' },
+            { name: 'PromptManager', icon: '💬', desc: 'Prompt engineering', cat: 'core' },
+            { name: 'ContextualRetriever', icon: '🎯', desc: 'Contextual retrieval', cat: 'memory' },
+            { name: 'NewsEngine', icon: '📰', desc: 'News aggregation', cat: 'core' },
+            { name: 'EditorialAnalyzer', icon: '📊', desc: 'Editorial analysis', cat: 'core' },
+            { name: 'GPUManager', icon: '🎮', desc: 'GPU management', cat: 'core' },
+            { name: 'BenchmarkSuite', icon: '🏆', desc: 'Benchmarking', cat: 'learning' },
+            { name: 'CodebaseForensics', icon: '🔍', desc: 'Codebase forensics', cat: 'learning' },
+        ];
+
+        function renderModules(filter = 'all') {
+            const grid = document.getElementById('modulesGrid');
+            const filtered = filter === 'all' ? modules : modules.filter(m => m.cat === filter);
+            grid.innerHTML = filtered.map(m => `
+                <div class="tool-card" onclick="showToast('info', 'Opening ${m.name}...')">
+                    <div class="tool-icon">${m.icon}</div>
+                    <div class="tool-name">${m.name}</div>
+                    <div class="tool-desc">${m.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function filterModules(filter, el) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderModules(filter);
+        }
+
+        // ── Tools Grid ──────────────────────────────────
+        const tools = [
+            { name: 'read_file', icon: '📄', desc: 'Read file contents' },
+            { name: 'write_file', icon: '✏️', desc: 'Write file contents' },
+            { name: 'edit_file', icon: '🔧', desc: 'Edit by replacement' },
+            { name: 'list_directory', icon: '📁', desc: 'List directory' },
+            { name: 'execute_command', icon: '⚡', desc: 'Run shell commands' },
+            { name: 'grep', icon: '🔍', desc: 'Search in files' },
+            { name: 'glob', icon: '🌐', desc: 'Find files by pattern' },
+            { name: 'git_integration', icon: '📦', desc: 'Git operations' },
+            { name: 'code_executor', icon: '💻', desc: 'Execute code' },
+            { name: 'browser_manager', icon: '🌍', desc: 'Web browsing' },
+            { name: 'computer_use', icon: '🖥️', desc: 'Vision + Actions' },
+            { name: 'docker_sandbox', icon: '🐳', desc: 'Container execution' },
+            { name: 'web_scraper', icon: '🕸️', desc: 'Scrape web pages' },
+            { name: 'email_manager', icon: '📧', desc: 'IMAP/SMTP email' },
+            { name: 'calendar_manager', icon: '📅', desc: 'CalDAV calendar' },
+            { name: 'drive_manager', icon: '💾', desc: 'WebDAV files' },
+            { name: 'social_scraper', icon: '📱', desc: 'Social media' },
+            { name: 'rss_aggregator', icon: '📰', desc: 'RSS/Atom feeds' },
+            { name: 'image_generator', icon: '🎨', desc: 'Image generation' },
+            { name: 'tts_manager', icon: '🔊', desc: 'Text to speech' },
+            { name: 'stt_manager', icon: '🎤', desc: 'Speech to text' },
+            { name: 'video_generator', icon: '🎬', desc: 'Video generation' },
+            { name: 'presentation_generator', icon: '📊', desc: 'Presentations' },
+            { name: 'website_generator', icon: '🌐', desc: 'Website generation' },
+            { name: 'diagram_generator', icon: '📐', desc: 'Diagrams' },
+            { name: 'backup_manager', icon: '💾', desc: 'Backup system' },
+            { name: 'git_integration', icon: '📦', desc: 'Git operations' },
+            { name: 'health_dashboard', icon: '💓', desc: 'Health monitoring' },
+            { name: 'webhook_manager', icon: '🔔', desc: 'Webhooks' },
+            { name: 'queue_manager', icon: '📋', desc: 'Job queue' },
+            { name: 'log_manager', icon: '📝', desc: 'Logging' },
+            { name: 'metrics_collector', icon: '📈', desc: 'Metrics' },
+            { name: 'clipboard_manager', icon: '📋', desc: 'Clipboard' },
+            { name: 'rate_limiter', icon: '⏱️', desc: 'Rate limiting' },
+            { name: 'cache_manager', icon: '💾', desc: 'Caching' },
+            { name: 'alert_manager', icon: '🔔', desc: 'Alerts' },
+        ];
+
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            grid.innerHTML = tools.map(t => `
+                <div class="tool-card" onclick="showToast('info', 'Tool: ${t.name}')">
+                    <div class="tool-icon">${t.icon}</div>
+                    <div class="tool-name">${t.name}</div>
+                    <div class="tool-desc">${t.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // ── Initialize ──────────────────────────────────
+        renderModules();
+        renderTools();
+        showToast('success', 'Dashboard loaded successfully');
+    </script>
+</body>
+</html>

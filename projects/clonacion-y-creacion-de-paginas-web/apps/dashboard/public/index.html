@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal AI Platform — Web Reconstruction Engine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-0:#04060e;--bg-1:#080c1a;--bg-2:#0d1225;--bg-3:#111832;--bg-4:#161f3e;
+  --border:#1a2548;--border-light:#243060;
+  --text:#e4e8f2;--text-2:#8a94b0;--text-3:#4c5878;--text-4:#2d3552;
+  --accent:#4f6df5;--accent-2:#6b82ff;--accent-g:rgba(79,109,245,.12);
+  --green:#22c993;--green-g:rgba(34,201,147,.1);--green-b:rgba(34,201,147,.25);
+  --cyan:#1ecfe0;--cyan-g:rgba(30,207,224,.1);
+  --purple:#8b6cff;--purple-g:rgba(139,108,255,.1);
+  --orange:#f0a030;--orange-g:rgba(240,160,48,.1);
+  --red:#e84057;--red-g:rgba(232,64,87,.1);
+  --gold:#d4a853;--gold-g:rgba(212,168,83,.1);
+  --r:14px;--r-s:10px;--r-xs:6px;
+}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-0);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:13px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{color:var(--accent);text-decoration:none}
+
+/* ═══ HEADER / TOP NAV ════════════════════════════════════════════════════════ */
+.top-nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:52px;background:var(--bg-1);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.top-nav .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:-.3px}
+.top-nav .logo .icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+.top-nav .logo span{color:var(--text-3);font-weight:400;font-size:11px;margin-left:2px}
+.nav-links{display:flex;gap:4px}
+.nav-links .link{padding:8px 14px;border-radius:var(--r-xs);font-size:11px;font-weight:600;color:var(--text-3);cursor:pointer;transition:.15s;text-transform:uppercase;letter-spacing:.5px}
+.nav-links .link:hover{color:var(--text-2);background:rgba(255,255,255,.03)}
+.nav-links .link.active{color:var(--accent-2);background:var(--accent-g)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .icon-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-3);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:13px;transition:.15s}
+.nav-right .icon-btn:hover{border-color:var(--accent);color:var(--text)}
+.nav-right .icon-btn .badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:20px;border:1px solid var(--border);cursor:pointer;transition:.15s}
+.user-chip:hover{border-color:var(--accent)}
+.user-chip .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.user-chip .name{font-size:12px;font-weight:600}
+.user-chip .role{font-size:9px;color:var(--text-3)}
+
+/* ═══ WELCOME SECTION ═════════════════════════════════════════════════════════ */
+.welcome-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 28px 12px}
+.welcome-bar h1{font-size:22px;font-weight:800}
+.welcome-bar h1 span{color:var(--accent-2)}
+.welcome-bar p{font-size:12px;color:var(--text-3);margin-top:2px}
+.status-pills{display:flex;gap:8px}
+.status-pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--r-s);border:1px solid var(--border);background:var(--bg-2);min-width:140px}
+.status-pill .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-pill .dot.green{background:var(--green);box-shadow:0 0 8px var(--green-b)}
+.status-pill .info{display:flex;flex-direction:column}
+.status-pill .info .label{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.status-pill .info .value{font-size:13px;font-weight:700}
+
+/* ═══ MODULE CARDS ════════════════════════════════════════════════════════════ */
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:12px 28px 20px}
+@media(min-width:1600px){.modules{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:1200px){.modules{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.modules{grid-template-columns:1fr}}
+.module-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:.2s;position:relative;cursor:pointer}
+.module-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.module-card .card-top{position:relative;height:130px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.module-card .card-top .bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.7;transition:.3s}
+.module-card:hover .card-top .bg{opacity:.85;transform:scale(1.05)}
+.module-card .card-top .number{position:absolute;top:10px;left:12px;width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.5);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--accent-2)}
+.module-card .card-top .fav{position:absolute;top:10px;right:12px;font-size:16px;color:var(--text-4);cursor:pointer;transition:.15s}
+.module-card .card-top .fav:hover,.module-card .card-top .fav.active{color:var(--gold)}
+.module-card .card-top .card-icon{position:relative;z-index:2;width:52px;height:52px;border-radius:14px;background:rgba(0,0,0,.4);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(8px)}
+.module-body{padding:14px 14px 0}
+.module-body h3{font-size:15px;font-weight:800;letter-spacing:-.2px}
+.module-body .subtitle{font-size:11px;color:var(--text-3);margin-bottom:10px}
+.module-body .features{list-style:none;margin-bottom:12px}
+.module-body .features li{font-size:10.5px;color:var(--text-2);padding:3px 0;display:flex;align-items:center;gap:7px;line-height:1.4}
+.module-body .features li::before{content:'◉';font-size:7px;color:var(--accent);flex-shrink:0}
+.module-body .features li.orange::before{color:var(--orange)}
+.module-body .features li.green::before{color:var(--green)}
+.module-body .features li.purple::before{color:var(--purple)}
+
+/* GPU bar */
+.gpu-bar{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.gpu-bar .gpu-label{font-size:9px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.gpu-bar .gpu-right{display:flex;align-items:center;gap:6px}
+.gpu-bar .gpu-online{font-size:9px;color:var(--green);display:flex;align-items:center;gap:3px}
+.gpu-bar .gpu-online .dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.gpu-bar .gpu-text{font-size:10px;color:var(--text-3)}
+.gpu-bar .gpu-track{width:60px;height:4px;border-radius:2px;background:var(--bg-0);overflow:hidden}
+.gpu-bar .gpu-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.gpu-bar .gpu-pct{font-size:10px;font-weight:700;color:var(--text-2)}
+
+/* CTA */
+.module-cta{padding:0 14px 14px}
+.cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--bg-3);color:var(--text-2);font-size:12px;font-weight:700;cursor:pointer;transition:.15s}
+.cta-btn:hover{border-color:var(--accent);color:var(--accent-2);background:var(--accent-g)}
+.cta-btn.gold{border-color:rgba(212,168,83,.3);color:var(--gold);background:rgba(212,168,83,.05)}
+.cta-btn.gold:hover{background:rgba(212,168,83,.12)}
+
+/* ═══ COMPUTE SECTION ════════════════════════════════════════════════════════ */
+.compute-section{margin:0 28px 20px;padding:18px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r)}
+.compute-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.compute-header h3{font-size:15px;font-weight:800}
+.compute-header p{font-size:11px;color:var(--text-3);margin-top:2px}
+.compute-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(min-width:1600px){.compute-grid{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:1000px){.compute-grid{grid-template-columns:repeat(2,1fr)}}
+.compute-item{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-s);padding:14px;transition:.15s}
+.compute-item:hover{border-color:var(--accent)}
+.compute-item .ci-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.compute-item .ci-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.compute-item .ci-name{font-size:12px;font-weight:700}
+.compute-item .ci-desc{font-size:10px;color:var(--text-3)}
+.compute-item .ci-status{display:flex;align-items:center;gap:5px;font-size:10px;margin-top:8px;font-weight:600}
+.compute-item .ci-status .dot{width:6px;height:6px;border-radius:50%}
+
+/* ═══ UNIFIED ECOSYSTEM BAR ══════════════════════════════════════════════════ */
+.ecosystem{margin:0 28px 20px;padding:14px 18px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between}
+.eco-left{display:flex;align-items:center;gap:12px}
+.eco-left .eco-icon{font-size:24px;color:var(--accent-2)}
+.eco-left .eco-text h4{font-size:13px;font-weight:800}
+.eco-left .eco-text p{font-size:10px;color:var(--text-3)}
+.eco-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.eco-pill{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r-xs);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-2);cursor:pointer;transition:.15s}
+.eco-pill:hover{border-color:var(--accent);color:var(--accent-2)}
+.eco-pill i{font-size:12px;color:var(--text-3)}
+.eco-pill.active i{color:var(--green)}
+
+/* ═══ VIEWS (hidden by default) ═══════════════════════════════════════════════ */
+.view{display:none;padding:12px 28px 28px}
+.view.active{display:block}
+.view-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.view-header h2{font-size:18px;font-weight:800}
+.btn{padding:8px 16px;border-radius:var(--r-xs);border:1px solid var(--border);background:var(--bg-3);color:var(--text-2);font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn:hover{border-color:var(--accent);color:var(--text)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-2)}
+
+/* URL Input */
+.url-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.url-bar input{flex:1;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r-s);padding:12px 16px;color:var(--text);font-size:13px;outline:none;font-family:inherit}
+.url-bar input:focus{border-color:var(--accent)}
+.url-bar input::placeholder{color:var(--text-4)}
+.url-bar select{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r-s);padding:10px 12px;color:var(--text-2);font-size:12px;outline:none;cursor:pointer}
+
+/* Cards */
+.card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+
+/* Project rows */
+.project-row{display:grid;grid-template-columns:auto 1.8fr auto auto auto auto;gap:14px;align-items:center;padding:12px 16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-s);margin-bottom:6px;cursor:pointer;transition:.15s}
+.project-row:hover{border-color:var(--accent);background:var(--bg-3)}
+.project-row .pr-icon{width:36px;height:36px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;font-size:14px}
+.project-row .pr-info h4{font-size:12px;font-weight:600}
+.project-row .pr-info p{font-size:10px;color:var(--text-3)}
+.project-row .pr-type{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:600}
+.project-row .pr-score{text-align:center;min-width:60px}
+.project-row .pr-score .val{font-size:16px;font-weight:800}
+.project-row .pr-score .lbl{font-size:9px;color:var(--text-3)}
+.project-row .pr-status{font-size:10px;font-weight:700}
+
+/* Agent cards */
+.agent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.agent-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-s);padding:14px;transition:.15s}
+.agent-card:hover{border-color:var(--accent)}
+.agent-card .ac-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.agent-card .ac-avatar{width:28px;height:28px;border-radius:var(--r-xs);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+.agent-card .ac-name{font-size:12px;font-weight:700}
+.agent-card .ac-type{font-size:9px;color:var(--text-3)}
+.agent-card .ac-status{margin-left:auto;font-size:10px;display:flex;align-items:center;gap:4px}
+.agent-card .ac-caps{display:flex;flex-wrap:wrap;gap:3px}
+.agent-card .ac-caps span{font-size:8px;padding:2px 5px;border-radius:3px;background:var(--bg-0);color:var(--text-3);font-weight:500}
+
+/* Skill cards */
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.skill-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-s);padding:12px}
+.skill-card .sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.skill-card .sc-name{font-size:11px;font-weight:700}
+.skill-card .sc-ver{font-size:9px;color:var(--text-3)}
+.skill-card .sc-desc{font-size:10px;color:var(--text-2);margin-bottom:8px;line-height:1.4}
+.skill-card .sc-foot{display:flex;align-items:center;justify-content:space-between}
+.skill-card .sc-status{font-size:9px;padding:2px 6px;border-radius:3px;font-weight:700}
+
+/* Score display */
+.score-big{text-align:center;padding:20px}
+.score-big .num{font-size:48px;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.score-big .label{font-size:12px;color:var(--text-3);margin-top:4px}
+.score-row{display:flex;gap:12px;margin-top:12px}
+.score-item{flex:1;text-align:center;padding:10px;background:var(--bg-3);border-radius:var(--r-xs);border:1px solid var(--border)}
+.score-item .si-val{font-size:20px;font-weight:800}
+.score-item .si-lbl{font-size:9px;color:var(--text-3);margin-top:2px}
+
+/* Event log */
+.event-list{display:flex;flex-direction:column;gap:4px}
+.event-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-3);border-radius:var(--r-xs);font-size:11px}
+.event-row .er-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.event-row .er-time{color:var(--text-4);font-size:10px;min-width:65px}
+.event-row .er-type{font-weight:700;min-width:90px}
+.event-row .er-msg{color:var(--text-2);flex:1}
+
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.mem-card{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r-s);padding:14px;text-align:center}
+.mem-card .mc-icon{font-size:20px;margin-bottom:6px}
+.mem-card .mc-val{font-size:24px;font-weight:900}
+.mem-card .mc-lbl{font-size:10px;color:var(--text-3)}
+
+/* Reconstructions */
+.recon-output{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:12px}
+.recon-output iframe{width:100%;height:400px;border:none;background:#fff}
+
+/* Toast */
+.toast{position:fixed;top:16px;right:16px;padding:12px 18px;border-radius:var(--r-s);background:var(--bg-3);border:1px solid var(--green);color:var(--green);font-size:12px;font-weight:600;z-index:1000;transform:translateY(-80px);opacity:0;transition:.3s}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Empty state */
+.empty{text-align:center;padding:60px 20px;color:var(--text-4)}
+.empty i{font-size:40px;margin-bottom:12px;display:block}
+.empty p{font-size:13px}
+
+/* Status colors */
+.st-completed{color:var(--green)}
+.st-analyzing,.st-building{color:var(--accent-2)}
+.st-repairing{color:var(--purple)}
+.st-failed{color:var(--red)}
+.st-created{color:var(--text-3)}
+.st-available{background:var(--green-g);color:var(--green)}
+.st-experimental{background:var(--orange-g);color:var(--orange)}
+.si-bg{background:var(--accent-g);color:var(--accent)}
+.si-bg-green{background:var(--green-g);color:var(--green)}
+.si-bg-purple{background:var(--purple-g);color:var(--purple)}
+.si-bg-orange{background:var(--orange-g);color:var(--orange)}
+.si-bg-red{background:var(--red-g);color:var(--red)}
+.si-bg-cyan{background:var(--cyan-g);color:var(--cyan)}
+.si-bg-gold{background:var(--gold-g);color:var(--gold)}
+.type-url{background:var(--accent-g);color:var(--accent)}
+.type-screenshot{background:var(--purple-g);color:var(--purple)}
+.dot-green{background:var(--green)}
+.dot-orange{background:var(--orange)}
+.dot-accent{background:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP NAVIGATION ═══════════════════════════════════════════════════════ -->
+<nav class="top-nav">
+  <div class="logo">
+    <div class="icon"><i class="fas fa-atom"></i></div>
+    Universal AI Platform <span>WEB ENGINE</span>
+  </div>
+  <div class="nav-links">
+    <div class="link active" data-view="home" onclick="switchView('home')">Home</div>
+    <div class="link" data-view="projects" onclick="switchView('projects')">Projects</div>
+    <div class="link" data-view="agents" onclick="switchView('agents')">Agents</div>
+    <div class="link" data-view="skills" onclick="switchView('skills')">Skills</div>
+    <div class="link" data-view="tools" onclick="switchView('tools')">Tools</div>
+    <div class="link" data-view="memory" onclick="switchView('memory')">Memory</div>
+    <div class="link" data-view="capabilities" onclick="switchView('capabilities')">Capabilities</div>
+    <div class="link" data-view="logs" onclick="switchView('logs')">Activity</div>
+  </div>
+  <div class="nav-right">
+    <div class="icon-btn" title="Search"><i class="fas fa-search"></i></div>
+    <div class="icon-btn" title="Notifications"><i class="fas fa-bell"></i><div class="badge" id="notifBadge">0</div></div>
+    <div class="user-chip"><div class="avatar">AI</div><div><div class="name">Engine</div><div class="role">Pro User</div></div></div>
+  </div>
+</nav>
+
+<!-- ═══ HOME VIEW ════════════════════════════════════════════════════════════ -->
+<div class="view active" id="view-home">
+
+  <!-- Welcome -->
+  <div class="welcome-bar">
+    <div>
+      <h1>Welcome back, <span>Engineer</span> 👋</h1>
+      <p>Your unified AI workspace. All systems connected. Everything works together.</p>
+    </div>
+    <div class="status-pills">
+      <div class="status-pill"><div class="dot green"></div><div class="info"><div class="label">System Status</div><div class="value" style="color:var(--green)">All systems operational</div></div></div>
+      <div class="status-pill"><i class="fas fa-folder" style="color:var(--accent-2);font-size:16px"></i><div class="info"><div class="label">Active Projects</div><div class="value" id="statProjects">0</div></div></div>
+      <div class="status-pill"><i class="fas fa-bolt" style="color:var(--orange);font-size:16px"></i><div class="info"><div class="label">Active Tasks</div><div class="value" id="statTasks">0</div></div></div>
+      <div class="status-pill"><i class="fas fa-microchip" style="color:var(--cyan);font-size:16px"></i><div class="info"><div class="label">Skills Loaded</div><div class="value" id="statSkills">0</div></div></div>
+    </div>
+  </div>
+
+  <!-- Module Cards -->
+  <div class="modules">
+    <!-- 1: AI Agent -->
+    <div class="module-card" onclick="switchView('projects')">
+      <div class="card-top">
+        <div class="bg" style="background:linear-gradient(135deg,#0a1628,#1a2d5a)"></div>
+        <div class="number">1</div>
+        <div class="card-icon si-bg">🤖</div>
+        <div class="fav" onclick="event.stopPropagation();this.classList.toggle('active')">☆</div>
+      </div>
+      <div class="module-body">
+        <h3>AI AGENT</h3>
+        <div class="subtitle">Autonomous web reconstruction</div>
+        <ul class="features">
+          <li>Autonomous agents</li>
+          <li>Task planning & execution</li>
+          <li>Multi-agent orchestration</li>
+          <li>RAG & long-term memory</li>
+          <li>Browser navigation</li>
+          <li>Computer use</li>
+          <li>Code execution & repair</li>
+          <li>File & project management</li>
+        </ul>
+      </div>
+      <div class="gpu-bar">
+        <div class="gpu-label">GPU Access</div>
+        <div class="gpu-right">
+          <div class="gpu-online"><div class="dot"></div> Online</div>
+          <div class="gpu-text">1,248 GPUs</div>
+          <div class="gpu-track"><div class="gpu-fill" style="width:78%"></div></div>
+          <div class="gpu-pct">78%</div>
+        </div>
+      </div>
+      <div class="module-cta"><div class="cta-btn">Open AI Agent <i class="fas fa-arrow-right"></i></div></div>
+    </div>
+
+    <!-- 2: Visual QA -->
+    <div class="module-card" onclick="switchView('skills')">
+      <div class="card-top">
+        <div class="bg" style="background:linear-gradient(135deg,#0e1a2a,#1a3050)"></div>
+        <div class="number">2</div>
+        <div class="card-icon si-bg-green">👁️</div>
+        <div class="fav" onclick="event.stopPropagation();this.classList.toggle('active')">☆</div>
+      </div>
+      <div class="module-body">
+        <h3>VISUAL QA</h3>
+        <div class="subtitle">Screenshot analysis & comparison</div>
+        <ul class="features">
+          <li>Pixel-level diff</li>
+          <li>Perceptual comparison</li>
+          <li>Layout detection</li>
+          <li>Color analysis</li>
+          <li>Typography analysis</li>
+          <li>Heatmap generation</li>
+          <li>Region-based scoring</li>
+          <li>Auto-repair loops</li>
+        </ul>
+      </div>
+      <div class="gpu-bar">
+        <div class="gpu-label">GPU Access</div>
+        <div class="gpu-right">
+          <div class="gpu-online"><div class="dot"></div> Online</div>
+          <div class="gpu-text">1,248 GPUs</div>
+          <div class="gpu-track"><div class="gpu-fill" style="width:78%"></div></div>
+          <div class="gpu-pct">78%</div>
+        </div>
+      </div>
+      <div class="module-cta"><div class="cta-btn">Open Visual QA <i class="fas fa-arrow-right"></i></div></div>
+    </div>
+
+    <!-- 3: Design Forensics -->
+    <div class="module-card" onclick="switchView('agents')">
+      <div class="card-top">
+        <div class="bg" style="background:linear-gradient(135deg,#12102a,#2a1850)"></div>
+        <div class="number">3</div>
+        <div class="card-icon si-bg-purple">🔬</div>
+        <div class="fav" onclick="event.stopPropagation();this.classList.toggle('active')">☆</div>
+      </div>
+      <div class="module-body">
+        <h3>DESIGN FORENSICS</h3>
+        <div class="subtitle">Extract design DNA from interfaces</div>
+        <ul class="features">
+          <li>Geometry extraction</li>
+          <li>Shadow analysis</li>
+          <li>Color palette detection</li>
+          <li>Typography profiling</li>
+          <li>Component detection</li>
+          <li>Responsive analysis</li>
+          <li>Animation detection</li>
+          <li>Design DNA generation</li>
+        </ul>
+      </div>
+      <div class="gpu-bar">
+        <div class="gpu-label">GPU Access</div>
+        <div class="gpu-right">
+          <div class="gpu-online"><div class="dot"></div> Online</div>
+          <div class="gpu-text">1,248 GPUs</div>
+          <div class="gpu-track"><div class="gpu-fill" style="width:78%"></div></div>
+          <div class="gpu-pct">78%</div>
+        </div>
+      </div>
+      <div class="module-cta"><div class="cta-btn">Open Forensics <i class="fas fa-arrow-right"></i></div></div>
+    </div>
+
+    <!-- 4: Code Generation -->
+    <div class="module-card" onclick="switchView('projects')">
+      <div class="card-top">
+        <div class="bg" style="background:linear-gradient(135deg,#0e1a10,#1a3020)"></div>
+        <div class="number">4</div>
+        <div class="card-icon si-bg-orange">⚡</div>
+        <div class="fav" onclick="event.stopPropagation();this.classList.toggle('active')">☆</div>
+      </div>
+      <div class="module-body">
+        <h3>CODE GENERATION</h3>
+        <div class="subtitle">Build & reconstruct interfaces</div>
+        <ul class="features">
+          <li>HTML/CSS generation</li>
+          <li>React component output</li>
+          <li>Design DNA → Code pipeline</li>
+          <li>Responsive code</li>
+          <li>Animation support</li>
+          <li>Inline style extraction</li>
+          <li>DOM-aware generation</li>
+          <li>Auto-repair integration</li>
+        </ul>
+      </div>
+      <div class="gpu-bar">
+        <div class="gpu-label">GPU Access</div>
+        <div class="gpu-right">
+          <div class="gpu-online"><div class="dot"></div> Online</div>
+          <div class="gpu-text">1,248 GPUs</div>
+          <div class="gpu-track"><div class="gpu-fill" style="width:78%"></div></div>
+          <div class="gpu-pct">78%</div>
+        </div>
+      </div>
+      <div class="module-cta"><div class="cta-btn">Open Generator <i class="fas fa-arrow-right"></i></div></div>
+    </div>
+
+    <!-- 5: Annotation Studio -->
+    <div class="module-card">
+      <div class="card-top">
+        <div class="bg" style="background:linear-gradient(135deg,#1a0e1a,#3a1a3a)"></div>
+        <div class="number">5</div>
+        <div class="card-icon si-bg-red">✏️</div>
+        <div class="fav" onclick="event.stopPropagation();this.classList.toggle('active')">☆</div>
+      </div>
+      <div class="module-body">
+        <h3>ANNOTATION STUDIO</h3>
+        <div class="subtitle">Draw, annotate & instruct the AI</div>
+        <ul class="features">
+          <li>Pencil drawing tool</li>
+          <li>Region highlighting</li>
+          <li>Arrow annotations</li>
+          <li>Text notes</li>
+          <li>Visual editing overlay</li>
+          <li>Selection tools</li>
+          <li>Area-based instructions</li>
+          <li>AI interpretation</li>
+        </ul>
+      </div>
+      <div class="gpu-bar">
+        <div class="gpu-label">GPU Access</div>
+        <div class="gpu-right">
+          <div class="gpu-online"><div class="dot"></div> Online</div>
+          <div class="gpu-text">1,248 GPUs</div>
+          <div class="gpu-track"><div class="gpu-fill" style="width:78%"></div></div>
+          <div class="gpu-pct">78%</div>
+        </div>
+      </div>
+      <div class="module-cta"><div class="cta-btn">COMING SOON<div style="font-size:9px;color:var(--text-4);margin-top:2px">Next milestone</div></div></div>
+    </div>
+  </div>
+
+  <!-- Compute & Infrastructure -->
+  <div class="compute-section">
+    <div class="compute-header">
+      <div>
+        <h3>COMPUTE & INFRASTRUCTURE</h3>
+        <p>Unified compute layer powering every module</p>
+      </div>
+    </div>
+    <div class="compute-grid">
+      <div class="compute-item">
+        <div class="ci-header">
+          <div class="ci-icon si-bg"><i class="fas fa-microchip"></i></div>
+          <div><div class="ci-name">Local Engine</div><div class="ci-desc">Node.js + Playwright</div></div>
+        </div>
+        <div class="ci-status"><div class="dot dot-green"></div> Active</div>
+      </div>
+      <div class="compute-item">
+        <div class="ci-header">
+          <div class="ci-icon si-bg-green"><i class="fas fa-play-circle"></i></div>
+          <div><div class="ci-name">Browser Control</div><div class="ci-desc">Chromium + Playwright</div></div>
+        </div>
+        <div class="ci-status"><div class="dot dot-green"></div> Available</div>
+      </div>
+      <div class="compute-item">
+        <div class="ci-header">
+          <div class="ci-icon si-bg-purple"><i class="fas fa-database"></i></div>
+          <div><div class="ci-name">SQLite Memory</div><div class="ci-desc">Persistent storage (sql.js)</div></div>
+        </div>
+        <div class="ci-status"><div class="dot dot-green"></div> Connected</div>
+      </div>
+      <div class="compute-item">
+        <div class="ci-header">
+          <div class="ci-icon si-bg-orange"><i class="fas fa-image"></i></div>
+          <div><div class="ci-name">Vision Pipeline</div><div class="ci-desc">Screenshot capture + analysis</div></div>
+        </div>
+        <div class="ci-status"><div class="dot dot-green"></div> Available</div>
+      </div>
+      <div class="compute-item">
+        <div class="ci-header">
+          <div class="ci-icon si-bg-cyan"><i class="fas fa-sync-alt"></i></div>
+          <div><div class="ci-name">Visual Diff Engine</div><div class="ci-desc">Pixelmatch + heatmap</div></div>
+        </div>
+        <div class="ci-status"><div class="dot dot-green"></div> Available</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unified Ecosystem -->
+  <div class="ecosystem">
+    <div class="eco-left">
+      <div class="eco-icon">🌐</div>
+      <div class="eco-text">
+        <h4>UNIFIED ECOSYSTEM</h4>
+        <p>Everything connected. Everything works together.</p>
+      </div>
+    </div>
+    <div class="eco-pills">
+      <div class="eco-pill" onclick="switchView('skills')"><i class="fas fa-puzzle-piece"></i> Skills <span id="ecoSkillCount" style="font-weight:800;color:var(--accent-2)">0</span></div>
+      <div class="eco-pill" onclick="switchView('agents')"><i class="fas fa-robot"></i> Agents <span style="font-weight:800;color:var(--accent-2)">9</span></div>
+      <div class="eco-pill" onclick="switchView('tools')"><i class="fas fa-wrench"></i> Tools <span id="ecoToolCount" style="font-weight:800;color:var(--accent-2)">0</span></div>
+      <div class="eco-pill active" onclick="switchView('memory')"><i class="fas fa-database"></i> Memory <span style="font-weight:800;color:var(--green)">SQLite</span></div>
+      <div class="eco-pill" onclick="switchView('projects')"><i class="fas fa-folder"></i> Projects <span id="ecoProjectCount" style="font-weight:800;color:var(--accent-2)">0</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROJECTS VIEW ════════════════════════════════════════════════════════ -->
+<div class="view" id="view-projects">
+  <div class="view-header">
+    <h2>Projects</h2>
+    <button class="btn btn-primary" onclick="switchView('home')"><i class="fas fa-plus"></i> New Reconstruction</button>
+  </div>
+  <div class="url-bar">
+    <input placeholder="Enter URL to reconstruct (e.g. https://example.com)" id="reconUrl" onkeypress="if(event.key==='Enter')startClone()">
+    <select id="reconFramework"><option value="auto">Auto-detect</option><option value="html">HTML/CSS</option><option value="react">React</option></select>
+    <button class="btn btn-primary" onclick="startClone()"><i class="fas fa-play"></i> Start</button>
+  </div>
+  <div id="projectsList"></div>
+</div>
+
+<!-- ═══ AGENTS VIEW ══════════════════════════════════════════════════════════ -->
+<div class="view" id="view-agents">
+  <div class="view-header"><h2>Agent Fleet</h2></div>
+  <div class="agent-grid" id="agentsGrid"></div>
+</div>
+
+<!-- ═══ SKILLS VIEW ══════════════════════════════════════════════════════════ -->
+<div class="view" id="view-skills">
+  <div class="view-header"><h2>Skill Registry</h2></div>
+  <div class="skill-grid" id="skillsGrid"></div>
+</div>
+
+<!-- ═══ TOOLS VIEW ═══════════════════════════════════════════════════════════ -->
+<div class="view" id="view-tools">
+  <div class="view-header"><h2>Tool Registry</h2></div>
+  <div class="card-grid" id="toolsGrid"></div>
+</div>
+
+<!-- ═══ MEMORY VIEW ══════════════════════════════════════════════════════════ -->
+<div class="view" id="view-memory">
+  <div class="view-header"><h2>Memory System</h2></div>
+  <div class="mem-grid" id="memStats"></div>
+  <div class="card-grid-2">
+    <div class="card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">📊 Score Trends</h3><div id="scoreTrends"></div></div>
+    <div class="card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">📝 Lessons Learned</h3><div id="lessonsList"></div></div>
+  </div>
+</div>
+
+<!-- ═══ CAPABILITIES VIEW ═══════════════════════════════════════════════════ -->
+<div class="view" id="view-capabilities">
+  <div class="view-header"><h2>UI Capability Registry</h2></div>
+  <div class="mem-grid" id="capStats"></div>
+  <div class="url-bar">
+    <input placeholder="Search capabilities (e.g. button, chart, animation)" id="capSearch" onkeypress="if(event.key==='Enter')searchCaps()">
+    <button class="btn btn-primary" onclick="searchCaps()"><i class="fas fa-search"></i> Search</button>
+  </div>
+  <div class="card-grid" id="capResults"></div>
+  <div style="margin-top:16px"><h3 style="font-size:14px;font-weight:700;margin-bottom:10px">📋 Registered Repositories</h3><div id="repoList"></div></div>
+</div>
+
+<!-- ═══ ACTIVITY VIEW ════════════════════════════════════════════════════════ -->
+<div class="view" id="view-logs">
+  <div class="view-header"><h2>Activity Log</h2><button class="btn" onclick="loadData()"><i class="fas fa-sync"></i> Refresh</button></div>
+  <div class="event-list" id="eventLog"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ STATE ═════════════════════════════════════════════════════════════════════
+const API = '';
+const state = { projects: [], skills: [], tools: [], models: [], memory: {}, events: [] };
+
+const AGENTS = [
+  { name: 'Supervisor', type: 'orchestrator', icon: '👑', bg: 'si-bg', caps: ['planning','delegation','review','conflict resolution'] },
+  { name: 'Browser Agent', type: 'browser', icon: '🌐', bg: 'si-bg-green', caps: ['playwright','navigation','screenshot','DOM extraction'] },
+  { name: 'Vision Agent', type: 'vision', icon: '👁️', bg: 'si-bg-purple', caps: ['color analysis','layout detection','component detection'] },
+  { name: 'Design Forensics', type: 'forensics', icon: '🔬', bg: 'si-bg-orange', caps: ['design DNA','typography','geometry','shadows'] },
+  { name: 'Frontend Agent', type: 'codegen', icon: '⚡', bg: 'si-bg-cyan', caps: ['HTML/CSS','React','code generation','DOM aware'] },
+  { name: 'Visual QA', type: 'qa', icon: '📊', bg: 'si-bg-red', caps: ['pixel diff','perceptual diff','heatmap','scoring'] },
+  { name: 'Auto Repair', type: 'repair', icon: '🔧', bg: 'si-bg-gold', caps: ['CSS repair','incremental fixes','targeted patches'] },
+  { name: 'Animation Agent', type: 'animation', icon: '✨', bg: 'si-bg', caps: ['anime.js','CSS transitions','entrance animations'] },
+  { name: 'Manus Agent', type: 'autonomous', icon: '🧠', bg: 'si-bg-purple', caps: ['autonomous planning','task decomposition','adaptive execution'] },
+];
+
+// ═══ API HELPERS ═════════════════════════════════════════════════════════════
+async function api(path, opts = {}) {
+  try {
+    const res = await fetch(API + path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+    return await res.json();
+  } catch (e) { console.error('API error:', e); return { success: false, error: e.message }; }
+}
+
+// ═══ DATA LOADING ════════════════════════════════════════════════════════════
+async function loadData() {
+  const [projectsRes, skillsRes, toolsRes, modelsRes, memoryRes, eventsRes] = await Promise.all([
+    api('/api/projects'), api('/api/skills'), api('/api/tools'), api('/api/models'), api('/api/memory'), api('/api/events')
+  ]);
+
+  state.projects = projectsRes.data || [];
+  state.skills = skillsRes.data || [];
+  state.tools = toolsRes.data || [];
+  state.models = modelsRes.data || [];
+  state.memory = memoryRes.data || {};
+  state.events = eventsRes.data || [];
+
+  // Update home stats
+  const active = state.projects.filter(p => ['analyzing','building','repairing'].includes(p.status)).length;
+  document.getElementById('statProjects').textContent = state.projects.length;
+  document.getElementById('statTasks').textContent = active;
+  document.getElementById('statSkills').textContent = skillsRes.stats?.total || 0;
+  document.getElementById('ecoSkillCount').textContent = skillsRes.stats?.total || 0;
+  document.getElementById('ecoToolCount').textContent = toolsRes.stats?.total || 0;
+  document.getElementById('ecoProjectCount').textContent = state.projects.length;
+  document.getElementById('notifBadge').textContent = state.events.length;
+
+  renderCurrentView();
+}
+
+// ═══ VIEW SWITCHING ══════════════════════════════════════════════════════════
+function switchView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-links .link').forEach(l => l.classList.remove('active'));
+  document.getElementById('view-' + view)?.classList.add('active');
+  document.querySelector(`.nav-links .link[data-view="${view}"]`)?.classList.add('active');
+  renderCurrentView();
+}
+
+function renderCurrentView() {
+  const active = document.querySelector('.view.active')?.id?.replace('view-', '');
+  if (active === 'projects') renderProjectsView();
+  else if (active === 'agents') renderAgentsView();
+  else if (active === 'skills') renderSkillsView();
+  else if (active === 'tools') renderToolsView();
+  else if (active === 'memory') renderMemoryView();
+  else if (active === 'capabilities') renderCapabilitiesView();
+  else if (active === 'logs') renderLogsView();
+}
+
+// ═══ RENDER: PROJECTS ════════════════════════════════════════════════════════
+function renderProjectsView() {
+  const el = document.getElementById('projectsList');
+  if (!state.projects.length) {
+    el.innerHTML = '<div class="empty"><i class="fas fa-folder-open"></i><p>No projects yet. Enter a URL above to start.</p></div>';
+    return;
+  }
+  el.innerHTML = state.projects.slice().reverse().map(p => {
+    const score = p.scores?.length ? p.scores[p.scores.length - 1]?.overall || 0 : 0;
+    const typeClass = p.input?.type === 'url' ? 'type-url' : 'type-screenshot';
+    const stClass = 'st-' + p.status;
+    return `<div class="project-row" onclick="viewProject('${p.id}')">
+      <div class="pr-icon si-bg"><i class="fas fa-${p.status === 'completed' ? 'check' : 'spinner'}"></i></div>
+      <div class="pr-info"><h4>${p.name}</h4><p>${p.input?.sources?.[0]?.url || p.input?.type || 'N/A'} • ${p.iterations || 0} iterations</p></div>
+      <div class="pr-type ${typeClass}">${p.input?.type || 'unknown'}</div>
+      <div class="pr-score"><div class="val" style="color:${score >= 90 ? 'var(--green)' : score >= 70 ? 'var(--orange)' : 'var(--text-3)'}">${score}%</div><div class="lbl">Score</div></div>
+      <div class="pr-status ${stClass}">${p.status}</div>
+      <button class="btn" onclick="event.stopPropagation();deleteProject('${p.id}')" title="Delete"><i class="fas fa-trash" style="font-size:10px"></i></button>
+    </div>`;
+  }).join('');
+}
+
+// ═══ RENDER: AGENTS ═════════════════════════════════════════════════════════
+function renderAgentsView() {
+  document.getElementById('agentsGrid').innerHTML = AGENTS.map(a => `
+    <div class="agent-card">
+      <div class="ac-head">
+        <div class="ac-avatar ${a.bg}">${a.icon}</div>
+        <div><div class="ac-name">${a.name}</div><div class="ac-type">${a.type}</div></div>
+        <div class="ac-status"><div class="dot dot-green"></div> Available</div>
+      </div>
+      <div class="ac-caps">${a.caps.map(c => `<span>${c}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+// ═══ RENDER: SKILLS ═════════════════════════════════════════════════════════
+function renderSkillsView() {
+  document.getElementById('skillsGrid').innerHTML = state.skills.map(s => {
+    const stClass = 'st-' + (s.status || 'available').toLowerCase();
+    return `<div class="skill-card">
+      <div class="sc-head"><div class="sc-name">${s.name}</div><div class="sc-ver">v${s.version || '1.0'}</div></div>
+      <div class="sc-desc">${s.description || ''}</div>
+      <div class="sc-foot"><span class="sc-status ${stClass}">${s.status || 'available'}</span><span style="font-size:9px;color:var(--text-3)">${s.category || ''}</span></div>
+    </div>`;
+  }).join('') || '<div class="empty"><p>No skills loaded</p></div>';
+}
+
+// ═══ RENDER: TOOLS ══════════════════════════════════════════════════════════
+function renderToolsView() {
+  document.getElementById('toolsGrid').innerHTML = state.tools.map(t => `
+    <div class="card">
+      <h4 style="font-size:13px;font-weight:700;margin-bottom:4px">${t.name}</h4>
+      <p style="font-size:10px;color:var(--text-3);margin-bottom:8px">${t.category || ''}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:3px">${(t.capabilities || []).map(c => `<span style="font-size:8px;padding:2px 5px;border-radius:3px;background:var(--bg-0);color:var(--text-3)">${c}</span>`).join('')}</div>
+    </div>
+  `).join('') || '<div class="empty"><p>No tools registered</p></div>';
+}
+
+// ═══ RENDER: MEMORY ═════════════════════════════════════════════════════════
+function renderMemoryView() {
+  const m = state.memory;
+  document.getElementById('memStats').innerHTML = `
+    <div class="mem-card"><div class="mc-icon">📁</div><div class="mc-val">${m.projects || 0}</div><div class="mc-lbl">Projects</div></div>
+    <div class="mem-card"><div class="mc-icon">🎯</div><div class="mc-val">${m.benchmarks || 0}</div><div class="mc-lbl">Benchmarks</div></div>
+    <div class="mem-card"><div class="mc-icon">📝</div><div class="mc-val">${m.lessons || 0}</div><div class="mc-lbl">Lessons</div></div>
+    <div class="mem-card"><div class="mc-icon">🧬</div><div class="mc-val">${m.designDNA || 0}</div><div class="mc-lbl">Design DNA</div></div>
+    <div class="mem-card"><div class="mc-icon">🏆</div><div class="mc-val">${m.bestScore || 0}%</div><div class="mc-lbl">Best Score</div></div>
+    <div class="mem-card"><div class="mc-icon">📊</div><div class="mc-val">${m.averageScore || 0}%</div><div class="mc-lbl">Avg Score</div></div>
+    <div class="mem-card"><div class="mc-icon">🔧</div><div class="mc-val">${m.repairs || 0}</div><div class="mc-lbl">Repairs</div></div>
+    <div class="mem-card"><div class="mc-icon">💾</div><div class="mc-val">${m.dbSize || 'N/A'}</div><div class="mc-lbl">DB Size (${m.engine || 'json'})</div></div>
+  `;
+  document.getElementById('scoreTrends').innerHTML = '<p style="font-size:11px;color:var(--text-3)">Score trends will appear after multiple reconstructions.</p>';
+  document.getElementById('lessonsList').innerHTML = '<p style="font-size:11px;color:var(--text-3)">Lessons learned from past projects.</p>';
+}
+
+// ═══ RENDER: LOGS ═══════════════════════════════════════════════════════════
+function renderLogsView() {
+  const el = document.getElementById('eventLog');
+  if (!state.events.length) {
+    el.innerHTML = '<div class="empty"><i class="fas fa-stream"></i><p>No events yet. Start a reconstruction to see activity.</p></div>';
+    return;
+  }
+  el.innerHTML = state.events.slice().reverse().map(e => {
+    const dotColor = e.type?.includes('error') ? 'var(--red)' : e.type?.includes('completed') ? 'var(--green)' : 'var(--accent)';
+    return `<div class="event-row">
+      <div class="er-dot" style="background:${dotColor}"></div>
+      <div class="er-time">${new Date(e.timestamp).toLocaleTimeString()}</div>
+      <div class="er-type" style="color:${dotColor}">${e.type}</div>
+      <div class="er-msg">${e.projectId || ''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ RENDER: CAPABILITIES ═══════════════════════════════════════════════════
+async function renderCapabilitiesView() {
+  const [capsRes, reposRes] = await Promise.all([api('/api/capabilities'), api('/api/capabilities/repos')]);
+  const caps = capsRes.data || {};
+  const repos = reposRes.data || [];
+  document.getElementById('capStats').innerHTML = `
+    <div class="mem-card"><div class="mc-icon">🧩</div><div class="mc-val">${caps.totalCapabilities || 0}</div><div class="mc-lbl">Total Capabilities</div></div>
+    <div class="mem-card"><div class="mc-icon">📂</div><div class="mc-val">${caps.categories || 0}</div><div class="mc-lbl">Categories</div></div>
+    <div class="mem-card"><div class="mc-icon">🎯</div><div class="mc-val">${caps.found || 0}</div><div class="mc-lbl">Routed</div></div>
+    <div class="mem-card"><div class="mc-icon">📝</div><div class="mc-val">${caps.generated || 0}</div><div class="mc-lbl">Templates Generated</div></div>
+  `;
+  document.getElementById('repoList').innerHTML = repos.map(r => `
+    <div class="project-row" onclick="window.open('${r.url}','_blank')">
+      <div class="pr-icon si-bg"><i class="fas fa-code-branch"></i></div>
+      <div class="pr-info"><h4>${r.name}</h4><p>${r.url}</p></div>
+      <div class="pr-type type-url">P${r.priority}</div>
+      <div class="pr-status st-available">${r.status}</div>
+    </div>
+  `).join('') || '<div class="empty"><p>No repos registered</p></div>';
+  renderCapResults();
+}
+
+let capSearchResults = null;
+
+async function searchCaps() {
+  const q = document.getElementById('capSearch')?.value;
+  if (!q) return;
+  const res = await api('/api/capabilities/search?q=' + encodeURIComponent(q));
+  capSearchResults = res.data || [];
+  renderCapResults();
+}
+
+function renderCapResults() {
+  const el = document.getElementById('capResults');
+  if (!el) return;
+  if (!capSearchResults || capSearchResults.length === 0) {
+    el.innerHTML = '<div class="empty"><p style="font-size:11px;color:var(--text-3)">Search for a capability above to find matching components, animations, and libraries.</p></div>';
+    return;
+  }
+  el.innerHTML = capSearchResults.map(r => `
+    <div class="card">
+      <h4 style="font-size:12px;font-weight:700;margin-bottom:4px">${r.name}</h4>
+      <p style="font-size:10px;color:var(--text-3);margin-bottom:6px">${r.category || ''}</p>
+      <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">${(r.features || []).slice(0, 5).join(', ')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="sc-status st-available">${r.license || 'N/A'}</span>
+        <span style="font-size:9px;color:var(--text-3)">${r.type || 'component'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══ SSE LIVE UPDATES ══════════════════════════════════════════════════════
+let sseConnection = null;
+function connectSSE() {
+  if (sseConnection) sseConnection.close();
+  sseConnection = new EventSource(API + '/api/stream');
+  sseConnection.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'reconstruction:started') toast('Reconstruction started: ' + data.projectId);
+      if (data.type === 'reconstruction:completed') { toast('Reconstruction completed! Score: ' + data.score + '%'); loadData(); }
+      if (data.type === 'reconstruction:error') toast('Error: ' + data.error);
+      state.events.unshift(data);
+      if (state.events.length > 100) state.events.length = 100;
+    } catch(e) {}
+  };
+  sseConnection.onerror = () => setTimeout(connectSSE, 5000);
+}
+
+// ═══ ACTIONS ═════════════════════════════════════════════════════════════════
+async function startClone() {
+  const url = document.getElementById('reconUrl')?.value;
+  if (!url) return toast('Please enter a URL');
+  const framework = document.getElementById('reconFramework')?.value || 'auto';
+  toast('Starting reconstruction...');
+  const res = await api('/api/clone', { method: 'POST', body: JSON.stringify({ url, framework, maxIterations: 5, qualityThreshold: 85 }) });
+  if (res.success) { toast('Reconstruction started: ' + res.data.projectId); setTimeout(loadData, 2000); }
+  else toast('Error: ' + (res.error || 'Unknown'));
+}
+
+async function deleteProject(id) {
+  if (!confirm('Delete project ' + id + '?')) return;
+  toast('Deleted');
+  loadData();
+}
+
+function viewProject(id) {
+  toast('Project: ' + id);
+}
+
+// ═══ TOAST ═══════════════════════════════════════════════════════════════════
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ═══ INIT ════════════════════════════════════════════════════════════════════
+loadData();
+connectSSE();
+setInterval(loadData, 15000);
+</script>
+</body>
+</html>

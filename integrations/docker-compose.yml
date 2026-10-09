@@ -1,0 +1,246 @@
+# =============================================================================
+# LibreChat + LiteLLM + Free Claude Code - Docker Compose
+# =============================================================================
+# Sistema completo de chat con múltiples proveedores LLM
+#
+# Servicios:
+#   - LiteLLM Gateway (Puerto 4000)
+#   - PostgreSQL (Puerto 5432)
+#   - Redis (Puerto 6379)
+#   - Prometheus (Puerto 9090)
+#   - Grafana (Puerto 3000)
+#   - LibreChat (Puerto 3080)
+#   - Free Claude Code (Puerto 3001)
+#
+# Uso:
+#   docker-compose up -d
+#   docker-compose logs -f
+#
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ===============================
+  # LITELLM GATEWAY
+  # ===============================
+  litellm:
+    image: ghcr.io/berriai/litellm:main
+    container_name: litellm-gateway
+    ports:
+      - "4000:4000"  # API
+      - "4001:4001"  # UI Admin
+    volumes:
+      - ./litellm-gateway/config.yaml:/app/config.yaml
+      - ./litellm-gateway/.env:/app/.env
+      - litellm_logs:/app/logs
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-litellm}:${POSTGRES_PASSWORD:-litellm123}@postgres:5432/${POSTGRES_DB:-litellm_db}
+      - REDIS_URL=redis://redis:6379
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY:-sk-default-key-change-me}
+      - LITELLM_UI_USERNAME=${LITELLM_UI_USERNAME:-admin}
+      - LITELLM_UI_PASSWORD=${LITELLM_UI_PASSWORD:-admin123}
+      - PORT=4000
+      - HOST=0.0.0.0
+      - CORS_ALLOW_ORIGINS=*
+    env_file:
+      - ./litellm-gateway/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===============================
+  # POSTGRESQL - Base de datos
+  # ===============================
+  postgres:
+    image: postgres:15-alpine
+    container_name: litellm-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-litellm_db}
+      POSTGRES_USER: ${POSTGRES_USER:-litellm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-litellm123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-litellm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # REDIS - Cache
+  # ===============================
+  redis:
+    image: redis:7-alpine
+    container_name: litellm-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # LIBRECHAT - Chat UI
+  # ===============================
+  librechat:
+    image: ghcr.io/danny-avila/librechat:latest
+    container_name: librechat
+    ports:
+      - "3080:3080"
+    environment:
+      - NODE_ENV=production
+      - PORT=3080
+      # MongoDB
+      - MONGO_URI=${MONGO_URI:-mongodb://mongo:27017/librechat}
+      # Redis
+      - REDIS_URL=redis://redis:6379
+      # Endpoint personalizado (LiteLLM)
+      - OPENAI_REVERSE_PROXY=http://litellm:4000/v1/chat/completions
+      # OAuth (opcional)
+      - OPENID_ISSUER=${OPENID_ISSUER:-}
+      - OPENID_CLIENT_ID=${OPENID_CLIENT_ID:-}
+      - OPENID_CLIENT_SECRET=${OPENID_CLIENT_SECRET:-}
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml:ro
+      - librechat_data:/app/data
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      litellm:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===============================
+  # MONGODB - Base de datos LibreChat
+  # ===============================
+  mongo:
+    image: mongo:7
+    container_name: librechat-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # FREE CLAUDE CODE (Opcional)
+  # ===============================
+  free-claude-code:
+    image: ghcr.io/agentops/free-claude-code:latest
+    container_name: free-claude-code
+    ports:
+      - "3001:3001"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PORT=3001
+      - CLAUDE_CODE_OPTS=--verbose --output-format stream-json
+    volumes:
+      - claude_code_data:/home/user/.claude
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - litellm
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    profiles:
+      - claude-code
+
+  # ===============================
+  # PROMETHEUS - Métricas (Opcional)
+  # ===============================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: litellm-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    profiles:
+      - monitoring
+
+  # ===============================
+  # GRAFANA - Dashboards (Opcional)
+  # ===============================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: litellm-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - librechat-network
+    profiles:
+      - monitoring
+
+# ===============================
+# NETWORKS
+# ===============================
+networks:
+  librechat-network:
+    driver: bridge
+
+# ===============================
+# VOLUMES
+# ===============================
+volumes:
+  postgres_data:
+  redis_data:
+  mongo_data:
+  litellm_logs:
+  librechat_data:
+  claude_code_data:
+  prometheus_data:
+  grafana_data:

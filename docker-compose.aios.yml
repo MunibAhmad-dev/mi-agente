@@ -1,0 +1,198 @@
+#=====================================================================#
+#           AI-OS Complete Stack - Docker Compose                     #
+#                                                                     #
+# Services:                                                           #
+#   - Ollama (Local LLM)                                             #
+#   - MongoDB (Database)                                             #
+#   - LibreChat (Frontend + Backend)                                  #
+#   - AI Model Browser (Model Search)                                #
+#   - MeiliSearch (Search Engine)                                    #
+#                                                                     #
+# Usage:                                                              #
+#   docker compose -f docker-compose.aios.yml up -d                  #
+#   docker compose -f docker-compose.aios.yml down                   #
+#=====================================================================#
+
+version: '3.8'
+
+services:
+  # ============================================================
+  # Ollama - Local LLM Inference
+  # ============================================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: aios-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    # GPU passthrough (uncomment for NVIDIA)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - aios-net
+
+  # Pulls qwen3:1.7b (1.3 GB) into the shared ollama_data volume on first run.
+  # On subsequent starts the model is already cached — no re-download.
+  # The service exits (restart: no) once the pull succeeds so it doesn't loop.
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: aios-ollama-init
+    restart: "no"
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint: ["/bin/sh", "-c", "ollama pull qwen3:1.7b && echo 'qwen3:1.7b ready'"]
+    networks:
+      - aios-net
+
+  # ============================================================
+  # MongoDB - Database
+  # ============================================================
+  mongodb:
+    image: mongo:7
+    container_name: aios-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=LibreChat
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - aios-net
+
+  # ============================================================
+  # MeiliSearch - Search Engine
+  # ============================================================
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    container_name: aios-meilisearch
+    restart: unless-stopped
+    ports:
+      - "7700:7700"
+    volumes:
+      - meili_data:/meili_data
+    environment:
+      - MEILI_NO_ANALYTICS=true
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-aios-master-key-2024}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - aios-net
+
+  # ============================================================
+  # AI Model Browser - Model Search UI
+  # ============================================================
+  ai-model-browser:
+    build:
+      context: .
+      dockerfile: Dockerfile.model-browser
+    container_name: aios-model-browser
+    restart: unless-stopped
+    ports:
+      - "3456:3456"
+    environment:
+      - NODE_ENV=production
+      - AI_MODEL_BROWSER_PORT=3456
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3456/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aios-net
+
+  # ============================================================
+  # LibreChat - Main UI + Backend
+  # ============================================================
+  librechat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aios-librechat
+    restart: unless-stopped
+    ports:
+      - "3080:3080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    env_file:
+      - .env.docker
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml
+      - ./data/olympus:/app/client/public/images/olympus
+      - logs:/app/api/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - aios-net
+
+  # ============================================================
+  # Admin Panel
+  # ============================================================
+  admin-panel:
+    image: ghcr.io/danny-avila/librechat-admin:latest
+    container_name: aios-admin
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/LibreChat
+      - CREDS_KEY=${CREDS_KEY:-f34be427ebb29de8d88c107a71546019685ed8b241d8f2ed00c3df97ad2566f0}
+      - CREDS_IV=${CREDS_IV:-e2341419ec3dd3d19b13a1a87fafcbfb}
+      - JWT_SECRET=${JWT_SECRET:-aios-jwt-secret-2024}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-aios-jwt-refresh-2024}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - aios-net
+
+volumes:
+  ollama_data:
+  mongo_data:
+  meili_data:
+  logs:
+
+networks:
+  aios-net:
+    driver: bridge

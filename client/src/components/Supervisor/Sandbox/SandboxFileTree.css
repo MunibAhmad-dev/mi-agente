@@ -1,0 +1,144 @@
+/**
+ * SandboxFileTree Styles
+ */
+
+.sandbox-file-tree {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-tree-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.file-tree-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.file-tree-count {
+  font-size: 11px;
+  color: #888;
+}
+
+.file-tree-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.file-tree-loading,
+.file-tree-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+}
+
+.file-tree-group {
+  margin-bottom: 8px;
+}
+
+.file-tree-dir {
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #888;
+  background: #1f1f1f;
+  border-radius: 4px;
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 2px 0;
+  background: #252525;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.file-tree-item:hover {
+  background: #2a2a2a;
+}
+
+.file-tree-item.modified {
+  border-left: 3px solid #f59e0b;
+}
+
+.file-tree-item.added {
+  border-left: 3px solid #22c55e;
+}
+
+.file-tree-item.deleted {
+  border-left: 3px solid #ef4444;
+  opacity: 0.6;
+}
+
+.file-icon {
+  font-size: 14px;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.file-path {
+  flex: 1;
+  font-size: 11px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-type-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.file-type-badge.modified {
+  background: #f59e0b;
+  color: #000;
+}
+
+.file-type-badge.added {
+  background: #22c55e;
+  color: #000;
+}
+
+.file-type-badge.deleted {
+  background: #ef4444;
+  color: #fff;
+}
+
+.file-size {
+  font-size: 11px;
+  color: #888;
+}
+
+.file-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  background: #3b82f6;
+  color: #fff;
+}

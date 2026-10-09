@@ -1,0 +1,178 @@
+# Crypto AI Trading System - K3s Kubernetes Manifests
+# ================================
+#Deployment para API
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-ai-api
+  namespace: crypto-ai
+  labels:
+    app: crypto-ai-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crypto-ai-api
+  template:
+    metadata:
+      labels:
+        app: crypto-ai-api
+    spec:
+      containers:
+      - name: api
+        image: cryptoai/api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: crypto-ai-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: crypto-ai-secrets
+              key: redis-url
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: crypto-ai-secrets
+              key: secret-key
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+# Service para API
+apiVersion: v1
+kind: Service
+metadata:
+  name: crypto-ai-api
+  namespace: crypto-ai
+spec:
+  selector:
+    app: crypto-ai-api
+  ports:
+  - port: 80
+    targetPort: 8000
+  type: ClusterIP
+---
+# Deployment para Frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-ai-frontend
+  namespace: crypto-ai
+  labels:
+    app: crypto-ai-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crypto-ai-frontend
+  template:
+    metadata:
+      labels:
+        app: crypto-ai-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: cryptoai/frontend:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+# Service para Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: crypto-ai-frontend
+  namespace: crypto-ai
+spec:
+  selector:
+    app: crypto-ai-frontend
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: ClusterIP
+---
+# Ingress con SSL
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crypto-ai-ingress
+  namespace: crypto-ai
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - crypto.yourdomain.com
+    secretName: crypto-ai-tls
+  rules:
+  - host: crypto.yourdomain.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: crypto-ai-api
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: crypto-ai-frontend
+            port:
+              number: 80
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crypto-ai-config
+  namespace: crypto-ai
+data:
+  settings.json: |
+    {
+      "api_prefix": "/api/v1",
+      "log_level": "INFO",
+      "cors_origins": ["*"]
+    }
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crypto-ai

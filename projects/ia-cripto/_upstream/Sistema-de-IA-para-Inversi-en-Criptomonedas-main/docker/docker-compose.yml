@@ -1,0 +1,165 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # CORE SERVICES
+  # ============================================
+  
+  # Qdrant Vector Database (Memory)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: crypto-ai-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__SERVICE__HTTP_PORT=6333
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/readyz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # ORCHESTRATION
+  # ============================================
+  
+  # n8n Workflow Automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: crypto-ai-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=cryptoai2025
+      - N8N_HOST=0.0.0.0
+      - WEBHOOK_URL=http://localhost:5678
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  # ============================================
+  # TRADING SERVICES
+  # ============================================
+  
+  # Freqtrade Trading Bot
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable
+    container_name: crypto-ai-freqtrade
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/freqtrade/user_data
+      - freqtrade_data:/freqtrade/data
+    environment:
+      - FLASK_APP=freqtrade
+      - FREQTRADE__CONFIG__CONFIGFILE=/freqtrade/user_data/config.json
+    depends_on:
+      - qdrant
+
+  # ============================================
+  # MONITORING
+  # ============================================
+  
+  # Prometheus Metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: crypto-ai-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: crypto-ai-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=cryptoai2025
+      - GF_INSTALL_PLUGINS=yesoreya-grafana-worldmap-panel,grafana-piechart-panel
+    volumes:
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  # ============================================
+  # DATA SERVICES
+  # ============================================
+  
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: crypto-ai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: crypto-ai-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=cryptoai
+      - POSTGRES_USER=cryptoai
+      - POSTGRES_PASSWORD=cryptoai2025
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ============================================
+  # OPTIONAL:Local LLM (Ollama)
+  # Uncomment to enable local AI model
+  # ============================================
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: crypto-ai-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   environment:
+  #     - OLLAMA_HOST=0.0.0.0
+  #   restart: unless-stopped
+  #   deploy:
+  #     resources:
+  #       devices:
+  #         - driver: nvidia
+  #           count: all
+  #           capabilities: [gpu]
+
+volumes:
+  qdrant_data:
+  n8n_data:
+  freqtrade_data:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+  postgres_data:
+  # ollama_data:
+
+networks:
+  default:
+    name: crypto-ai-network
+    driver: bridge

@@ -1,0 +1,153 @@
+# LLM Providers Configuration
+# Add your API keys here to enable providers
+
+providers:
+  # OpenAI - GPT-5.6 Family (Sol/Terra/Luna), o3, o4, GPT-4.1
+  openai:
+    enabled: true
+    apiKey: "${OPENAI_API_KEY}"  # Get from https://platform.openai.com/api-keys
+    models:
+      - "gpt-5.6-sol"
+      - "gpt-5.6-terra"
+      - "gpt-5.6-luna"
+      - "gpt-4.1"
+      - "gpt-4.1-mini"
+      - "gpt-4.1-nano"
+      - "o3"
+      - "o3-mini"
+      - "o4-mini"
+      - "gpt-4o"
+      - "gpt-4o-mini"
+      - "gpt-image-1"
+
+  # xAI - Grok 4.5/4.6 Family
+  xai:
+    enabled: true
+    apiKey: "${XAI_API_KEY}"  # Get from https://console.x.ai
+    baseUrl: "https://api.x.ai/v1"
+    models:
+      - "grok-4-0709"
+      - "grok-4-0709-fast"
+      - "grok-4.5"
+      - "grok-3"
+      - "grok-3-mini"
+
+  # Groq - High speed inference (14,400 req/day free)
+  groq:
+    enabled: true
+    apiKey: "${GROQ_API_KEY}"  # Get from https://console.groq.com
+    models:
+      - "llama-3.3-70b-versatile"
+      - "mixtral-8x7b-32768"
+      - "gemma2-9b-it"
+
+  # DeepSeek - Great for code and math (5M tokens credit)
+  deepseek:
+    enabled: true
+    apiKey: "${DEEPSEEK_API_KEY}"  # Get from https://platform.deepseek.com
+    models:
+      - "deepseek-chat"
+      - "deepseek-coder"
+
+  # Cloudflare Workers AI - Serverless, global (10,000 req/day free)
+  cloudflare:
+    enabled: true
+    apiKey: "${CF_API_TOKEN}"  # Get from https://dash.cloudflare.com
+    accountId: "${CF_ACCOUNT_ID}"
+    models:
+      - "@cf/meta/llama-3.1-8b-instruct"
+      - "@cf/mistral/mistral-7b-instruct-v0.2"
+      - "@cf/google/gemma-2-2b-it"
+
+  # Mistral AI - European open-source (~1B tokens/month free)
+  mistral:
+    enabled: true
+    apiKey: "${MISTRAL_API_KEY}"  # Get from https://console.mistral.ai
+    models:
+      - "mistral-small-latest"
+      - "mistral-medium-latest"
+      - "mistral-large-latest"
+
+  # Cohere - Specialized for RAG (1,000 req/month free)
+  cohere:
+    enabled: true
+    apiKey: "${COHERE_API_KEY}"  # Get from https://dashboard.cohere.com
+    models:
+      - "command-r-plus"
+      - "command-r"
+      - "command"
+
+  # HuggingFace - Inference API (~100 req/hour free)
+  huggingface:
+    enabled: true
+    apiKey: "${HF_API_KEY}"  # Get from https://huggingface.co/settings/tokens
+    models:
+      - "meta-llama/Llama-3.1-8B-Instruct"
+      - "mistralai/Mistral-7B-Instruct-v0.2"
+
+  # OpenRouter - Multi-provider routing (free models available)
+  openrouter:
+    enabled: true
+    apiKey: "${OPENROUTER_API_KEY}"  # Get from https://openrouter.ai/keys
+    models:
+      - "anthropic/claude-3-haiku-20240307"
+      - "google/gemma-2-9b-it"
+      - "meta-llama/llama-3-8b-instruct"
+
+  # Google AI Studio - Best context window (1.5M tokens/min free)
+  gemini:
+    enabled: true
+    apiKey: "${GEMINI_API_KEY}"  # Get from https://aistudio.google.com/app/apikey
+    models:
+      - "gemini-1.5-flash"
+      - "gemini-1.5-pro"
+      - "gemini-2.0-flash-exp"
+
+  # Anthropic - Claude models ($5 trial credit)
+  anthropic:
+    enabled: true
+    apiKey: "${ANTHROPIC_API_KEY}"  # Get from https://console.anthropic.com
+    models:
+      - "claude-3-5-sonnet-20240620"
+      - "claude-3-haiku-20240307"
+
+  # Perplexity - Search-focused (100 req/day free)
+  perplexity:
+    enabled: true
+    apiKey: "${PERPLEXITY_API_KEY}"  # Get from https://perplexity.ai/settings/api
+    models:
+      - "sonar"
+      - "sonar-pro"
+      - "sonar-reasoning"
+
+  # Lepton AI - Simple API (sandbox free)
+  lepton:
+    enabled: true
+    apiKey: "${LEPTON_API_KEY}"  # Get from https://www.lepton.ai
+    models:
+      - "llama-3.1-405b"
+      - "llama-3.1-70b"
+      - "qwen2.5-72b"
+
+  # Together AI - Model variety ($100 credit)
+  together:
+    enabled: true
+    apiKey: "${TOGETHER_API_KEY}"  # Get from https://api.together.xyz
+    models:
+      - "meta-llama/Llama-3-70b-chat-hf"
+      - "mistralai/Mixtral-8x7B-Instruct-v0.1"
+
+# Gateway Settings
+gateway:
+  defaultProvider: "openai"
+  defaultModel: "gpt-5.6-luna"
+  timeout: 180000
+  maxRetries: 3
+  enableFallback: true
+  fallbackOrder:
+    - "openai"
+    - "xai"
+    - "groq"
+    - "deepseek"
+    - "mistral"
+    - "cloudflare"

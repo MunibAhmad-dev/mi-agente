@@ -1,0 +1,18 @@
+{
+  // Config E2E Fase 12 — apunta el server de mi-opencode al mock LLM local
+  // (OpenAI-compatible, corre en el host en el puerto 9099; el contenedor lo
+  // alcanza vía host.docker.internal, provisto por Docker Desktop).
+  "provider": {
+    "mockllm": {
+      "name": "Mock LLM (E2E F12)",
+      "options": {
+        "baseURL": "http://host.docker.internal:9099/v1",
+        "apiKey": "mock-key"
+      },
+      "models": {
+        "mock-agent": { "name": "Mock Agent" }
+      }
+    }
+  },
+  "model": "mockllm/mock-agent"
+}

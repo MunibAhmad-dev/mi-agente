@@ -1,0 +1,21 @@
+# AEOS docker compose (spec §151-152). Profiles map to environment modes.
+#   docker compose --profile paper up -d      # default safe mode
+#   docker compose --profile limited_live up -d
+# No heavy services (Postgres/Kafka/Qdrant): SQLite in a volume is the store (§8).
+services:
+  aeos:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile
+    image: aeos-core:latest
+    container_name: aeos-core
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - aeos-data:/app/data
+    command: ["python", "-m", "aeos.cli", "status"]
+    profiles: ["paper", "limited_live"]
+
+volumes:
+  aeos-data:

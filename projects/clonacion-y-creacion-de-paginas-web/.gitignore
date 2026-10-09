@@ -1,0 +1,6 @@
+node_modules/
+memory/data/*.db
+memory/data/*.json
+projects/
+*.log
+.DS_Store

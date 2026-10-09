@@ -1,0 +1,96 @@
+import { atom } from 'recoil';
+import { SettingsViews, LocalStorageKeys } from 'librechat-data-provider';
+import type { TOptionSettings } from '~/common';
+import { atomWithLocalStorage } from '~/store/utils';
+
+// Static atoms without localStorage
+const staticAtoms = {
+  abortScroll: atom<boolean>({ key: 'abortScroll', default: false }),
+  optionSettings: atom<TOptionSettings>({ key: 'optionSettings', default: {} }),
+  currentSettingsView: atom<SettingsViews>({
+    key: 'currentSettingsView',
+    default: SettingsViews.default,
+  }),
+  showPopover: atom<boolean>({ key: 'showPopover', default: false }),
+};
+
+const localStorageAtoms = {
+  // General settings
+  autoScroll: atomWithLocalStorage('autoScroll', false),
+  sidebarExpanded: atomWithLocalStorage(
+    'unifiedSidebarExpanded',
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches ? false : true,
+  ),
+  enableUserMsgMarkdown: atomWithLocalStorage<boolean>(
+    LocalStorageKeys.ENABLE_USER_MSG_MARKDOWN,
+    true,
+  ),
+  keepScreenAwake: atomWithLocalStorage('keepScreenAwake', true),
+  newChatSwitchToHistory: atomWithLocalStorage('newChatSwitchToHistory', true),
+
+  // Chat settings
+  enterToSend: atomWithLocalStorage('enterToSend', true),
+  /** What Enter does while a run is generating: steer (inject mid-run) or queue (send after). */
+  duringRunDefaultAction: atomWithLocalStorage<'steer' | 'queue'>(
+    'duringRunDefaultAction',
+    'steer',
+  ),
+  maximizeChatSpace: atomWithLocalStorage('maximizeChatSpace', false),
+  chatDirection: atomWithLocalStorage('chatDirection', 'LTR'),
+  autoExpandTools: atomWithLocalStorage(LocalStorageKeys.AUTO_EXPAND_TOOLS, false),
+  saveDrafts: atomWithLocalStorage('saveDrafts', true),
+  showScrollButton: atomWithLocalStorage('showScrollButton', true),
+  forkSetting: atomWithLocalStorage('forkSetting', ''),
+  splitAtTarget: atomWithLocalStorage('splitAtTarget', false),
+  rememberDefaultFork: atomWithLocalStorage(LocalStorageKeys.REMEMBER_FORK_OPTION, false),
+  saveBadgesState: atomWithLocalStorage('saveBadgesState', false),
+
+  // Beta features settings
+  modularChat: atomWithLocalStorage('modularChat', true),
+  LaTeXParsing: atomWithLocalStorage('LaTeXParsing', true),
+  centerFormOnLanding: atomWithLocalStorage('centerFormOnLanding', true),
+  showFooter: atomWithLocalStorage('showFooter', true),
+
+  // Commands settings
+  atCommand: atomWithLocalStorage('atCommand', true),
+  plusCommand: atomWithLocalStorage('plusCommand', true),
+  slashCommand: atomWithLocalStorage('slashCommand', true),
+  dollarCommand: atomWithLocalStorage('dollarCommand', true),
+
+  // Speech settings
+  conversationMode: atomWithLocalStorage('conversationMode', false),
+  advancedMode: atomWithLocalStorage('advancedMode', false),
+
+  speechToText: atomWithLocalStorage('speechToText', true),
+  engineSTT: atomWithLocalStorage('engineSTT', 'external'),
+  languageSTT: atomWithLocalStorage('languageSTT', ''),
+  autoTranscribeAudio: atomWithLocalStorage('autoTranscribeAudio', false),
+  decibelValue: atomWithLocalStorage('decibelValue', -45),
+  autoSendText: atomWithLocalStorage('autoSendText', -1),
+
+  textToSpeech: atomWithLocalStorage('textToSpeech', true),
+  engineTTS: atomWithLocalStorage('engineTTS', 'browser'),
+  voice: atomWithLocalStorage<string | undefined>('voice', undefined),
+  cloudBrowserVoices: atomWithLocalStorage('cloudBrowserVoices', false),
+  languageTTS: atomWithLocalStorage('languageTTS', ''),
+  automaticPlayback: atomWithLocalStorage('automaticPlayback', false),
+  playbackRate: atomWithLocalStorage<number | null>('playbackRate', null),
+  cacheTTS: atomWithLocalStorage('cacheTTS', true),
+
+  // Account settings
+  UsernameDisplay: atomWithLocalStorage('UsernameDisplay', true),
+
+  // Sidebar feature visibility (beginner/advanced mode)
+  // Each toggle hides/shows one "power user" panel from the unified sidebar.
+  // Defaulting to `true` preserves current behavior for existing users.
+  showSidebarAgentBuilder: atomWithLocalStorage('showSidebarAgentBuilder', true),
+  showSidebarSkills: atomWithLocalStorage('showSidebarSkills', true),
+  showSidebarPrompts: atomWithLocalStorage('showSidebarPrompts', true),
+  showSidebarMemories: atomWithLocalStorage('showSidebarMemories', true),
+  showSidebarBookmarks: atomWithLocalStorage('showSidebarBookmarks', true),
+  showSidebarParameters: atomWithLocalStorage('showSidebarParameters', true),
+  showSidebarMcpBuilder: atomWithLocalStorage('showSidebarMcpBuilder', true),
+  showSidebarFiles: atomWithLocalStorage('showSidebarFiles', true),
+};
+
+export default { ...staticAtoms, ...localStorageAtoms };

@@ -1,0 +1,7 @@
+{
+  "providers": {
+    "ollama": {
+      "enabled": true
+    }
+  }
+}

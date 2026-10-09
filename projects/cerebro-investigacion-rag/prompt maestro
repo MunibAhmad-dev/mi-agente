@@ -1,0 +1,4654 @@
+Face 21-
+
+
+
+MASTER PROMPT V2.0
+UNIVERSAL RESEARCH OS — COMPLETE IMPLEMENTATION SPECIFICATION
+0. INSTRUCCIÓN PRINCIPAL
+Actúa simultáneamente como:
+Principal Software Architect
+AI Systems Engineer
+Research Systems Engineer
+RAG Engineer
+Information Retrieval Engineer
+Knowledge Graph Engineer
+Browser Automation Engineer
+Data Engineer
+ML Engineer
+Security Engineer
+DevOps Engineer
+QA Engineer
+UX/Product Architect
+Tu misión es auditar el repositorio/proyecto actual y convertirlo en un sistema universal de investigación, verificación, conocimiento, RAG, experimentación y auto-mejora.
+NO empieces programando inmediatamente.
+Primero:
+inspecciona completamente el repositorio;
+entiende la arquitectura existente;
+identifica qué ya funciona;
+identifica qué está parcialmente implementado;
+identifica mocks;
+identifica placeholders;
+identifica código muerto;
+identifica duplicaciones;
+identifica dependencias;
+identifica servicios;
+identifica bases de datos;
+identifica APIs;
+identifica problemas de seguridad;
+identifica problemas de rendimiento;
+identifica puntos de integración;
+identifica componentes que pueden reutilizarse.
+Después diseña el plan de implementación.
+REGLA ABSOLUTA
+NO destruyas implementaciones funcionales.
+NO reemplaces una implementación existente simplemente porque otra arquitectura parezca más elegante.
+Primero intenta:
+REUSE
+→ EXTEND
+→ ADAPT
+→ REFACTOR
+→ REPLACE ONLY IF NECESSARY
+
+Cada reemplazo debe estar justificado.
+
+1. OBJETIVO FINAL
+Construir:
+UNIVERSAL RESEARCH, EVIDENCE, KNOWLEDGE & EXPERIMENTATION OS
+El sistema debe poder investigar prácticamente cualquier pregunta y cualquier dominio.
+Debe funcionar para:
+IA;
+LLM;
+programación;
+hardware;
+GPUs;
+CPUs;
+electrónica;
+ciencia;
+matemáticas;
+ingeniería;
+cerámica;
+arte;
+historia;
+anime;
+manga;
+videojuegos;
+películas;
+personajes;
+comunidades de fans;
+noticias;
+política;
+economía;
+productos;
+documentación;
+papers;
+repositorios;
+blogs;
+foros;
+Reddit;
+redes sociales accesibles;
+vídeos;
+podcasts;
+entrevistas;
+wikis;
+Wikipedia;
+documentación oficial;
+comunidades especializadas.
+Debe poder pasar de:
+BUSCAR
+
+a:
+INVESTIGAR
+
+a:
+VERIFICAR
+
+a:
+FORMULAR HIPÓTESIS
+
+a:
+EXPERIMENTAR
+
+cuando corresponda.
+
+2. PRINCIPIO FUNDAMENTAL
+El sistema debe distinguir permanentemente entre:
+FACT
+EVIDENCE
+INFERENCE
+HYPOTHESIS
+SPECULATION
+RUMOR
+UNKNOWN
+CONTRADICTED
+EXPERIMENTALLY VERIFIED
+
+Nunca conviertas automáticamente:
+source → fact
+
+ni:
+many sources → truth
+
+ni:
+high reputation → truth
+
+ni:
+political orientation → truth/falsity
+
+La evidencia debe determinar la conclusión.
+
+3. ARQUITECTURA GLOBAL
+Implementa una arquitectura modular:
+USER
+ │
+ ▼
+INTENT ANALYZER
+ │
+ ▼
+CLARIFICATION ENGINE
+ │
+ ▼
+RESEARCH PROFILE
+ │
+ ▼
+COMPLEXITY / RESOURCE ROUTER
+ │
+ ▼
+RESEARCH ORCHESTRATOR
+ │
+ ├───────────────┬────────────────┬────────────────┐
+ ▼               ▼                ▼                ▼
+WEB             ACADEMIC        SOCIAL          COMMUNITY
+ │               │                │                │
+ └───────────────┴────────────────┴────────────────┘
+                         │
+                         ▼
+                 CONTENT PIPELINE
+                         │
+                         ▼
+                  SOURCE ANALYZER
+                         │
+                         ▼
+                  CLAIM ENGINE
+                         │
+                         ▼
+               SOURCE DEPENDENCY GRAPH
+                         │
+                         ▼
+                   EVIDENCE GRAPH
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+      SUPPORTS       CONTRADICTS     UNKNOWN
+          │              │              │
+          └──────────────┼──────────────┘
+                         ▼
+              MULTI-PERSPECTIVE ENGINE
+                         │
+                         ▼
+                ADVERSARIAL ENGINE
+                         │
+                         ▼
+                RESEARCH GAP ENGINE
+                         │
+               ┌─────────┴─────────┐
+               ▼                   ▼
+         MORE RESEARCH        EXPERIMENT
+               │                   │
+               └─────────┬─────────┘
+                         ▼
+                    VERIFICATION
+                         │
+                         ▼
+                    HYBRID RAG
+                         │
+                         ▼
+              KNOWLEDGE CONSOLIDATION
+                         │
+                         ▼
+                 MEMORY SYSTEM
+                         │
+                         ▼
+                   COMPRESSION
+                         │
+                         ▼
+                    SYNTHESIS
+                         │
+                         ▼
+                  FINAL ANSWER
+                         │
+                         ▼
+                  RESEARCH MEMORY
+                         │
+                         ▼
+                  ACTIVE LEARNING
+
+
+4. SERVICIOS PRINCIPALES
+Define interfaces independientes para:
+IntentService
+ClarificationService
+ResearchPlanner
+ResearchOrchestrator
+SearchProvider
+BrowserProvider
+CrawlerProvider
+DocumentExtractor
+AcademicSearchProvider
+SocialSearchProvider
+MediaProvider
+TranscriptionProvider
+SourceProfiler
+ClaimExtractor
+EvidenceEngine
+DependencyAnalyzer
+BiasAnalyzer
+FactChecker
+ContradictionEngine
+KnowledgeGraph
+EvidenceGraph
+EmbeddingProvider
+RerankerProvider
+VectorStore
+KeywordStore
+RAGEngine
+CompressionProvider
+HypothesisEngine
+ExperimentEngine
+SandboxProvider
+EvaluationEngine
+MemoryManager
+ResourceGovernor
+CacheManager
+CheckpointManager
+PolicyManager
+
+Cada proveedor debe ser reemplazable.
+
+5. RESEARCH ORCHESTRATOR
+Este es el componente central.
+Debe decidir:
+WHAT TO DO
+WHEN TO DO IT
+WHICH TOOL TO USE
+WHICH MODEL TO USE
+HOW MUCH TO SEARCH
+WHEN TO STOP
+WHEN TO VERIFY
+WHEN TO EXPERIMENT
+
+No debe estar codificado con reglas rígidas únicamente.
+Utiliza:
+rules
++
+heuristics
++
+confidence
++
+resource budgets
++
+research history
++
+domain policy
+
+
+6. INTENT ANALYZER
+Clasifica:
+domain
+subdomain
+entities
+question_type
+task_type
+complexity
+freshness_requirement
+verification_requirement
+research_depth
+experiment_requirement
+
+Ejemplos:
+"¿Quién es Twilight Sparkle?"
+
+fiction
+character
+low complexity
+
+"¿Cómo reducir Qwen sin cuantizar?"
+
+AI
+model optimization
+high complexity
+research + experiment
+
+"¿Es verdadera esta noticia?"
+
+news
+fact checking
+high verification
+freshness critical
+
+
+7. ADAPTIVE CLARIFICATION
+Preguntar solamente cuando la respuesta pueda cambiar significativamente el resultado.
+Ejemplo:
+"¿Cómo personalizo un LLM?"
+Preguntar:
+¿Qué quieres personalizar?
+
+- comportamiento
+- conocimiento
+- personalidad
+- estilo
+- herramientas
+- razonamiento
+- código
+
+¿Qué modelo?
+
+- Qwen
+- Llama
+- DeepSeek
+- Mistral
+- otro
+- no lo sé
+
+Si el usuario no responde:
+CONTINÚA.
+Utiliza hipótesis explícitas.
+
+8. RESEARCH PROFILE
+Crear:
+ResearchProfile {
+    id
+    question
+    domain
+    entities
+    task
+    complexity
+    depth
+    freshness
+    source_types
+    required_evidence
+    political_analysis
+    experimentation
+    budget
+    deadline
+}
+
+
+9. COMPLEXITY ROUTER
+Clasifica:
+SIMPLE
+MODERATE
+COMPLEX
+DEEP
+EXPERIMENTAL
+FORENSIC
+
+Ejemplo:
+Pregunta factual sencilla:
+1-5 sources
+
+Pregunta técnica:
+10-30 sources
+
+Investigación compleja:
+multiple research rounds
+
+Forensic:
+source graph
+primary evidence
+contradiction analysis
+adversarial search
+
+Experimental:
+research + experiment loop
+
+Los límites deben ser configurables.
+
+10. RESOURCE GOVERNOR
+Antes de realizar una operación calcula:
+estimated_cpu
+estimated_ram
+estimated_vram
+estimated_disk
+estimated_tokens
+estimated_network
+estimated_runtime
+estimated_cost
+
+Configurable:
+MAX_RAM
+MAX_VRAM
+MAX_DISK
+MAX_RUNTIME
+MAX_PAGES
+MAX_SOURCES
+MAX_TOKENS
+MAX_EXPERIMENTS
+MAX_CONCURRENT_JOBS
+MAX_COST
+
+Usa:
+CHEAPEST SUFFICIENT METHOD
+
+
+11. WEB ENGINE
+Implementa una cascada:
+CACHE
+ ↓
+HTTP FETCH
+ ↓
+TEXT EXTRACTION
+ ↓
+CRAWLER
+ ↓
+BROWSER
+
+No uses navegador para todo.
+Utiliza browser solamente cuando:
+JavaScript sea necesario;
+contenido dinámico;
+interacción;
+navegación;
+formularios;
+contenido generado después de acciones.
+
+12. PROYECTOS OPEN SOURCE A EVALUAR
+DeerFlow
+https://github.com/bytedance/deer-flow
+Evaluar para:
+agentes;
+investigación;
+tareas largas;
+memoria;
+tools;
+sandbox.
+GPT Researcher
+https://github.com/assafelovic/gpt-researcher
+Evaluar para:
+research workflow;
+búsqueda;
+generación de informes.
+STORM
+https://github.com/stanford-oval/storm
+Licencia MIT.
+Evaluar para:
+investigación desde múltiples perspectivas;
+entrevistas simuladas;
+generación de preguntas;
+síntesis.
+Crawl4AI
+https://github.com/unclecode/crawl4ai
+Evaluar para crawling y extracción.
+Trafilatura
+https://github.com/adbar/trafilatura
+Evaluar para extracción ligera de contenido.
+browser-use
+https://github.com/browser-use/browser-use
+Evaluar para navegación real.
+yt-dlp
+https://github.com/yt-dlp/yt-dlp
+Evaluar para adquisición de contenido multimedia públicamente accesible y permitido.
+Whisper
+https://github.com/openai/whisper
+Evaluar para transcripción local.
+sqlite-vec
+https://github.com/asg017/sqlite-vec
+Evaluar para vector storage ligero.
+LanceDB
+https://github.com/lancedb/lancedb
+https://lancedb.github.io/lancedb/
+Evaluar para instalaciones mayores.
+Microsoft GraphRAG
+https://github.com/microsoft/graphrag
+https://microsoft.github.io/graphrag/
+Evaluar solamente cuando el problema necesite GraphRAG.
+LLMLingua
+https://github.com/microsoft/LLMLingua
+Evaluar para compresión de contexto.
+
+13. SOURCE ACQUISITION
+Crear adaptadores para:
+general web
+news
+academic
+GitHub
+forums
+Reddit
+wikis
+fan wikis
+blogs
+manufacturer
+documentation
+video
+audio
+social
+archives
+
+No asumir que todas las fuentes tienen el mismo valor.
+
+14. ACCESO SIN API
+Cuando sea técnicamente posible y legalmente permitido:
+priorizar:
+public HTTP
+public pages
+RSS
+public feeds
+browser access
+open datasets
+public repositories
+
+No diseñar mecanismos para:
+evadir autenticación;
+romper CAPTCHA;
+evadir paywalls;
+robar sesiones;
+acceder a contenido privado;
+eludir controles técnicos.
+Si no se puede acceder:
+ACCESS_LIMITED
+
+y continúa con otras fuentes.
+
+15. UNIVERSAL DOCUMENT
+Implementar:
+UniversalDocument {
+    id
+    canonical_url
+    source_id
+    author
+    publisher
+    title
+    content
+    media
+    language
+    created_at
+    published_at
+    fetched_at
+    extraction_method
+    content_hash
+    metadata
+}
+
+
+16. MULTIMODAL INGESTION
+Aceptar:
+HTML
+PDF
+TXT
+Markdown
+JSON
+CSV
+images
+video
+audio
+social posts
+threads
+comments
+
+Pipeline:
+RAW
+ ↓
+NORMALIZE
+ ↓
+EXTRACT
+ ↓
+SEGMENT
+ ↓
+METADATA
+ ↓
+CLAIMS
+ ↓
+EMBEDDING
+
+
+17. VIDEO KNOWLEDGE
+Representar:
+Video
+ ↓
+audio
+ ↓
+transcript
+ ↓
+timestamp
+ ↓
+segment
+ ↓
+claim
+
+Cada afirmación procedente de vídeo debe poder localizarse en:
+video_id
+timestamp
+transcript_segment
+
+Cuando sea posible:
+OCR
+frames
+visual evidence
+
+
+18. SOURCE PROFILE
+Crear:
+SourceProfile {
+    source_id
+    publisher
+    author
+    type
+    authority
+    historical_accuracy
+    editorial_orientation
+    orientation_confidence
+    bias
+    bias_confidence
+    citation_quality
+    correction_history
+    originality
+    independence
+    ownership
+    funding
+    conflicts_of_interest
+    freshness
+}
+
+
+19. POLITICAL ANALYSIS
+Clasificar:
+left
+center-left
+center
+center-right
+right
+unknown
+mixed
+
+Pero también:
+economic
+social
+cultural
+foreign_policy
+editorial
+partisan
+
+Nunca utilizar:
+left = false
+right = false
+
+La orientación política es CONTEXTO.
+No es evidencia de falsedad.
+
+20. ARTICLE BIAS
+Analizar individualmente:
+loaded_language
+emotional_language
+omissions
+framing
+sensationalism
+source_selection
+citation_quality
+balance
+counterarguments
+
+Una publicación puede tener una orientación política determinada y un artículo concreto ser equilibrado.
+
+21. CLAIM EXTRACTION
+Extraer afirmaciones atómicas.
+Ejemplo:
+C1:
+X ocurrió.
+
+C2:
+X ocurrió en 2025.
+
+C3:
+X causó Y.
+
+Modelo:
+Claim {
+    id
+    subject
+    predicate
+    object
+    time
+    location
+    modality
+    source_ids
+    evidence_ids
+    confidence
+    status
+}
+
+
+22. EVIDENCE LEVEL
+Utilizar:
+E0 = unsupported
+E1 = single secondary source
+E2 = dependent repetition
+E3 = independent corroboration
+E4 = primary evidence
+E5 = direct/experimental verification
+
+
+23. SOURCE DEPENDENCY
+Detectar:
+copied_from
+derived_from
+cites
+quotes
+references
+same_original_source
+same_document
+same_image
+same_video
+same_wording
+
+Ejemplo:
+A
+ ↓
+B
+ ↓
+C
+ ↓
+D
+
+No contar A+B+C+D como cuatro evidencias independientes.
+
+24. SOURCE LAUNDERING
+Detectar:
+apparent consensus
+vs
+actual independent evidence
+
+Mostrar:
+20 apparent sources
+3 independent sources
+1 primary source
+
+
+25. WIKIPEDIA / WIKI AUDITOR
+Nunca tratar una wiki como autoridad automática.
+Pipeline:
+claim
+ ↓
+citation
+ ↓
+original citation
+ ↓
+verify citation meaning
+ ↓
+primary source
+ ↓
+independent sources
+ ↓
+revision history
+ ↓
+disputes
+
+Detectar:
+citation mismatch
+unsupported claim
+citation inflation
+edit wars
+poor sourcing
+secondary-source loops
+
+
+26. MULTI-PERSPECTIVE ENGINE
+Crear perspectivas adaptativas.
+News:
+local
+international
+left
+center
+right
+government
+opposition
+academic
+legal
+economic
+primary
+
+AI:
+paper
+developer
+manufacturer
+benchmark
+GitHub
+community
+critic
+practitioner
+
+Ceramics:
+academic
+historical
+museum
+master practitioner
+technical
+community
+
+Anime:
+official
+original source
+episode
+database
+wiki
+fan
+community
+interview
+
+No todas las perspectivas deben utilizarse siempre.
+
+27. ADVERSARIAL ENGINE
+Crear agentes lógicos:
+SUPPORTER
+CHALLENGER
+SKEPTIC
+SOURCE AUDITOR
+JUDGE
+
+Supporter:
+busca evidencia favorable.
+Challenger:
+busca evidencia contraria.
+Skeptic:
+busca errores.
+Source Auditor:
+audita las fuentes.
+Judge:
+sintetiza según evidencia.
+No decidir por mayoría de agentes.
+
+28. CONTRADICTION ENGINE
+Detectar:
+direct contradiction
+partial contradiction
+temporal contradiction
+contextual contradiction
+definition mismatch
+source disagreement
+
+Ejemplo:
+Source A:
+X occurred in 2024.
+
+Source B:
+X occurred in 2025.
+
+No seleccionar automáticamente una.
+Buscar:
+primary evidence
+dates
+context
+definitions
+
+
+29. RESEARCH GAP ENGINE
+Después de cada ronda:
+WHAT DON'T WE KNOW?
+
+Detectar:
+missing source
+missing primary evidence
+contradiction
+unknown date
+unknown author
+unverified claim
+insufficient sample
+
+Crear nuevas tareas automáticamente.
+
+30. STOP ENGINE
+La investigación se detiene cuando:
+evidence_sufficiency
++
+source_independence
++
+primary_evidence
++
+contradiction_resolution
++
+freshness
++
+coverage
+
+superen los thresholds del dominio.
+Nunca investigar indefinidamente.
+
+31. CONFIDENCE ENGINE
+No utilizar solamente un número.
+Calcular:
+confidence
+evidence_quality
+source_quality
+independence
+primary_evidence
+freshness
+contradiction
+bias_risk
+
+Ejemplo:
+Confidence: 87/100
+
+Evidence: 91
+Source Quality: 84
+Independence: 88
+Primary Evidence: 93
+Freshness: 97
+Contradiction: Low
+Bias Risk: Medium
+
+
+32. CONFIDENCE HISTORY
+Guardar:
+initial_confidence
+updated_confidence
+reason
+evidence_that_changed_it
+timestamp
+
+Ejemplo:
+95
+ ↓
+primary contradiction
+ ↓
+62
+ ↓
+new evidence
+ ↓
+81
+
+
+33. DEVIL'S ADVOCATE
+Cuando:
+confidence > threshold
+
+activar:
+CHALLENGE MODE
+
+Preguntar:
+What would prove us wrong?
+
+Buscar activamente esa evidencia.
+
+34. FACT CHECKING
+El sistema debe verificar:
+claim
+source
+date
+location
+identity
+quote
+statistics
+image
+video
+context
+
+Siempre diferenciar:
+TRUE
+MOSTLY_TRUE
+PARTIALLY_TRUE
+MISLEADING
+UNVERIFIED
+FALSE
+CONTRADICTED
+
+No forzar una clasificación cuando la evidencia no sea suficiente.
+
+35. HYBRID RAG
+Implementar:
+VECTOR SEARCH
++
+BM25 / KEYWORD SEARCH
++
+ENTITY SEARCH
++
+CLAIM SEARCH
++
+GRAPH SEARCH
+
+Después:
+RERANK
+ ↓
+EVIDENCE FILTER
+ ↓
+CONTEXT BUILDER
+ ↓
+COMPRESSION
+ ↓
+LLM
+
+
+36. RETRIEVAL ROUTER
+Decidir qué recuperación usar.
+Ejemplo:
+exact fact
+→ keyword
+
+semantic question
+→ vector
+
+entity relationship
+→ graph
+
+controversial claim
+→ evidence graph
+
+technical specification
+→ keyword + primary source
+
+complex research
+→ hybrid
+
+
+37. RAG MEMORY LAYERS
+Separar:
+RAW MEMORY
+
+documentos originales.
+EVIDENCE MEMORY
+
+claims + evidence.
+KNOWLEDGE MEMORY
+
+conocimiento consolidado.
+WORKING MEMORY
+
+contexto de investigación actual.
+
+38. KNOWLEDGE GRAPH
+Entidades:
+Person
+Organization
+Product
+Model
+Event
+Location
+Document
+Claim
+Source
+Experiment
+Hypothesis
+
+Relaciones:
+created
+owns
+uses
+supports
+contradicts
+cites
+derived_from
+related_to
+verified_by
+
+
+39. EVIDENCE GRAPH
+Debe ser independiente del Knowledge Graph.
+Representar:
+SOURCE
+ ↓
+DOCUMENT
+ ↓
+CLAIM
+ ↓
+EVIDENCE
+ ↓
+VERIFICATION
+
+y:
+CLAIM
+ ├── SUPPORTS
+ ├── CONTRADICTS
+ ├── QUALIFIES
+ └── UNKNOWN
+
+
+40. KNOWLEDGE CONSOLIDATION
+Convertir:
+1000 documents
+
+en:
+entities
+claims
+facts
+relationships
+summaries
+source profiles
+
+Eliminar duplicación semántica.
+No eliminar RAW.
+
+41. DEDUPLICATION
+Detectar:
+exact duplicates
+near duplicates
+syndicated articles
+copied articles
+same video
+same claim
+same source
+
+Guardar hashes:
+content_hash
+semantic_hash
+source_hash
+embedding_hash
+
+
+42. KNOWLEDGE FRESHNESS
+Guardar:
+created_at
+updated_at
+verified_at
+expires_at
+freshness_score
+
+Clasificar conocimiento:
+STATIC
+SLOW_CHANGING
+DYNAMIC
+VERY_DYNAMIC
+BREAKING
+
+
+43. RESEARCH MEMORY
+Guardar:
+question
+plan
+queries
+sources
+claims
+evidence
+contradictions
+experiments
+results
+answer
+evaluation
+failed_strategies
+successful_strategies
+
+
+44. CONTEXT COMPRESSION
+Pipeline:
+RAW
+ ↓
+CLEAN
+ ↓
+DEDUP
+ ↓
+RELEVANCE
+ ↓
+CLAIM EXTRACTION
+ ↓
+EVIDENCE RANKING
+ ↓
+SEMANTIC COMPRESSION
+ ↓
+PROMPT COMPRESSION
+
+No confundir:
+storage compression
+semantic compression
+context compression
+
+
+45. LLMLINGUA
+Evaluar:
+https://github.com/microsoft/LLMLingua
+Utilizarlo principalmente para reducir contexto/prompt cuando sea apropiado.
+No asumir que:
+20x
+
+significa que el almacenamiento total se reduce siempre 20x.
+Medir realmente:
+original tokens
+compressed tokens
+compression ratio
+information retention
+answer quality
+
+
+46. COMPRESIÓN DE ALMACENAMIENTO
+Implementar diferentes niveles:
+L0 RAW
+L1 CLEAN
+L2 DEDUP
+L3 STRUCTURED
+L4 KNOWLEDGE
+L5 SUMMARY
+
+Calcular:
+original_size
+deduplicated_size
+structured_size
+knowledge_size
+summary_size
+
+Ejemplo:
+1 GB RAW
+ ↓
+900 MB CLEAN
+ ↓
+600 MB DEDUP
+ ↓
+250 MB STRUCTURED
+ ↓
+80 MB KNOWLEDGE
+ ↓
+20 MB SUMMARY
+
+NO inventar ratios.
+Los ratios deben medirse con datasets reales.
+
+47. COMPRESSION BENCHMARK
+Crear herramienta:
+benchmark_compression(dataset)
+
+Salida:
+input_size
+output_size
+compression_ratio
+token_reduction
+retrieval_recall
+factual_retention
+claim_retention
+answer_quality
+
+
+48. HYPOTHESIS ENGINE
+Para problemas abiertos:
+Research
+ ↓
+Gap
+ ↓
+Hypothesis
+
+Crear:
+H1
+H2
+H3
+H4
+
+Cada hipótesis:
+statement
+assumptions
+supporting_evidence
+contradicting_evidence
+confidence
+testability
+predicted_outcome
+experiment_plan
+
+
+49. EXPERIMENT ENGINE
+Debe poder crear:
+experiment
+environment
+configuration
+dataset
+code
+benchmark
+metrics
+artifact
+result
+
+
+50. EJEMPLO: REDUCIR LLM SIN CUANTIZAR
+Si el usuario pregunta:
+"¿Cómo hacer este modelo más pequeño sin cuantizar?"
+El sistema debe investigar:
+pruning
+structured pruning
+unstructured pruning
+layer removal
+width reduction
+depth reduction
+expert pruning
+parameter sharing
+low-rank factorization
+distillation
+vocabulary reduction
+architecture modification
+
+Después:
+MODEL AUDIT
+ ↓
+ARCHITECTURE
+ ↓
+PARAMETERS
+ ↓
+MEMORY
+ ↓
+COMPUTE
+ ↓
+BOTTLENECKS
+ ↓
+RESEARCH
+ ↓
+HYPOTHESES
+ ↓
+EXPERIMENTS
+
+
+51. EXPERIMENT SANDBOX
+Todo experimento debe ejecutarse aislado.
+Nunca proporcionar acceso ilimitado al host.
+Controlar:
+CPU
+RAM
+GPU
+VRAM
+disk
+network
+processes
+runtime
+
+Permitir:
+create
+run
+pause
+resume
+cancel
+rollback
+
+
+52. EXPERIMENT REPRODUCIBILITY
+Guardar:
+git_commit
+dependencies
+versions
+OS
+hardware
+GPU
+driver
+CUDA
+dataset_hash
+configuration
+random_seed
+code_hash
+
+
+53. FAILURE MEMORY
+Guardar experimentos fallidos.
+Ejemplo:
+H17
+REJECTED
+
+Technique:
+layer pruning
+
+Result:
+quality degradation > threshold
+
+No repetir inútilmente.
+
+54. RESEARCH + EXPERIMENT PARALLELISM
+Permitir:
+RESEARCH TRACK
+       +
+EXPERIMENT TRACK
+
+en paralelo cuando los recursos lo permitan.
+Después:
+research evidence
++
+experimental evidence
+
+se combinan.
+
+55. RESOURCE SCHEDULER
+Prioridad:
+CACHE
+LOCAL KNOWLEDGE
+CHEAP SEARCH
+HTTP
+LIGHT MODEL
+RERANKER
+BROWSER
+LARGE MODEL
+EXPERIMENT
+
+Utilizar GPU únicamente cuando aporte valor.
+
+56. MULTI-LLM ROUTER
+Separar:
+planner_model
+search_model
+extractor_model
+embedding_model
+reranker_model
+research_model
+verifier_model
+synthesis_model
+experiment_model
+
+Cada uno puede ser distinto.
+Permitir:
+local models
+remote APIs
+fallback models
+
+
+57. MODEL SELECTION
+El router debe considerar:
+quality
+latency
+RAM
+VRAM
+context_length
+cost
+task_type
+availability
+
+Ejemplo:
+simple extraction
+→ small local model
+
+complex synthesis
+→ stronger model
+
+embedding
+→ embedding model
+
+classification
+→ small classifier
+
+
+58. CACHE ENGINE
+Cachear:
+URL
+document
+search result
+embedding
+claim
+source profile
+research plan
+research result
+experiment
+
+Utilizar:
+TTL
+content_hash
+etag
+last_modified
+
+cuando estén disponibles.
+
+59. CHECKPOINT SYSTEM
+Crear checkpoints:
+RESEARCH_STARTED
+SEARCH_COMPLETED
+SOURCES_COLLECTED
+CLAIMS_EXTRACTED
+EVIDENCE_BUILT
+VERIFICATION_COMPLETED
+EXPERIMENT_STARTED
+EXPERIMENT_COMPLETED
+ANSWER_GENERATED
+
+Si algo falla:
+RESUME FROM LAST VALID CHECKPOINT
+
+
+60. FAILURE RECOVERY
+Debe sobrevivir a:
+LLM failure
+browser failure
+network failure
+database failure
+GPU failure
+experiment failure
+source unavailable
+parser failure
+timeout
+
+No perder toda la investigación.
+
+61. SECURITY
+Todo contenido externo debe considerarse:
+UNTRUSTED DATA
+
+Proteger contra:
+prompt injection
+indirect prompt injection
+malicious documents
+malicious PDFs
+SSRF
+unsafe URLs
+arbitrary code
+credential extraction
+data exfiltration
+
+Una página web NO puede modificar:
+system prompt
+credentials
+permissions
+tools
+filesystem
+environment variables
+
+
+62. SANDBOX
+Separar:
+Research Runtime
+Browser Runtime
+Experiment Runtime
+Database
+Secrets
+Host
+
+El experimento no debe poder acceder a secretos salvo autorización explícita.
+
+63. PROVENANCE
+Cada respuesta importante debe poder reconstruirse hasta:
+ANSWER
+ ↓
+CLAIM
+ ↓
+EVIDENCE
+ ↓
+DOCUMENT
+ ↓
+SOURCE
+ ↓
+ORIGINAL SOURCE
+
+
+64. ANSWER AUDIT
+Cada respuesta debe poder responder:
+Why do we believe this?
+What sources support it?
+What contradicts it?
+How independent are the sources?
+What is inferred?
+What remains unknown?
+
+
+65. "WHY SHOULD I BELIEVE THIS?"
+Implementar vista:
+WHY SHOULD I BELIEVE THIS?
+
+Evidence: 91
+Source reliability: 84
+Independence: 88
+Primary evidence: 93
+Freshness: 97
+Contradiction: Low
+Bias risk: Medium
+
+
+66. "WHAT COULD MAKE THIS WRONG?"
+Mostrar:
+missing primary source
+conflicting evidence
+old data
+weak source
+dependent sources
+unknown context
+
+
+67. RESEARCH MODES
+Implementar:
+QUICK
+STANDARD
+DEEP
+FORENSIC
+EXPERIMENTAL
+
+QUICK
+Pocas fuentes.
+STANDARD
+Múltiples fuentes.
+DEEP
+Investigación multietapa.
+FORENSIC
+Provenance + claims + contradictions + primary evidence.
+EXPERIMENTAL
+Research + hypothesis + sandbox.
+
+68. DOMAIN POLICIES
+Crear políticas por dominio.
+Ejemplo:
+NEWS
+priority:
+primary + independent journalism
+
+AI
+priority:
+papers + technical docs + GitHub + benchmarks
+
+HARDWARE
+priority:
+manufacturer + technical documentation + independent benchmarks
+
+CERAMICS
+priority:
+academic + historical + practitioner + community
+
+ANIME
+priority:
+original source + official + episode + reliable database + community
+
+Las políticas deben ser configurables.
+
+69. SOURCE DIVERSITY
+Medir:
+source_type_diversity
+geographic_diversity
+political_diversity
+institutional_diversity
+independence
+
+Pero no buscar diversidad artificial si no aporta evidencia.
+
+70. NEWS ENGINE
+Para noticias:
+discover event
+ ↓
+identify original claim
+ ↓
+search multiple outlets
+ ↓
+search opposing editorial perspectives
+ ↓
+search local sources
+ ↓
+search primary documents
+ ↓
+fact check
+ ↓
+detect copied reporting
+ ↓
+compare versions
+ ↓
+identify uncertainty
+
+
+71. POLITICAL BIAS ENGINE
+No utilizar orientación para decidir verdad.
+Utilizarla para:
+identify framing
+find missing perspective
+search opposing coverage
+detect selective omission
+
+
+72. SOCIAL INFORMATION ENGINE
+Cuando existan fuentes públicas accesibles:
+extraer:
+post
+author
+timestamp
+text
+thread
+comments
+links
+media
+transcript
+
+Conservar provenance.
+
+73. COMMUNITY KNOWLEDGE
+No descartar comunidades automáticamente.
+Para comunidades:
+experience
+expertise
+consensus
+counterexamples
+anecdotes
+
+separados.
+Ejemplo:
+Community consensus = strong
+Scientific evidence = weak
+
+No convertir automáticamente uno en otro.
+
+74. EXPERTISE DETECTION
+Cuando sea posible evaluar:
+author background
+technical experience
+citations
+track record
+demonstrated knowledge
+
+No confundir:
+follower count
+views
+likes
+
+con expertise.
+
+75. TEMPORAL REASONING
+El sistema debe entender:
+before
+after
+during
+since
+until
+historically
+currently
+formerly
+
+No utilizar información actual para explicar automáticamente acontecimientos históricos.
+
+76. ENTITY RESOLUTION
+Detectar que:
+"RTX 5090"
+"NVIDIA GeForce RTX 5090"
+
+pueden ser la misma entidad.
+Igualmente:
+person aliases
+company names
+model names
+character aliases
+
+
+77. KNOWLEDGE VERSIONING
+Guardar:
+knowledge_version
+source_version
+claim_version
+
+Permitir comparar:
+WHAT DID WE KNOW THEN?
+WHAT DO WE KNOW NOW?
+WHAT CHANGED?
+
+
+78. SELF-EVALUATION
+Después de cada investigación:
+factuality
+citation_accuracy
+citation_completeness
+source_quality
+independence
+coverage
+contradiction_handling
+freshness
+hallucination
+reasoning_quality
+
+
+79. RESEARCH SCORE
+Crear:
+ResearchScore {
+    factuality
+    evidence
+    source_quality
+    independence
+    coverage
+    freshness
+    contradiction_handling
+    efficiency
+}
+
+
+80. ACTIVE LEARNING
+Después de cada investigación:
+What worked?
+What failed?
+Which source was useful?
+Which query was useful?
+Which strategy failed?
+Which model worked?
+Which model failed?
+
+Guardar como:
+ResearchPolicy
+
+
+81. SELF-IMPROVEMENT
+El sistema puede mejorar:
+query generation
+source ranking
+model routing
+retrieval
+reranking
+research stopping
+hypothesis generation
+resource allocation
+
+Pero:
+NO permitir auto-modificación arbitraria del código de producción.
+Toda modificación debe pasar por:
+proposal
+evaluation
+test
+benchmark
+approval
+deployment
+rollback
+
+
+82. RESEARCH STRATEGY MEMORY
+Aprender estrategias:
+AI research:
+papers + GitHub + benchmarks
+
+Hardware:
+manufacturer + independent benchmarks + community
+
+News:
+primary + local + independent + opposing perspectives
+
+
+83. DASHBOARD
+Crear vistas:
+Research
+Sources
+Claims
+Evidence
+Knowledge
+RAG
+Memory
+Compression
+Experiments
+Hypotheses
+Models
+Resources
+Logs
+Security
+
+
+84. RESEARCH GRAPH VIEW
+Visualizar:
+Question
+ ↓
+Sources
+ ↓
+Documents
+ ↓
+Claims
+ ↓
+Evidence
+ ↓
+Contradictions
+ ↓
+Conclusion
+
+
+85. SOURCE EXPLORER
+Desde un claim permitir:
+open source
+open original
+open citation
+show source profile
+show bias
+show dependency
+show contradictions
+show evidence
+
+
+86. RESEARCH TIMELINE
+Mostrar:
+Search
+Source
+Claim
+Contradiction
+Verification
+Hypothesis
+Experiment
+Result
+Conclusion
+
+
+87. RESOURCE MONITOR
+Mostrar:
+CPU
+RAM
+VRAM
+GPU
+Disk
+Network
+Tokens
+Latency
+Cost
+
+por investigación.
+
+88. API
+Diseñar APIs internas para:
+POST /research
+GET /research/:id
+POST /research/:id/continue
+POST /research/:id/verify
+GET /research/:id/sources
+GET /research/:id/claims
+GET /research/:id/evidence
+GET /research/:id/graph
+POST /research/:id/experiment
+GET /knowledge
+POST /knowledge/search
+POST /rag/query
+GET /compression/stats
+
+Adaptar al framework existente.
+
+89. EVENT BUS
+Utilizar eventos internos:
+ResearchStarted
+SearchStarted
+SourceFound
+DocumentIngested
+ClaimExtracted
+EvidenceAdded
+ContradictionDetected
+HypothesisCreated
+ExperimentStarted
+ExperimentFinished
+ConfidenceUpdated
+ResearchCompleted
+
+Esto permite desacoplar servicios.
+
+90. DATABASE
+Crear tablas equivalentes a:
+research_sessions
+research_tasks
+sources
+source_profiles
+documents
+document_chunks
+claims
+evidence
+evidence_relations
+source_relations
+entities
+entity_relations
+experiments
+hypotheses
+experiment_results
+embeddings
+memories
+knowledge
+compression_runs
+evaluation_runs
+checkpoints
+events
+
+Adaptar al almacenamiento existente cuando sea adecuado.
+
+91. INDEXING
+Crear índices para:
+source_id
+document_id
+claim_id
+entity_id
+timestamp
+content_hash
+canonical_url
+embedding
+
+Optimizar según workload real.
+
+92. VECTOR DATABASE
+Evaluar primero:
+https://github.com/asg017/sqlite-vec
+Si no es suficiente:
+https://github.com/lancedb/lancedb
+No introducir infraestructura pesada sin necesidad.
+
+93. GRAPH DATABASE
+No introducir Neo4j u otro sistema pesado automáticamente.
+Primero evaluar:
+SQLite
+relational graph tables
+embedded graph representation
+
+Sólo usar una base gráfica dedicada cuando realmente sea necesario.
+
+94. LIGHTWEIGHT-FIRST
+Preferencia:
+SQLite
+local filesystem
+embedded vector search
+small models
+CPU
+cache
+
+antes que:
+distributed database
+large GPU
+heavy infrastructure
+
+cuando ambos resuelvan el problema.
+
+95. TESTING
+Crear:
+unit
+integration
+E2E
+security
+RAG
+retrieval
+source
+research
+compression
+experiment
+performance
+
+
+96. TEST DE FUENTES DEPENDIENTES
+Simular:
+A original
+B copies A
+C copies B
+D cites C
+E cites D
+
+Esperado:
+independent evidence = 1
+
+
+97. TEST DE WIKIPEDIA
+Simular:
+wiki claim
+ ↓
+citation
+ ↓
+citation doesn't support claim
+
+Esperado:
+citation mismatch detected
+confidence reduced
+
+
+98. TEST POLÍTICO
+Simular:
+left source
+right source
+neutral source
+primary source
+
+No seleccionar automáticamente por orientación.
+
+99. TEST DE CONTRADICCIÓN
+Simular:
+source A → TRUE
+source B → FALSE
+
+Esperado:
+conflict detected
+new research generated
+primary source search
+
+
+100. TEST DE EXPERIMENTACIÓN
+Simular:
+hypothesis
+ ↓
+experiment
+ ↓
+failure
+
+Esperado:
+hypothesis rejected
+result stored
+knowledge updated
+
+
+101. TEST DE RECUPERACIÓN
+Interrumpir:
+browser
+LLM
+database
+GPU
+network
+
+La investigación debe poder continuar desde checkpoint.
+
+102. TEST DE COMPRESIÓN
+Utilizar datasets:
+10 MB
+100 MB
+1 GB
+10 GB
+100 GB
+
+cuando los recursos lo permitan.
+Medir realmente:
+compression ratio
+retrieval quality
+factual retention
+claim retention
+
+No inventar resultados.
+
+103. BENCHMARK
+Crear benchmark interno:
+Question Answering
+Fact Checking
+Research
+RAG
+Source Verification
+Citation Accuracy
+Contradiction Detection
+Compression
+Experimentation
+
+
+104. COMPARACIÓN CON OTROS SISTEMAS
+Preparar infraestructura para comparar:
+our system
+GPT
+Grok
+Claude
+DeepSeek
+other models
+
+Pero comparar mediante tareas reproducibles.
+Métricas:
+accuracy
+research depth
+source diversity
+citation correctness
+citation completeness
+time
+tokens
+RAM
+VRAM
+cost
+
+
+105. AUDIT MODE
+Crear un modo:
+FORENSIC AUDIT
+
+que permita inspeccionar:
+why answer
+why source
+why confidence
+why stopped
+why model
+why experiment
+
+
+106. TRANSPARENCY
+Nunca ocultar:
+uncertainty
+missing evidence
+conflicting evidence
+source limitations
+access limitations
+
+
+107. NO HALLUCINATION POLICY
+Si no existe evidencia suficiente:
+I don't have enough evidence to conclude this.
+
+No inventar.
+Si existe una hipótesis:
+marcarla como:
+HYPOTHESIS
+
+
+108. FINAL ANSWER GENERATOR
+El generador debe adaptar la respuesta al usuario.
+Modo simple:
+answer
+short explanation
+sources
+
+Modo research:
+answer
+evidence
+sources
+uncertainty
+
+Modo forensic:
+claims
+sources
+dependencies
+contradictions
+evidence
+confidence
+
+Modo experimental:
+hypothesis
+experiment
+results
+limitations
+conclusion
+
+
+109. FINAL RESPONSE DATA MODEL
+ResearchAnswer {
+    conclusion
+    confidence
+    claims
+    evidence
+    sources
+    contradictions
+    uncertainties
+    hypotheses
+    experiments
+    provenance
+}
+
+
+110. OBSERVABILITY
+Implementar:
+structured logs
+metrics
+traces
+research events
+resource metrics
+errors
+
+Cada investigación debe tener:
+research_id
+
+
+111. COST / RESOURCE REPORT
+Al finalizar:
+Sources searched
+Documents processed
+Claims extracted
+Tokens used
+CPU time
+RAM peak
+VRAM peak
+Disk used
+Network used
+Experiments
+Total runtime
+
+
+112. IMPLEMENTATION STRATEGY
+Implementar por fases:
+PHASE 0
+Full repository audit.
+PHASE 1
+Architecture foundation.
+PHASE 2
+Universal document model.
+PHASE 3
+Web acquisition.
+PHASE 4
+Research orchestrator.
+PHASE 5
+Source profiling.
+PHASE 6
+Claim engine.
+PHASE 7
+Evidence graph.
+PHASE 8
+Dependency detection.
+PHASE 9
+Multi-perspective research.
+PHASE 10
+Adversarial research.
+PHASE 11
+Hybrid RAG.
+PHASE 12
+Knowledge graph.
+PHASE 13
+Memory.
+PHASE 14
+Compression.
+PHASE 15
+Hypothesis engine.
+PHASE 16
+Experiment sandbox.
+PHASE 17
+Evaluation.
+PHASE 18
+Dashboard.
+PHASE 19
+Active learning.
+PHASE 20
+Full integration.
+
+113. DEFINITION OF DONE
+Una fase NO está terminada si:
+only mock exists
+only placeholder exists
+endpoint returns fake data
+UI exists without backend
+backend exists without real integration
+tests are fake
+
+Una fase está terminada solamente cuando:
+implemented
+integrated
+tested
+documented
+observable
+recoverable
+secure
+
+
+114. DOCUMENTATION
+Crear:
+ARCHITECTURE.md
+RESEARCH_ENGINE.md
+RAG.md
+EVIDENCE_ENGINE.md
+SOURCE_ENGINE.md
+EXPERIMENT_ENGINE.md
+SECURITY.md
+DATABASE.md
+API.md
+RESOURCE_MODEL.md
+COMPRESSION.md
+TESTING.md
+OPERATIONS.md
+
+
+115. LICENSE AUDIT
+Para cada dependencia:
+name
+version
+license
+repository
+purpose
+compatibility
+
+Priorizar:
+MIT
+Apache-2.0
+BSD
+MPL-compatible
+
+No asumir que un proyecto es permisivo sin verificar su licencia actual.
+
+116. DEPENDENCY AUDIT
+Verificar:
+license
+security
+maintenance
+last update
+dependencies
+resource usage
+architecture
+
+No integrar una dependencia únicamente por popularidad.
+
+117. PERFORMANCE
+Optimizar:
+latency
+memory
+network
+tokens
+disk
+GPU
+
+Medir antes y después.
+
+118. AUTO-OPTIMIZATION
+El sistema debe poder descubrir:
+this query strategy is inefficient
+this source is low value
+this model is unnecessary
+this browser operation can be replaced by HTTP
+this context is redundant
+this document is duplicate
+
+y mejorar su estrategia.
+
+119. RESEARCH POLICY ENGINE
+Crear políticas dinámicas:
+domain
+task
+source ranking
+query strategy
+model routing
+resource budget
+stop condition
+
+
+120. META-RESEARCH
+El sistema puede investigar sobre su propio funcionamiento.
+Ejemplo:
+"¿Por qué esta investigación está tardando tanto?"
+Debe analizar:
+queries
+sources
+models
+browser
+RAG
+reranking
+
+y proponer:
+optimization
+
+
+121. SELF-CRITIQUE
+Antes de finalizar:
+Did I answer the question?
+Did I verify important claims?
+Did I use independent evidence?
+Did I miss primary sources?
+Did I confuse repetition with evidence?
+Did I overstate confidence?
+Did I distinguish fact from inference?
+Did I check contradictory evidence?
+
+
+122. FINAL QUALITY GATE
+No entregar la investigación hasta pasar:
+SOURCE QUALITY CHECK
+CLAIM CHECK
+EVIDENCE CHECK
+DEPENDENCY CHECK
+CONTRADICTION CHECK
+FRESHNESS CHECK
+CONFIDENCE CHECK
+CITATION CHECK
+HALLUCINATION CHECK
+
+
+123. IMPORTANT DESIGN RULE
+El sistema debe ser capaz de decir:
+I DON'T KNOW
+
+y:
+THERE IS NOT ENOUGH EVIDENCE
+
+cuando corresponda.
+Esto es una característica, no un fallo.
+
+124. SEGUNDA REGLA FUNDAMENTAL
+Nunca utilizar:
+political orientation
+source popularity
+number of repetitions
+authority score
+
+como sustitutos de evidencia.
+
+125. TERCERA REGLA FUNDAMENTAL
+La cantidad de fuentes no debe medirse únicamente como:
+number_of_sources
+
+sino como:
+independent_sources
+primary_sources
+source_diversity
+evidence_quality
+
+
+126. CUARTA REGLA FUNDAMENTAL
+Cada afirmación importante debe poder rastrearse:
+ANSWER
+ ↓
+CLAIM
+ ↓
+EVIDENCE
+ ↓
+DOCUMENT
+ ↓
+SOURCE
+ ↓
+ORIGINAL SOURCE
+
+
+127. QUINTA REGLA FUNDAMENTAL
+El sistema debe distinguir:
+WHAT IT FOUND
+WHAT IT VERIFIED
+WHAT IT INFERRED
+WHAT IT HYPOTHESIZED
+WHAT IT EXPERIMENTALLY TESTED
+WHAT IT DOES NOT KNOW
+
+
+128. ORDEN DE IMPLEMENTACIÓN DEL AGENTE
+Cuando recibas este prompt:
+PASO 1
+Audita el repositorio.
+PASO 2
+Produce un mapa completo de arquitectura.
+PASO 3
+Identifica qué componentes existentes pueden reutilizarse.
+PASO 4
+Identifica gaps.
+PASO 5
+Construye un dependency graph.
+PASO 6
+Diseña interfaces.
+PASO 7
+Diseña base de datos.
+PASO 8
+Implementa infraestructura.
+PASO 9
+Implementa componentes por fases.
+PASO 10
+Integra.
+PASO 11
+Ejecuta tests.
+PASO 12
+Realiza pruebas reales.
+PASO 13
+Mide recursos.
+PASO 14
+Corrige problemas.
+PASO 15
+Realiza auditoría final.
+PASO 16
+Documenta.
+
+129. NO HACER
+NO:
+rewrite entire repository
+delete working code
+invent APIs
+invent test results
+invent compression ratios
+invent source reliability
+invent citations
+invent successful experiments
+claim completion without testing
+
+
+130. SI ENCUENTRAS UNA LIMITACIÓN
+No ocultarla.
+Reportar:
+LIMITATION
+CAUSE
+IMPACT
+WORKAROUND
+ALTERNATIVE
+FUTURE SOLUTION
+
+
+131. RESULTADO FINAL ESPERADO
+El proyecto debe terminar siendo:
+A UNIVERSAL RESEARCH OS
+
+capaz de:
+SEARCH
+CRAWL
+BROWSE
+READ
+TRANSCRIBE
+CLASSIFY
+PROFILE SOURCES
+ANALYZE BIAS
+EXTRACT CLAIMS
+TRACE PROVENANCE
+DETECT DEPENDENCIES
+COMPARE SOURCES
+FIND CONTRADICTIONS
+VERIFY FACTS
+SEARCH OPPOSING EVIDENCE
+FIND RESEARCH GAPS
+GENERATE HYPOTHESES
+RUN EXPERIMENTS
+LEARN FROM RESULTS
+BUILD KNOWLEDGE
+STORE MEMORY
+RETRIEVE KNOWLEDGE
+COMPRESS CONTEXT
+ANSWER
+CITE
+EXPLAIN CONFIDENCE
+AND REMEMBER
+
+
+132. PRINCIPIO FINAL
+No construyas:
+SEARCH → LLM → ANSWER
+
+Construye:
+QUESTION
+ ↓
+UNDERSTAND
+ ↓
+PLAN
+ ↓
+SEARCH
+ ↓
+READ
+ ↓
+COMPARE
+ ↓
+TRACE
+ ↓
+VERIFY
+ ↓
+CHALLENGE
+ ↓
+FIND GAPS
+ ↓
+RESEARCH AGAIN
+ ↓
+HYPOTHESIZE
+ ↓
+EXPERIMENT
+ ↓
+VERIFY AGAIN
+ ↓
+CONSOLIDATE
+ ↓
+RETRIEVE
+ ↓
+COMPRESS
+ ↓
+SYNTHESIZE
+ ↓
+EXPLAIN
+ ↓
+REMEMBER
+ ↓
+LEARN
+
+La propiedad principal del sistema debe ser:
+NO SABER SOLAMENTE ENCONTRAR INFORMACIÓN, SINO SABER CUÁNTA CONFIANZA MERECE ESA INFORMACIÓN Y POR QUÉ.
+La segunda:
+NO CONFUNDIR REPETICIÓN CON CORROBORACIÓN.
+La tercera:
+NO CONFUNDIR ORIENTACIÓN POLÍTICA CON VERACIDAD.
+La cuarta:
+NO CONFUNDIR INFERENCIA CON HECHO.
+La quinta:
+NO CONFUNDIR UNA HIPÓTESIS CON UNA CONCLUSIÓN.
+La sexta:
+NO CONFUNDIR UN EXPERIMENTO FALLIDO CON INFORMACIÓN INÚTIL.
+La séptima:
+CUANDO LA INFORMACIÓN NO SEA SUFICIENTE, INVESTIGAR MÁS O RECONOCER LA INCERTIDUMBRE.
+La octava:
+CUANDO EL PROBLEMA PUEDA RESOLVERSE EXPERIMENTALMENTE, PASAR DE LA INVESTIGACIÓN A LA EXPERIMENTACIÓN.
+La novena:
+CADA CONCLUSIÓN IMPORTANTE DEBE PODER SER AUDITADA HASTA SU EVIDENCIA ORIGINAL.
+La décima:
+EL SISTEMA DEBE APRENDER QUÉ MÉTODOS DE INVESTIGACIÓN FUNCIONAN MEJOR Y UTILIZAR ESA EXPERIENCIA PARA MEJORAR FUTURAS INVESTIGACIONES.
+IMPLEMENTA TODO ESTO DE FORMA MODULAR, TESTEABLE, OBSERVABLE, SEGURA, REVERSIBLE Y EFICIENTE EN RECURSOS.
+NO MARQUES COMO COMPLETADO NADA QUE NO HAYA SIDO REALMENTE IMPLEMENTADO Y PROBADO.
+
+19A. IDEOLOGICAL & BIAS FORENSICS ENGINE
+Implementar un módulo especializado denominado:
+IDEOLOGICAL & BIAS FORENSICS ENGINE
+Su objetivo es identificar, analizar y contextualizar la orientación ideológica, política y editorial de cualquier fuente, artículo, noticia, post, vídeo, comentario, blog, foro, wiki o documento.
+Este módulo NO debe determinar automáticamente que una información es falsa porque procede de una determinada orientación política.
+Debe distinguir estrictamente entre:
+IDEOLOGICAL ORIENTATION
+EDITORIAL FRAMING
+LANGUAGE PATTERNS
+BIAS
+CLAIM-LEVEL BIAS
+EVIDENCE QUALITY
+SOURCE RELIABILITY
+FACTUALITY
+
+
+19A.1 ORIENTACIÓN IDEOLÓGICA
+Clasificar cuando exista evidencia suficiente:
+LEFT
+CENTER-LEFT
+CENTER
+CENTER-RIGHT
+RIGHT
+LIBERTARIAN
+SOCIALIST
+GREEN
+CONSERVATIVE
+PROGRESSIVE
+NATIONALIST
+RELIGIOUS
+POPULIST
+MIXED
+UNKNOWN
+
+La clasificación debe devolver:
+orientation
+orientation_confidence
+evidence
+
+Ejemplo:
+orientation:
+CENTER-LEFT
+
+confidence:
+82%
+
+evidence:
+- editorial history
+- repeated framing
+- political endorsements
+- language patterns
+- topic selection
+
+Nunca presentar la clasificación ideológica como certeza absoluta si la evidencia es insuficiente.
+
+19A.2 DETECCIÓN DE PATRONES
+Analizar múltiples señales.
+No utilizar ninguna señal individual como prueba definitiva.
+Detectar, entre otras:
+victimization framing
+oppressor/victim framing
+identity framing
+minority advocacy framing
+feminist framing
+anti-feminist framing
+progressive terminology
+conservative terminology
+nationalist terminology
+anti-capitalist framing
+pro-capitalist framing
+anti-government framing
+pro-government framing
+anti-corporate framing
+pro-corporate framing
+social justice framing
+traditional values framing
+religious framing
+class framing
+immigration framing
+gender framing
+racial framing
+economic framing
+law-and-order framing
+environmental framing
+
+También analizar:
+emotional language
+moral language
+loaded terminology
+sensationalism
+fear appeals
+outrage framing
+appeals to identity
+appeals to authority
+appeals to consensus
+selective statistics
+selective quotations
+selective examples
+
+
+19A.3 VICTIMIZATION / ADVOCACY ANALYSIS
+El sistema puede detectar si un texto utiliza:
+victimization framing
+marginalization framing
+oppression framing
+discrimination framing
+persecution framing
+privilege framing
+systemic oppression framing
+
+Pero debe distinguir entre:
+DESCRIPTION OF AN ACTUAL EVENT
+
+y:
+IDEOLOGICAL FRAMING OF AN EVENT
+
+Ejemplo:
+"El grupo X fue discriminado."
+
+
+NO debe clasificarse automáticamente como una señal ideológica.
+Debe verificar:
+Was discrimination actually documented?
+What evidence exists?
+Who documented it?
+Are there independent sources?
+
+
+19A.4 FEMINISM / GENDER / IDENTITY TOPICS
+El sistema puede identificar:
+feminist framing
+anti-feminist framing
+gender-rights framing
+gender-critical framing
+identity politics
+
+Pero:
+MENTIONING FEMINISM ≠ LEFT-WING
+
+y:
+SUPPORTING FEMINISM ≠ FALSE INFORMATION
+
+El patrón solamente debe contribuir a la clasificación ideológica cuando exista evidencia contextual suficiente.
+
+19A.5 MULTI-SIGNAL CLASSIFICATION
+No utilizar:
+single_keyword → ideology
+
+Utilizar múltiples señales:
+keywords
+phrasing
+framing
+historical editorial behavior
+political endorsements
+topic selection
+source network
+citations
+author history
+publisher ownership
+editorial policies
+repeated patterns
+
+Calcular:
+orientation_probability
+orientation_confidence
+
+
+19A.6 SOURCE-LEVEL VS ARTICLE-LEVEL BIAS
+Separar:
+SOURCE ORIENTATION
+
+de:
+ARTICLE ORIENTATION
+
+Una publicación puede tener orientación de izquierda y publicar un artículo neutral.
+Una publicación conservadora puede publicar ocasionalmente un artículo crítico de posiciones conservadoras.
+Por tanto:
+publisher_orientation
+author_orientation
+article_orientation
+claim_level_bias
+
+deben ser entidades independientes.
+
+19A.7 CLAIM-LEVEL BIAS
+El análisis de sesgo debe llegar hasta el nivel de cada afirmación.
+Ejemplo:
+Article:
+strongly ideological
+
+Claim 1:
+neutral factual statement
+
+Claim 2:
+factually supported
+
+Claim 3:
+highly ideological interpretation
+
+Claim 4:
+unsupported causal claim
+
+No aplicar la misma puntuación a todos los claims.
+
+19A.8 FRAMING ANALYSIS
+Para cada documento analizar:
+what is emphasized?
+what is omitted?
+which actors receive positive framing?
+which actors receive negative framing?
+what terminology is used?
+what assumptions are implicit?
+which counterarguments are presented?
+which counterarguments are absent?
+
+Crear:
+FramingProfile {
+    emphasis
+    omissions
+    positive_framing
+    negative_framing
+    terminology
+    assumptions
+    counterarguments
+    emotional_intensity
+}
+
+
+19A.9 OMISSION DETECTION
+Buscar información potencialmente relevante que el documento no menciona.
+Comparar:
+SOURCE A
+SOURCE B
+SOURCE C
+PRIMARY SOURCE
+
+Detectar:
+important omission
+context omission
+counterargument omission
+historical omission
+statistical omission
+
+No considerar automáticamente toda omisión como engaño.
+Clasificar:
+LIKELY IRRELEVANT
+POSSIBLY RELEVANT
+IMPORTANT CONTEXT
+CRITICAL OMISSION
+UNKNOWN
+
+
+19A.10 BIAS SCORE
+Crear una puntuación independiente:
+Bias Score
+
+Ejemplo:
+Framing Bias:       72/100
+Language Bias:      64/100
+Selection Bias:     55/100
+Omission Risk:      71/100
+Emotional Bias:     83/100
+Claim Bias:         41/100
+
+No utilizar:
+Bias Score = Truth Score
+
+Son métricas diferentes.
+
+19A.11 SOURCE RELIABILITY
+La fiabilidad debe evaluarse independientemente de la orientación política.
+Evaluar:
+historical accuracy
+correction history
+citation quality
+primary-source usage
+editorial transparency
+author expertise
+fact-checking practices
+independent corroboration
+original reporting
+source dependence
+
+Ejemplo:
+Political Orientation:
+LEFT — 88%
+
+Bias:
+HIGH — 76%
+
+Source Reliability:
+HIGH — 87%
+
+Evidence Quality:
+HIGH — 91%
+
+Claim Verification:
+HIGH — 94%
+
+Una fuente puede tener alto sesgo y aun así proporcionar información factual correcta.
+
+19A.12 EVIDENCE-ADJUSTED RELIABILITY
+Crear una métrica principal para las afirmaciones:
+Evidence-Adjusted Reliability
+
+Debe considerar:
+source reliability
+evidence quality
+independent corroboration
+primary evidence
+citation accuracy
+citation completeness
+freshness
+contradictory evidence
+claim-level bias
+
+No utilizar orientación política como una penalización fija.
+
+19A.13 PROHIBITED HEURISTIC
+PROHIBIDO implementar reglas como:
+LEFT → TRUST 30%
+RIGHT → TRUST 30%
+LEFT → FALSE
+RIGHT → TRUE
+
+o:
+feminism mentioned → left
+minority mentioned → left
+conservative mentioned → right
+
+Estas reglas generan falsos positivos y hacen que el propio sistema esté sesgado.
+
+19A.14 EVIDENCE-FIRST MODEL
+El sistema debe utilizar:
+IDEOLOGY → CONTEXT
+BIAS → RISK INDICATOR
+EVIDENCE → TRUTH ASSESSMENT
+
+Nunca:
+IDEOLOGY → TRUTH
+
+
+19A.15 MULTI-PERSPECTIVE CROSS-CHECK
+Cuando una fuente tenga una orientación ideológica fuerte y el tema sea controvertido:
+activar automáticamente:
+MULTI-PERSPECTIVE MODE
+
+Buscar:
+left-leaning sources
+center sources
+right-leaning sources
+international sources
+local sources
+academic sources
+primary sources
+official documents
+
+siempre que existan fuentes relevantes.
+
+19A.16 SYMMETRICAL SKEPTICISM
+El sistema debe aplicar exactamente el mismo nivel de escrutinio a todas las orientaciones.
+Para una fuente de izquierda:
+find supporting evidence
+find contradictory evidence
+find primary evidence
+check omissions
+check framing
+
+Para una fuente de derecha:
+find supporting evidence
+find contradictory evidence
+find primary evidence
+check omissions
+check framing
+
+Para una fuente centrista:
+find supporting evidence
+find contradictory evidence
+find primary evidence
+check omissions
+check framing
+
+Ninguna orientación recibe confianza automática.
+
+19A.17 ADVERSARIAL POLITICAL CHECK
+Cuando exista una afirmación política controvertida:
+crear dos tareas:
+TASK A:
+Find strongest evidence supporting the claim.
+
+TASK B:
+Find strongest evidence contradicting the claim.
+
+Después:
+TASK C:
+Find primary evidence.
+
+TASK D:
+Find independent sources.
+
+TASK E:
+Determine whether apparent consensus is actually independent.
+
+
+19A.18 POLITICAL SOURCE MATRIX
+Crear una matriz:
+                    SUPPORTS     CONTRADICTS     NEUTRAL
+LEFT                    X              X             X
+CENTER-LEFT             X              X             X
+CENTER                  X              X             X
+CENTER-RIGHT            X              X             X
+RIGHT                   X              X             X
+ACADEMIC                X              X             X
+PRIMARY                 X              X             X
+
+La matriz debe mostrar:
+number of sources
+independent sources
+evidence quality
+primary evidence
+confidence
+
+
+19A.19 FALSE CONSENSUS DETECTION
+Detectar cuando:
+10 articles
+
+en realidad proceden de:
+1 original article
+
+o:
+1 press release
+
+o:
+1 social media post
+
+o:
+1 wire-service report
+
+Mostrar:
+Apparent sources: 10
+Independent sources: 2
+Original sources: 1
+
+
+19A.20 SOURCE NETWORK
+Construir:
+Source A
+ ↓
+Source B
+ ↓
+Source C
+
+Source D
+ ↓
+Primary Document
+
+El sistema debe identificar:
+original reporting
+secondary reporting
+tertiary reporting
+copying
+syndication
+citation chains
+
+
+19A.21 POLITICAL CONFIDENCE VS FACTUAL CONFIDENCE
+Nunca combinar estas métricas.
+Guardar:
+political_orientation_confidence
+bias_confidence
+factual_confidence
+source_reliability_confidence
+
+Ejemplo:
+Political orientation:
+LEFT — 91%
+
+Bias:
+HIGH — 84%
+
+Source reliability:
+78%
+
+Claim factuality:
+93%
+
+
+19A.22 FINAL INFORMATION PROFILE
+Cada fuente importante puede tener:
+SOURCE INFORMATION PROFILE
+
+Political Orientation:
+CENTER-LEFT — 82%
+
+Orientation Confidence:
+91%
+
+Editorial Bias:
+MEDIUM-HIGH — 71%
+
+Emotional Language:
+HIGH — 78%
+
+Omission Risk:
+MEDIUM — 54%
+
+Source Reliability:
+HIGH — 86%
+
+Evidence Quality:
+HIGH — 91%
+
+Independent Corroboration:
+HIGH — 89%
+
+Claim Verification:
+VERY HIGH — 94%
+
+
+19A.23 USER-CONFIGURABLE FILTERS
+El usuario puede activar filtros:
+Show political orientation
+Show bias
+Show framing
+Show source reliability
+Show evidence quality
+Show contradictions
+Show source dependencies
+Show opposing sources
+Show primary sources
+Show uncertainty
+
+Pero estos filtros deben cambiar la PRESENTACIÓN y la INVESTIGACIÓN, no manipular artificialmente la verdad.
+
+19A.24 USER-DEFINED HEURISTICS
+Permitir al usuario definir reglas experimentales.
+Ejemplo:
+IF source_orientation == LEFT
+THEN search additional independent sources
+
+Esto es permitido.
+Pero:
+IF source_orientation == LEFT
+THEN mark claim as false
+
+debe ser rechazado como una regla de fact-checking porque confunde orientación con evidencia.
+El sistema puede permitir reglas de:
+SEARCH MORE
+VERIFY MORE
+REQUIRE PRIMARY SOURCE
+LOWER PRIORITY
+SHOW WARNING
+
+pero no convertir automáticamente una orientación política en falsedad.
+
+19A.25 DOMAIN-SPECIFIC BIAS
+No limitar el análisis a política.
+Permitir:
+commercial bias
+religious bias
+institutional bias
+national bias
+cultural bias
+fan bias
+anti-fan bias
+corporate bias
+academic bias
+community bias
+
+Ejemplo:
+Anime Wiki:
+fan bias
+
+Product Review:
+commercial bias
+
+Manufacturer:
+corporate interest
+
+Political News:
+partisan/editorial bias
+
+Academic Paper:
+methodological limitations
+
+
+19A.26 BIAS ≠ LIE
+Regla absoluta:
+BIAS ≠ FALSE
+
+Una fuente puede estar sesgada y decir la verdad.
+Una fuente aparentemente neutral puede estar equivocada.
+Una fuente políticamente opuesta puede proporcionar evidencia correcta.
+El sistema debe evaluar:
+CLAIM
++
+EVIDENCE
++
+PROVENANCE
+
+y no solamente:
+SOURCE LABEL
+
+
+19A.27 FINAL DECISION MODEL
+Para cada claim:
+Claim
+ ↓
+Source Analysis
+ ↓
+Ideological Analysis
+ ↓
+Bias Analysis
+ ↓
+Evidence Analysis
+ ↓
+Independent Corroboration
+ ↓
+Primary Source Search
+ ↓
+Contradiction Search
+ ↓
+Adversarial Search
+ ↓
+Final Confidence
+
+Resultado:
+TRUE
+MOSTLY_TRUE
+PARTIALLY_TRUE
+MISLEADING
+UNVERIFIED
+FALSE
+CONTRADICTED
+UNKNOWN
+
+acompañado de:
+confidence
+evidence quality
+source reliability
+bias risk
+independence
+freshness
+
+
+19A.28 PRINCIPIO FUNDAMENTAL
+El sistema no debe intentar descubrir:
+"¿Qué ideología tiene razón?"
+Debe intentar descubrir:
+"¿Qué afirmaciones están respaldadas por evidencia y cuáles no?"
+La ideología sirve para descubrir:
+different framings
+missing perspectives
+potential omissions
+alternative interpretations
+additional sources
+
+La evidencia sirve para determinar:
+what is supported
+what is contradicted
+what remains uncertain
+
+
+19A.29 EJEMPLO COMPLETO
+Pregunta:
+"¿Es cierta esta afirmación política?"
+
+Sistema:
+SOURCE A
+Political orientation:
+LEFT — 89%
+
+Bias:
+HIGH
+
+Claim:
+X happened.
+
+        ↓
+
+SEARCH RIGHT
+        ↓
+
+SEARCH CENTER
+        ↓
+
+SEARCH INTERNATIONAL
+        ↓
+
+SEARCH ACADEMIC
+        ↓
+
+SEARCH PRIMARY
+        ↓
+
+COMPARE
+
+Resultado hipotético:
+Claim:
+X happened.
+
+Left sources:
+7
+
+Right sources:
+5
+
+Center sources:
+4
+
+Independent sources:
+8
+
+Primary evidence:
+2
+
+Supporting evidence:
+strong
+
+Contradictory evidence:
+weak
+
+Final factual confidence:
+91%
+
+Political framing:
+disputed
+
+Conclusion:
+The event is strongly supported.
+The political interpretation of the event remains disputed.
+
+Esto es exactamente el comportamiento que queremos.
+
+19A.30 INTEGRACIÓN CON EL RESTO DEL SISTEMA
+Integrar este módulo con:
+SOURCE PROFILER
+CLAIM ENGINE
+EVIDENCE ENGINE
+CONTRADICTION ENGINE
+MULTI-PERSPECTIVE ENGINE
+ADVERSARIAL ENGINE
+RESEARCH GAP ENGINE
+FACT CHECKING
+KNOWLEDGE GRAPH
+EVIDENCE GRAPH
+RAG
+MEMORY
+FINAL ANSWER GENERATOR
+
+El resultado debe ser un sistema de investigación capaz de decir:
+WHO SAID IT?
+WHAT DID THEY SAY?
+WHY DID THEY SAY IT?
+WHAT EVIDENCE SUPPORTS IT?
+WHAT EVIDENCE CONTRADICTS IT?
+IS THE SOURCE INDEPENDENT?
+IS THE SOURCE BIASED?
+HOW IS IT FRAMED?
+WHAT WAS OMITTED?
+WHAT DOES THE PRIMARY EVIDENCE SAY?
+WHAT REMAINS UNKNOWN?
+
+y finalmente:
+WHAT DO WE ACTUALLY KNOW?
+
+
+19A.31 MÉTRICAS FINALES
+Para cada investigación política o controvertida mostrar separadamente:
+Source Reliability
+Evidence Quality
+Independent Corroboration
+Primary Evidence
+Factual Confidence
+Political Orientation
+Orientation Confidence
+Editorial Bias
+Bias Confidence
+Framing Risk
+Omission Risk
+Contradiction Level
+Freshness
+
+Nunca reducir todas estas dimensiones a una sola puntuación sin conservar las métricas originales.
+
+19A.32 AUDITABILITY
+Todo resultado de este módulo debe poder rastrearse hasta:
+orientation classification
+    ↓
+signals detected
+    ↓
+documents analyzed
+    ↓
+claims extracted
+    ↓
+evidence
+    ↓
+counter-evidence
+    ↓
+final assessment
+
+El usuario debe poder inspeccionar por qué el sistema clasificó una fuente como:
+LEFT
+RIGHT
+CENTER
+UNKNOWN
+
+y por qué asignó determinado nivel de confianza.
+
+***********************************************************************
+
+mejoras del proyecto
+
+face 26 (cerebro, rag, investigacion 
+
+.
+🧠 Universal Cognitive Fabric
+                        ┌──────────────────────────┐
+                         │      WORLD MODEL          │
+                         │  hechos · entidades       │
+                         │  relaciones · tiempo      │
+                         └────────────┬─────────────┘
+                                      │
+                                      ▼
+┌──────────────────────────────────────────────────────────────┐
+│                 KNOWLEDGE & CAPABILITY FABRIC                │
+│                                                              │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
+│  │ MODEL GENOME │ │ KNOWLEDGE    │ │ CAPABILITY GRAPH     │ │
+│  │              │ │ GRAPH        │ │                      │ │
+│  │ qué sabe     │ │ qué es       │ │ qué puede hacer     │ │
+│  │ qué no sabe  │ │ qué cambió   │ │ bajo qué condiciones │ │
+│  │ cómo falla   │ │ qué contradice│ │ con qué herramientas │ │
+│  └──────┬───────┘ └──────┬───────┘ └──────────┬───────────┘ │
+│         └─────────────────┼────────────────────┘             │
+│                           ▼                                  │
+│                 ┌───────────────────┐                        │
+│                 │ INTELLIGENCE CORE  │                        │
+│                 └─────────┬─────────┘                        │
+└───────────────────────────┼──────────────────────────────────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          ▼                 ▼                 ▼
+     KNOWLEDGE          CAPABILITY         ROUTING
+      SEARCH             SEARCH            ENGINE
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            ▼
+                     MODEL / TOOL POOL
+                            │
+       ┌──────────┬─────────┼─────────┬──────────┐
+       ▼          ▼         ▼         ▼          ▼
+      LLM        TTS       STT       IMAGE      VIDEO
+       │          │         │         │          │
+       └──────────┴─────────┼─────────┴──────────┘
+                            ▼
+                      VERIFICATION
+                            │
+                            ▼
+                     LEARNING LOOP
+                            │
+                            └──────────► FABRIC
+1. La primera evolución: tres cosas distintas
+No mezclaría conocimiento, capacidad y verdad.
+World Graph
+Representa lo que el sistema considera verdadero:
+Rust
+ └── Tokio
+      ├── async runtime
+      ├── scheduler
+      └── ecosystem
+Model Genome
+Representa lo que un modelo conoce:
+Qwen
+ └── Rust
+      ├── básico       98%
+      ├── async        91%
+      ├── Tokio        63%
+      └── internals    27%
+Capability Graph
+Representa lo que realmente puede hacer:
+Qwen
+ └── Tokio
+      ├── explicar             81%
+      ├── escribir código      89%
+      ├── depurar              74%
+      └── responder con docs   97%
+Esta separación es fundamental.
+
+2. Añadiría un cuarto estado: "Unknown"
+No obligaría al sistema a elegir entre conocido/desconocido.
+Usaría:
+KNOWN
+PARTIAL
+UNKNOWN
+OUTDATED
+CONTRADICTORY
+UNCERTAIN
+Y distinguiría:
+UNKNOWN
+de:
+LOW CONFIDENCE
+Un modelo puede saber algo pero no estar seguro.
+
+3. Crearía un "epistemic engine"
+Esta sería una de las piezas más importantes.
+El sistema debería poder responder:
+¿Por qué creemos que el modelo conoce esto?
+Por ejemplo:
+Tokio = 0.71
+
+Evidence:
+  2,381 tests
+  2,112 correct
+  173 partial
+   96 incorrect
+
+Confidence calibration: 0.94
+Last verified: 2026-09-09
+No sería una puntuación inventada.
+Sería una estimación estadística respaldada por evidencia.
+
+4. Haría que el profiler sea activo
+Aquí está una de las mayores mejoras.
+No:
+1 millón de preguntas → ejecutar → terminar
+Sino:
+             INITIAL TEST
+                   │
+                   ▼
+             KNOWLEDGE MAP
+                   │
+             ¿Dónde hay
+             incertidumbre?
+                   │
+                   ▼
+             TARGETED TESTS
+                   │
+                   ▼
+            UPDATED MAP
+                   │
+                   ▼
+          ¿Todavía incertidumbre?
+              /           \
+            sí             no
+            │               │
+            └───────┐       ▼
+                    │     DONE
+                    └────►
+Es decir:
+Active Knowledge Discovery
+El sistema gasta pruebas donde aportan información nueva.
+Eso puede hacer que 10 millones de pruebas inteligentes sean mucho más útiles que 500 millones aleatorias.
+
+5. Crearía un "Test Genome"
+Los tests también tendrían identidad.
+Test
+ ├── domain
+ ├── concept
+ ├── difficulty
+ ├── reasoning_depth
+ ├── language
+ ├── modality
+ ├── adversarial_level
+ ├── temporal_context
+ └── uniqueness
+Y el sistema sabría:
+"Ya hice 4,300 pruebas prácticamente iguales."
+Entonces las descarta.
+
+6. Añadiría pruebas de transferencia
+Esto es brutalmente importante.
+No solamente:
+"¿Conoce Tokio?"
+Sino:
+A. recordar
+B. explicar
+C. aplicar
+D. modificar
+E. comparar
+F. resolver un problema nuevo
+G. detectar un error
+H. enseñar a otro modelo
+Porque un modelo puede recordar un hecho pero ser incapaz de utilizarlo.
+Así:
+Recall       94%
+Explanation  91%
+Application  83%
+Reasoning    74%
+Debugging    61%
+Eso proporciona un perfil mucho más real.
+
+7. Añadiría "Knowledge Compensation"
+Aquí tu idea empieza a volverse realmente potente.
+El sistema descubre:
+Qwen
+Tokio internals
+Intrinsic knowledge = 27%
+Busca en el cerebro.
+Encuentra:
+Official Tokio docs
+Relevant GitHub source
+API reference
+Examples
+Construye contexto.
+Después:
+Qwen
+Intrinsic       27%
+With Brain      94%
+Improvement    +67%
+Y guarda:
+COMPENSATABLE = TRUE
+Pero si:
+27% → 31%
+entonces:
+RAG compensation = POOR
+y el Router puede seleccionar otro modelo.
+Esto convierte al cerebro en un sistema de compensación de capacidades.
+
+8. El Router debería aprender estrategias
+No sólo:
+elige modelo
+Sino:
+elige estrategia
+Por ejemplo:
+Strategy A
+Qwen → answer
+
+Strategy B
+Qwen → RAG → answer
+
+Strategy C
+Qwen → search → RAG → answer → verification
+
+Strategy D
+DeepSeek → tool → verification
+
+Strategy E
+Qwen → Claude → critic
+Y el sistema aprende qué estrategia funciona mejor para cada clase de tarea.
+
+9. Añadiría un "Capability Auction"
+Esto puede ser muy poderoso para tu ecosistema.
+Para una tarea:
+"Crear un vídeo educativo en japonés"
+Los recursos "pujan":
+LLM A
+quality: 91
+cost: $0.02
+latency: 1.2s
+
+LLM B
+quality: 96
+cost: $0.11
+latency: 3.4s
+
+TTS A
+Japanese: 94
+
+Video A
+Character consistency: 89
+El Router construye la combinación óptima.
+No buscas el mejor modelo.
+Buscas:
+la mejor composición de capacidades.
+
+10. Metería un "Verifier Stack"
+Toda salida importante pasa por verificación.
+OUTPUT
+  │
+  ├── factual verification
+  ├── semantic verification
+  ├── tool verification
+  ├── code execution
+  ├── vision verification
+  ├── audio verification
+  └── consistency verification
+Por ejemplo, en vídeo:
+Prompt:
+"Una mujer camina hacia la izquierda."
+
+Vision verifier:
+✓ mujer
+✓ caminar
+✓ dirección izquierda
+✓ continuidad temporal
+En TTS:
+✓ idioma
+✓ pronunciación
+✓ duración
+✓ intelligibility
+✓ prosody
+
+11. Crearía un "Truth Layer"
+El cerebro necesita diferenciar:
+FACT
+MODEL CLAIM
+USER CLAIM
+INFERENCE
+HYPOTHESIS
+UNKNOWN
+Por ejemplo:
+FACT:
+Python 3.x tiene X.
+
+MODEL CLAIM:
+Qwen dice que Python tiene Y.
+
+VERIFICATION:
+Y = incorrecto.
+
+RESULT:
+Model hallucination detected.
+Eso alimenta directamente el Model Genome.
+
+12. Haría el sistema federado
+No obligaría a ejecutar todo en una máquina.
+                MASTER
+                   │
+       ┌───────────┼───────────┐
+       ▼           ▼           ▼
+    Worker 1    Worker 2    Worker 3
+      GPU          GPU          CPU
+       │           │            │
+       └───────────┼────────────┘
+                   ▼
+              RESULTS DB
+Cada worker puede hacer:
+10,000
+100,000
+1,000,000
+tests y enviar únicamente resultados.
+Esto encaja perfectamente con tu objetivo de utilizar PCs externos/VMs/Colab/GPU workers sin distribuir necesariamente los modelos completos.
+
+13. Haría los tests reproducibles
+Cada prueba tendría:
+test_id
+model_id
+model_version
+prompt
+context
+temperature
+seed
+tools
+RAG_version
+knowledge_version
+timestamp
+hardware
+latency
+tokens
+result
+evaluation
+Entonces puedes reproducir exactamente:
+"¿Por qué Qwen obtuvo 72% ayer y 76% hoy?"
+
+14. Y añadiría detección de regresiones
+Esto es esencial.
+Si actualizas un modelo:
+Qwen v1
+Rust = 91%
+
+Qwen v2
+Rust = 88%
+el sistema alerta:
+⚠️ Regression detected.
+Y no sólo globalmente:
+Rust             -3%
+Tokio            -11%
+Python            +2%
+Japanese          +5%
+Eso es muchísimo más útil para mantener una plataforma de modelos.
+
+15. Para multimodal, utilizaría un concepto común: "Capability Contract"
+Cada modalidad define capacidades propias.
+LLM
+reasoning
+knowledge
+coding
+planning
+TTS
+language
+pronunciation
+emotion
+prosody
+speaker consistency
+Image
+object
+composition
+style
+text
+spatial relation
+Video
+motion
+identity
+temporal consistency
+physics
+camera
+Pero todos devuelven un mismo tipo de registro:
+CAPABILITY RESULT
+
+capability
+score
+confidence
+test_count
+failure_modes
+conditions
+cost
+latency
+Así puedes tener un único sistema de descubrimiento.
+
+16. El cerebro también tendría "memory tiers"
+No todo debe estar en el contexto del LLM.
+L0  Context
+L1  Working memory
+L2  Semantic memory
+L3  Knowledge graph
+L4  Vector store
+L5  Archive
+El Router decide cuánto necesita recuperar.
+Una pregunta sencilla:
+L0 → suficiente
+Una investigación compleja:
+L1 → L2 → Graph → Vector → Sources
+Esto reduce tokens y latencia.
+
+17. Añadiría aprendizaje de recuperación
+El sistema registra:
+Query
+↓
+Retrieved documents
+↓
+Which documents were actually useful?
+↓
+Answer quality
+Después aprende:
+"Para este tipo de pregunta, recuperar 8 documentos empeora el resultado; 3 documentos oficiales funcionan mejor."
+Por tanto, el RAG se optimiza por experiencia, no sólo por configuración manual.
+
+18. Y finalmente: un "Cognitive Compiler"
+Esta sería mi capa superior.
+La tarea:
+"Investiga X, compáralo con Y y crea un vídeo."
+Se convierte automáticamente en:
+TASK
+ │
+ ▼
+DECOMPOSE
+ │
+ ├── research
+ ├── fact verification
+ ├── comparison
+ ├── script
+ ├── translation
+ ├── TTS
+ ├── video
+ └── quality control
+       │
+       ▼
+CAPABILITY ROUTER
+       │
+       ▼
+EXECUTION GRAPH
+       │
+       ▼
+VERIFICATION
+       │
+       ▼
+FINAL RESULT
+El sistema básicamente compila una tarea humana en un grafo de capacidades.
+
+La arquitectura 10/10 que yo congelaría
+                   ┌─────────────────────┐
+                    │      WORLD MODEL    │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │       KNOWLEDGE FABRIC           │
+              │                                  │
+              │ Knowledge Graph                  │
+              │ Vector Memory                    │
+              │ Source Graph                     │
+              │ Temporal Graph                   │
+              │ Truth / Provenance               │
+              └────────────────┬─────────────────┘
+                               │
+       ┌───────────────────────▼────────────────────────┐
+       │             MODEL INTELLIGENCE                 │
+       │                                                │
+       │ Model Genome                                   │
+       │ Capability Graph                               │
+       │ Reliability / Calibration                      │
+       │ Failure Modes                                  │
+       │ Regression Tracking                            │
+       └───────────────────────┬────────────────────────┘
+                               │
+       ┌───────────────────────▼────────────────────────┐
+       │              DISCOVERY ENGINE                   │
+       │                                                │
+       │ Test Generator                                │
+       │ Active Learning                               │
+       │ Synthetic Worlds                              │
+       │ Adversarial Tests                             │
+       │ Massive Distributed Testing                  │
+       └───────────────────────┬────────────────────────┘
+                               │
+                               ▼
+                       CAPABILITY DATABASE
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   COGNITIVE ROUTER  │
+                    └──────────┬──────────┘
+                               │
+                  ┌────────────┼────────────┐
+                  ▼            ▼            ▼
+                MODEL        BRAIN        TOOLS
+                  │            │            │
+                  └────────────┼────────────┘
+                               ▼
+                       EXECUTION GRAPH
+                               │
+                               ▼
+                         VERIFIER STACK
+                               │
+                               ▼
+                         RESULT + SCORE
+                               │
+                               ▼
+                         LEARNING LOOP
+                               │
+                               └──────────► UPDATE BRAIN
+Y la regla central sería:
+Nunca asumir que un modelo sabe algo porque alguien lo dice. Medirlo.
+Y la segunda:
+Nunca asumir que RAG mejoró una respuesta. Demostrarlo.
+Y la tercera:
+Nunca utilizar un modelo caro si un modelo barato + conocimiento externo consigue el mismo resultado con suficiente fiabilidad.
+Con eso, el objetivo deja de ser construir "un LLM mejor". Construyes algo potencialmente mucho más interesante:
+Un cerebro externo que convierte una colección heterogénea de modelos pequeños, medianos y grandes en un sistema cognitivo colectivo.
+Ese enfoque además encaja muy bien con tu objetivo anterior de reducir tokens, utilizar modelos pequeños cuando sea posible, enrutar tareas entre múltiples proveedores y reservar los modelos caros para los casos donde realmente aporten algo.
+
+
+
+Universal Cognitive Fabric — Technology Stack and Build Specification
+Open, permissive, resource-efficient architecture for massive multimodal capability testing, Model Genomes, adaptive RAG, and intelligent routing
+Research snapshot: 9 September 2026. This document is designed to be handed directly to an implementation AI or engineering team. It separates verified facts about third-party projects from architectural recommendations.
+1. Executive decision
+The recommended design is not a single benchmark suite and not a conventional RAG stack. It is a layered system that discovers the empirical boundary of each model or tool, stores the evidence as a versioned Model Genome, measures how much external knowledge improves performance, and lets a cognitive router decide whether to use the model alone, the brain, tools, another model, or a composition of them.
+The core principle is: never treat a model capability as a permanent fact. Treat it as a statistically estimated property of a specific model version, configuration, modality, task family, and test population. The system continuously re-evaluates uncertain and drifting areas.
+Layer
+Recommended project
+Role
+License / fit
+Why
+Distributed evaluation
+NVIDIA NeMo Evaluator
+Campaign runner, adapters, reports, external harness execution
+Apache-2.0; strong fit
+Scalable/reproducible evaluation; 17 built-in benchmarks plus external harness integrations and a built-in interceptor proxy. [1]
+LLM benchmark engine
+EleutherAI lm-evaluation-harness
+Standardized LLM tasks and repeatable scoring
+MIT; strong fit
+Large task library, custom tasks, many backends; active project. [2]
+LLM evaluation / RAG
+DeepEval
+LLM/RAG test cases, judge-based metrics, red teaming
+Apache-2.0; strong fit
+Useful application-level evaluator and regression framework. [3]
+Embedding / retrieval
+MTEB
+Embedding and retrieval evaluation
+Apache-2.0; strong fit
+Broad benchmark toolbox for embeddings/retrieval, including multilingual and multimodal tasks. [4]
+Multimodal LLM
+VLMEvalKit
+Vision-language model evaluation
+Apache-2.0; strong fit
+Supports 220+ LMMs and 80+ benchmarks. [5]
+Graph knowledge
+Apache AGE + PostgreSQL
+Knowledge/relationship layer
+Apache-2.0 extension + PostgreSQL
+Keeps graph and relational evidence in one durable system. [6]
+Vector retrieval
+Qdrant
+Dense/sparse/multivector retrieval, filtering, hybrid search
+Apache-2.0; strong fit
+Hybrid search and payload filtering; can be run locally. [7]
+Full-text retrieval
+Tantivy
+Low-overhead lexical/BM25 index
+MIT; strong fit
+Rust library, fast and lightweight; useful for exact terms and technical identifiers. [8]
+Local LLM serving
+llama.cpp
+Very small-footprint local inference
+MIT; strong fit
+CPU/GPU local inference and broad quantization ecosystem. [9]
+High-throughput LLM serving
+vLLM or SGLang
+High-throughput GPU inference workers
+Apache-2.0; conditional fit
+Use only on workers where throughput justifies overhead. [10][11]
+Speech recognition
+Whisper / faster-whisper / WhisperX
+ASR verifier and transcript generation
+MIT for Whisper/faster-whisper; BSD-2-Clause WhisperX
+Provides independent intelligibility and transcription checks. [12][13][14]
+Audio quality
+ViSQOL
+Full-reference audio quality check
+Apache-2.0; strong fit
+Objective speech/audio quality metric; useful as one verifier, not the sole TTS quality score. [15]
+Speech toolkit
+SpeechBrain
+Speech evaluation utilities / speaker and audio analysis
+Apache-2.0; strong fit
+Open toolkit with a stated focus on small-footprint conversational AI. [16]
+Image similarity
+OpenCLIP
+Image-text / image-image style scoring primitives
+MIT; strong fit
+Permissive implementation useful for semantic alignment checks. [17]
+Video evaluation
+VideoScore + GenAI-Bench
+Video quality / preference evaluation research components
+Review per-repo/data license before redistribution
+Useful research components, but not sufficient alone for production truth. [18][19]
+Distributed messaging
+NATS
+Low-overhead event bus and task dispatch
+Apache-2.0; strong fit
+Go-native, edge friendly, high performance; fits worker pools. [20]
+Task orchestration
+Temporal
+Durable workflows and retries
+MIT; strong fit
+Good for long-running evaluation campaigns and recovery. [21]
+Analytics
+DuckDB + Apache Arrow
+Local/worker-side analytical scans and result compaction
+MIT + Apache-2.0
+Efficient analytical processing without heavyweight cluster infrastructure. [22][23]
+Object storage abstraction
+Apache OpenDAL
+Uniform access to local/cloud/object storage
+Apache-2.0
+Separates data access from storage backend and supports object-storage-first design. [24]
+Observability
+OpenTelemetry + Langfuse
+Traces, metrics, prompts, eval datasets
+Apache-2.0 / MIT core
+Langfuse core is MIT; avoid its EE directories if strict permissive-only is required. [25]
+Environment/tooling
+uv + Ruff
+Fast environment + code quality
+MIT/Apache-2.0 dual + MIT
+Fast Rust-based developer tooling. [26][27]
+
+2. Target architecture
+                        UNIVERSAL COGNITIVE FABRIC
+                                      |
+        +-----------------------------+-----------------------------+
+        |                             |                             |
+   WORLD / TRUTH                 MODEL GENOME                CAPABILITY GRAPH
+  facts + provenance          empirical model state         tasks + conditions
+        |                             |                             |
+        +-----------------------------+-----------------------------+
+                                      |
+                             INTELLIGENCE CORE
+                                      |
+       +----------------------+-------+-----------------------+
+       |                      |                               |
+  Discovery Engine      Knowledge Engine                Router
+       |                      |                               |
+  test generation       Graph + Vector + BM25         model/tool composition
+  active learning       temporal evidence              cost/latency/quality
+  adversarial tests     source ranking                  constraints
+       |                      |                               |
+       +----------------------+---------------+---------------+
+                                      |
+                             EXECUTION FABRIC
+                                      |
+      LLM | TTS | STT | IMAGE | VIDEO | OCR | EMBEDDING | TOOLS
+                                      |
+                                  VERIFIER
+                                      |
+                           Evidence + score + update
+                                      |
+                               LEARNING LOOP
+Recommended deployment principle: keep the control plane small and mostly stateless, and move expensive inference to disposable workers. The coordinator should not need a GPU. It should queue work, track versions, collect evidence, calculate statistics, and schedule follow-up tests.
+3. Evaluation core
+3.1 NVIDIA NeMo Evaluator — campaign and integration layer
+Repository — https://github.com/NVIDIA-NeMo/Evaluator [Apache-2.0]
+Use this as the top-level evaluation campaign substrate rather than writing your own benchmark runner. Current documentation shows built-in benchmarks plus external integrations for lm-eval, skills, VLMEvalKit, gym, Harbor, and containers. It also provides a local interceptor proxy that can cache, log, modify payloads, and limit turns without an external dependency. [1]
+Connection: Universal Test Planner emits a campaign spec -> NeMo Evaluator executes a batch -> result artifacts are normalized by our Result Adapter -> statistical engine updates Model Genome -> Knowledge Gap Detector decides whether more tests are needed.
+CampaignSpec
+  id, model_version, modality, task_family, seed, temperature,
+  dataset_version, evaluator_version, worker_policy
+       |
+       v
+NeMo Evaluator
+       |
+       +--> lm-eval / VLMEvalKit / custom harness / container
+       |
+       v
+RawResult JSONL
+       |
+       v
+Universal Result Adapter
+       |
+       v
+EvidenceRecord -> Genome + Analytics
+3.2 lm-evaluation-harness — LLM standardized test engine
+Repository — https://github.com/EleutherAI/lm-evaluation-harness [MIT]
+Use it for standardized LLM benchmarks and as the main reference implementation for custom LLM task definitions. The project is active and its package metadata declares MIT licensing; the project exposes a CLI and supports local models and API-style model backends. [2]
+Do not make benchmark percentages your final “knowledge score.” Use them as evidence for specific capability facets. A benchmark result becomes one observation in the Genome, not the Genome itself.
+3.3 DeepEval — application-level and RAG evaluator
+Repository — https://github.com/confident-ai/deepeval [Apache-2.0]
+Use DeepEval for test-case-centric application evaluation, including LLM-as-a-judge style measurements and RAG-oriented tests. It complements, rather than replaces, deterministic evaluation. [3]
+Design rule: every judge-based metric must include evaluator version, judge model version, judge prompt hash, and calibration set. Otherwise the metric cannot be trusted for longitudinal comparisons.
+4. The Model Genome
+The core proprietary value should live in your own schema, not in a third-party framework. Each model version receives a Genome containing evidence-backed estimates for knowledge, capability, reliability, calibration, cost, latency, resource requirements, failure modes, and augmentation response.
+ModelGenome
+  model_id
+  provider_id
+  model_version
+  adapter_version
+  modality
+  context_limits
+  languages
+
+  facets[]
+    facet_id
+    domain
+    capability
+    state: KNOWN|PARTIAL|UNKNOWN|OUTDATED|CONTRADICTORY|UNCERTAIN
+    score
+    calibrated_confidence
+    sample_count
+    last_verified_at
+    drift_score
+    intrinsic_score
+    augmented_score
+    augmentation_gain
+    hallucination_rate
+    failure_modes[]
+    evidence_refs[]
+
+  resource_profile
+    vram_mb / ram_mb / cpu_threads
+    tokens_per_second / realtime_factor
+    p50 / p95 latency
+    cost_per_1k_tokens_or_unit
+Use Bayesian or confidence-interval-aware estimates internally. A raw 0.87 without sample count and uncertainty bounds is not acceptable. The UI may show a clean percentage, but the underlying record must retain enough evidence to explain it.
+5. Massive test generation without wasting compute
+5.1 Active knowledge discovery
+Avoid one-agent-per-question. That architecture wastes tokens and makes millions of tests expensive. Instead use a deterministic test executor plus small generator/evaluator workers. The generator should create variants only where uncertainty, contradiction, drift, or poor calibration is detected.
+Seed facts / tasks
+      |
+      v
+Test Generator
+  |  paraphrase / adversarial / inverse / multi-hop /
+  |  temporal / multilingual / synthetic-world variants
+      v
+Deduplicator + Coverage Planner
+      v
+Priority Queue
+      |
+      +--> CPU deterministic tests
+      +--> small-model judge
+      +--> heavy judge only for ambiguous cases
+      v
+Evidence Store
+      v
+Active Learner selects next frontier
+The key objective is information gain per unit of compute, not raw test count. If 100,000 questions provide no new coverage, they are worse than 1,000 well-targeted frontier tests.
+5.2 Synthetic knowledge islands
+Build private synthetic worlds that the model could not have memorized. Give the model controlled facts about fictional entities, then test recall, compositional reasoning, contradiction handling, and use of retrieved context. Keep the test corpus private to reduce benchmark contamination and re-generate portions periodically.
+5.3 Negative and abstention tests
+Every knowledge facet needs false-premise, missing-evidence, contradiction, and impossible-query tests. A system that maximizes answer rate can be worse than a system that answers only when evidence is sufficient.
+6. Brain / RAG stack
+6.1 PostgreSQL + Apache AGE for durable relational + graph truth
+Apache AGE — https://github.com/apache/age [Apache-2.0]
+PostgreSQL — https://www.postgresql.org/ [PostgreSQL License]
+Use PostgreSQL as the durable system of record for models, tests, evidence, provenance, versions, metrics, users, and audit trails. AGE adds graph functionality as a PostgreSQL extension, which makes graph relationships queryable without introducing a separate distributed graph system. [6]
+This is deliberately chosen over a more specialized graph-only database because your system already has strong relational requirements and you want low operational overhead. A separate graph engine can be introduced later if profiling proves it necessary.
+6.2 Qdrant for semantic/hybrid retrieval
+Repository — https://github.com/qdrant/qdrant [Apache-2.0]
+Use Qdrant for dense, sparse, multivector retrieval and payload filtering. Its current Query API supports parallel prefetch and fusion patterns for hybrid search, which fits the “exact term + semantic meaning” requirement of technical knowledge. [7]
+Store chunk embeddings, entity embeddings, claim embeddings, and optionally separate embeddings for summaries. Avoid an explosion of named vectors: only create representations that correspond to a real retrieval need.
+6.3 Tantivy for cheap lexical search
+Repository — https://github.com/quickwit-oss/tantivy [MIT]
+Use Tantivy as a local or embedded BM25/full-text component for exact identifiers, version strings, API names, package names, file paths, and code symbols. It is a Rust library and is considerably lighter than a full Elasticsearch-style stack. [8]
+6.4 Knowledge pipeline
+Sources
+  -> fetch / snapshot
+  -> parse
+  -> normalize
+  -> split
+  -> entity extraction
+  -> claim extraction
+  -> provenance + timestamps
+  -> embeddings
+  -> Graph nodes/edges
+  -> Qdrant vectors
+  -> Tantivy lexical index
+
+Query
+  -> intent + facet detection
+  -> graph expansion
+  -> semantic + sparse retrieval in parallel
+  -> metadata/time/source filters
+  -> rerank
+  -> evidence bundle
+  -> LLM
+7. Inference and worker layer
+7.1 llama.cpp as the low-resource baseline
+Repository — https://github.com/ggml-org/llama.cpp [MIT]
+Use llama.cpp as the default local execution path for small and quantized LLM workers. It minimizes the footprint of the worker node and is suitable for CPU-heavy or modest-GPU environments. [9]
+7.2 vLLM / SGLang for high-throughput GPU workers
+vLLM — https://github.com/vllm-project/vllm [Apache-2.0]
+SGLang — https://github.com/sgl-project/sglang [Apache-2.0]
+Run one of these only on workers where throughput justifies the additional memory and runtime complexity. The control plane should treat them as interchangeable serving adapters through an OpenAI-compatible internal contract. Do not hardwire application logic to vLLM or SGLang APIs.
+7.3 LiteLLM as provider gateway — optional but valuable
+Repository — https://github.com/BerriAI/litellm [Review current repository licensing before distribution; project advertises open-source gateway functionality]
+Use LiteLLM at the provider boundary when you need one OpenAI-style interface across remote LLM APIs and local endpoints. Its current repository advertises support for 100+ LLM providers and endpoints including embeddings, images, audio, batches and rerank. [28]
+Strict permissive-only rule: perform an automated license audit in CI before each release. Keep LiteLLM as a replaceable gateway, not an irreducible dependency of the core cognitive fabric.
+8. Distributed execution
+8.1 NATS for event transport
+Repository — https://github.com/nats-io/nats-server [Apache-2.0]
+Use NATS for subjects such as `eval.campaign.created`, `eval.job.ready`, `eval.result.raw`, `eval.result.normalized`, `brain.ingest.requested`, and `genome.update.requested`. The server is Go-based, Apache-2.0, and designed for high-performance messaging and edge deployments. [20]
+controller -> eval.jobs.llm
+controller -> eval.jobs.tts
+eval worker -> eval.results.raw
+normalizer -> genome.updates
+knowledge worker -> brain.documents
+router -> inference.requests
+verifier -> verification.results
+8.2 Temporal for durable campaigns
+Repository — https://github.com/temporalio/temporal [MIT]
+Use Temporal when a campaign can run for hours or days, must survive worker restarts, or has dependent phases. Example: Discover -> generate frontier tests -> execute -> verify -> update Genome -> ingest missing knowledge -> retest augmentation gain.
+9. Data and storage
+9.1 DuckDB + Arrow
+DuckDB — https://github.com/duckdb/duckdb [MIT]
+Apache Arrow — https://github.com/apache/arrow [Apache-2.0]
+Use Arrow for portable columnar result batches and DuckDB for analytical queries over millions/billions of observations without forcing every query through PostgreSQL. Store raw result shards as Parquet. Compact only after checksums and provenance are recorded.
+9.2 Apache OpenDAL
+Repository — https://github.com/apache/opendal [Apache-2.0]
+Use OpenDAL as the storage abstraction between the brain/evaluation services and local filesystem, S3-compatible storage, or other object stores. This keeps the application independent from a specific storage vendor and follows its object-storage-first design. [24]
+10. Multimodal evaluation adapters
+10.1 Speech-to-text and speech understanding
+OpenAI Whisper — https://github.com/openai/whisper [MIT]
+faster-whisper — https://github.com/SYSTRAN/faster-whisper [MIT]
+WhisperX — https://github.com/m-bain/whisperX [BSD-2-Clause]
+Use an independent ASR stack to validate generated speech and to create reference transcripts for speech tests. Whisper’s model card explicitly notes that the model can hallucinate text that is not present in the audio, so ASR output must itself be treated as evidence with confidence and cross-checking, not as ground truth. [12][13][14]
+10.2 TTS verification
+ViSQOL — https://github.com/google/visqol [Apache-2.0]
+SpeechBrain — https://github.com/speechbrain/speechbrain [Apache-2.0]
+librosa — https://github.com/librosa/librosa [ISC]
+For TTS, combine transcript intelligibility (ASR), acoustic measurements, reference-based quality where a reference exists, speaker similarity when authorized reference audio exists, and human preference samples. ViSQOL is a full-reference metric and explicitly warns that it can behave poorly outside its intended codec/VoIP-style domain, so it should be one verifier among several. [15]
+10.3 Image generation and vision-language evaluation
+VLMEvalKit — https://github.com/open-compass/VLMEvalKit [Apache-2.0]
+OpenCLIP — https://github.com/mlfoundations/open_clip [MIT]
+Hugging Face Diffusers — https://github.com/huggingface/diffusers [Apache-2.0]
+For image generators, separate prompt adherence, object presence, spatial relations, text rendering, aesthetic quality, and identity consistency. Use VLM-based verification for semantics, OpenCLIP-like similarity as a supporting signal, and deterministic computer-vision checks where possible. Diffusers is the recommended permissive framework layer for integrating diffusion pipelines; individual model weights may have their own licenses and must be audited separately. [17][30]
+10.4 Video generation
+VideoScore — https://github.com/TIGER-AI-Lab/VideoScore [Review repository/data/model license before redistribution]
+GenAI-Bench — https://github.com/TIGER-AI-Lab/GenAI-Bench [Review repository/data license before redistribution]
+Wan2.2 — https://github.com/Wan-Video/Wan2.2 [Apache-2.0 code repository; audit weights separately]
+For video, use a verifier stack: frame-level prompt alignment, temporal consistency, motion quality, identity continuity, camera/scene constraints, and audio-video synchronization. VideoScore and GenAI-Bench are useful research components, but they should not be treated as the sole source of truth. [18][19][31]
+Important licensing boundary: the fact that a repository contains Apache-2.0 code does not automatically mean every model weight, dataset, checkpoint, or generated data asset inside the ecosystem has the same license. CI must audit code, model, data, and third-party dependency licenses independently.
+11. Cognitive router
+The Router consumes Genome + task requirements + knowledge state + resource policy. It does not merely rank models. It chooses a strategy.
+Task
+  -> classify intent / modality / risk / freshness need
+  -> find required capabilities
+  -> lookup Model Genome
+  -> estimate intrinsic success probability
+  -> estimate augmentation gain from Brain
+  -> estimate tool gain
+  -> estimate cost / latency / resource use
+  -> choose strategy
+
+Strategies:
+  MODEL_ONLY
+  MODEL_PLUS_BRAIN
+  SEARCH_PLUS_MODEL
+  TOOL_PLUS_MODEL
+  SMALL_MODEL_PLUS_VERIFIER
+  MODEL_A_CRITIC_MODEL_B
+  MODEL_A -> TOOL -> MODEL_A -> VERIFY
+Decision rule: only invoke the brain when expected utility increases enough to justify retrieval and context cost. This requires empirical learning from prior traces, not a hand-written “always RAG” rule.
+12. Truth, provenance and calibration
+The brain must distinguish between a fact, a model claim, an inference, a hypothesis, and an unknown. Every claim is attached to sources, timestamps, version identifiers, and verification history.
+Claim
+  claim_id
+  subject / predicate / object
+  status: FACT|MODEL_CLAIM|INFERENCE|HYPOTHESIS|UNKNOWN
+  valid_from / valid_until / observed_at
+  source_refs[]
+  source_reliability
+  verification_runs[]
+  contradictions[]
+  confidence_interval
+  checksum / content_hash
+Calibration is mandatory. For example, if the UI says a facet is 90% likely to be answered correctly, historical predictions in that probability bucket should actually be near 90% correct. Store calibration curves and Brier-style or equivalent calibration metrics.
+13. Scaling to millions and beyond
+The architecture scales by separating the cheap coordination plane from expensive evaluation workers. The coordinator should never hold all raw prompts or outputs in RAM. Tests are immutable work items with content-addressed IDs; workers fetch inputs, execute, stream compact results, and release local artifacts.
+Scale
+Recommended behavior
+Main resource
+10k tests
+Single controller + a few workers
+CPU/GPU as needed
+1M tests
+NATS + worker pools + Parquet + DuckDB compaction
+Network + inference
+10M+ tests
+Partition by model/version/facet/seed; checkpoint campaigns
+Object storage + compute
+100M+ tests
+Active learning + frontier targeting; avoid uniform brute force
+Compute efficiency is the bottleneck
+Long-running campaigns
+Temporal workflows + immutable artifacts
+Reliability / recovery
+
+Do not promise “hundreds of millions of unique knowledge discoveries.” The objective is high coverage with low redundancy. Test amplification and active learning should concentrate compute around uncertainty and failure boundaries.
+14. Low-resource engineering rules
+Prefer Go or Rust for hot-path services: event gateway, worker agent, artifact transfer, indexing glue, and local collectors.
+Prefer Python only where model libraries require it: evaluation adapters, dataset logic, judges, and ML-specific metrics.
+Use llama.cpp for small local LLM judges and classifiers; reserve heavyweight GPU serving for throughput-critical pools.
+Keep the controller stateless where possible; persist state in PostgreSQL and artifacts in Parquet/object storage.
+Batch embeddings, ASR, VLM and judge requests. Avoid one process/container per item.
+Use deterministic rules before an LLM judge. Escalate only ambiguous cases.
+Use content hashes and deduplication before running an expensive test.
+Cache model responses only when the cache key includes model/version/configuration/prompt/context/tool state.
+Prefer one PostgreSQL deployment plus Qdrant over a large collection of overlapping databases until scale measurements prove otherwise.
+Audit all third-party licenses in CI, including model weights and datasets, not just code repositories.
+15. Recommended monorepo structure
+universal-cognitive-fabric/
+  apps/
+    controller/
+    api/
+    router/
+    brain-api/
+    dashboard/
+
+  services/
+    campaign-manager/
+    test-generator/
+    deduplicator/
+    result-normalizer/
+    genome-engine/
+    calibration-engine/
+    knowledge-ingest/
+    retrieval-service/
+    verification-service/
+    license-auditor/
+
+  workers/
+    llm/
+    tts/
+    stt/
+    image/
+    video/
+    judge/
+    embedding/
+
+  adapters/
+    nemo-evaluator/
+    lm-eval/
+    deepeval/
+    vlmevalkit/
+    qdrant/
+    age/
+    llama-cpp/
+    vllm/
+    sglang/
+    litellm/
+
+  schemas/
+    campaign.proto
+    evidence.schema.json
+    genome.schema.json
+    capability.schema.json
+    claim.schema.json
+
+  infra/
+    nats/
+    postgres/
+    qdrant/
+    temporal/
+
+  datasets/
+    benchmark-registry/
+    private-tests/
+    synthetic-worlds/
+
+  policies/
+    license-allowlist.yaml
+    retention.yaml
+    routing.yaml
+    evaluation.yaml
+
+  docs/
+    architecture/
+    benchmarks/
+    adapters/
+    licenses/
+16. Build order for another AI
+1. Create repository skeleton and schemas first. No provider-specific business logic yet.
+2. Implement PostgreSQL schema for models, versions, campaigns, tests, results, evidence, calibration and provenance.
+3. Implement NATS subjects and a minimal campaign manager.
+4. Integrate NeMo Evaluator and lm-evaluation-harness through adapters.
+5. Implement deterministic scoring, result normalization and content-addressed artifacts.
+6. Implement Model Genome calculation with uncertainty and calibration, not just percentages.
+7. Add Qdrant + Tantivy + AGE knowledge pipeline.
+8. Implement Brain retrieval with source ranking, temporal filters and evidence bundles.
+9. Implement augmentation A/B testing: model-only versus model+brain versus tool-assisted.
+10. Add multimodal adapters: Whisper/faster-whisper/WhisperX, ViSQOL/SpeechBrain, VLMEvalKit/OpenCLIP, VideoScore/GenAI-Bench.
+11. Add local inference backends: llama.cpp first, then vLLM/SGLang workers.
+12. Add Temporal for long campaigns and resumability.
+13. Add router policy learning based on quality/cost/latency/augmentation gain.
+14. Add license auditor and dependency SBOM/allowlist enforcement.
+15. Load-test from 10k to 1M tests before considering larger campaigns.
+16. Create a private holdout suite that is never exposed to the evaluator model and is regenerated periodically.
+17. Minimum internal APIs
+POST /v1/campaigns
+POST /v1/campaigns/{id}/start
+GET  /v1/campaigns/{id}
+POST /v1/tests/generate
+POST /v1/tests/claim
+POST /v1/tests/{id}/result
+GET  /v1/genome/models/{model_version}
+GET  /v1/genome/models/{model_version}/facets
+POST /v1/brain/search
+POST /v1/brain/ingest
+POST /v1/verify/text
+POST /v1/verify/audio
+POST /v1/verify/image
+POST /v1/verify/video
+POST /v1/router/plan
+POST /v1/licenses/audit
+18. 10/10 acceptance gates
+Gate
+Required condition
+Reproducibility
+Same test + same model version + same config produces traceable rerun metadata.
+Evidence
+Every Genome score links to raw/normalized evidence and evaluator version.
+Calibration
+Confidence is empirically checked, not decorative.
+No leakage
+Private holdouts and synthetic-world tests exist.
+Active discovery
+System targets uncertain/weak facets rather than brute-force only.
+RAG causality
+Improvement from retrieval is measured against a control condition.
+Multimodal independence
+Each modality uses appropriate metrics and cross-checks.
+Cost awareness
+Router tracks quality, latency and compute/token cost.
+Regression safety
+Model updates can trigger facet-level regression alerts.
+Licensing
+Code, weights, datasets and dependencies are independently audited.
+Failure transparency
+UNKNOWN and UNCERTAIN are first-class states; the system can abstain.
+Scalability
+Campaigns resume after failures and do not require all results in RAM.
+
+19. Projects deliberately not used as core dependencies
+Some popular projects are excellent technically but conflict with the strict “open + permissive + commercial-friendly” requirement or add avoidable operational complexity.
+Meilisearch: its current repository is dual-licensed at the repository level, with Enterprise Edition components under BSL-1.1 while the community edition remains MIT. For a strict permissive-only baseline, use Tantivy instead and add Meilisearch only if the exact needed CE surface is verified. [32][33]
+FalkorDB: technically attractive for GraphRAG, but the server is currently SSPL-1.0, so it is not suitable as the strict permissive core. [34]
+Langfuse: useful, but only the core is MIT; EE directories are separately licensed. Keep it optional or isolate core-only use under license policy. [25][35]
+Silero model repository: its main model licensing is not permissive-only; the repository states CC-NC-BY for many models, with exceptions. Do not make those model assets part of a permissive baseline. [36]
+Stanford HELM: excellent research reference, but it entered maintenance mode on June 1, 2026. Use it as a reference, not as the main future execution layer. [37]
+20. Full URL registry
+NVIDIA NeMo Evaluator — https://github.com/NVIDIA-NeMo/Evaluator
+EleutherAI lm-evaluation-harness — https://github.com/EleutherAI/lm-evaluation-harness
+DeepEval — https://github.com/confident-ai/deepeval
+MTEB — https://github.com/embeddings-benchmark/mteb
+VLMEvalKit — https://github.com/open-compass/VLMEvalKit
+Apache AGE — https://github.com/apache/age
+PostgreSQL — https://www.postgresql.org/
+Qdrant — https://github.com/qdrant/qdrant
+Tantivy — https://github.com/quickwit-oss/tantivy
+llama.cpp — https://github.com/ggml-org/llama.cpp
+vLLM — https://github.com/vllm-project/vllm
+SGLang — https://github.com/sgl-project/sglang
+LiteLLM — https://github.com/BerriAI/litellm
+Whisper — https://github.com/openai/whisper
+faster-whisper — https://github.com/SYSTRAN/faster-whisper
+WhisperX — https://github.com/m-bain/whisperX
+ViSQOL — https://github.com/google/visqol
+SpeechBrain — https://github.com/speechbrain/speechbrain
+librosa — https://github.com/librosa/librosa
+OpenCLIP — https://github.com/mlfoundations/open_clip
+Hugging Face Diffusers — https://github.com/huggingface/diffusers
+VideoScore — https://github.com/TIGER-AI-Lab/VideoScore
+GenAI-Bench — https://github.com/TIGER-AI-Lab/GenAI-Bench
+Wan2.2 — https://github.com/Wan-Video/Wan2.2
+NATS — https://github.com/nats-io/nats-server
+Temporal — https://github.com/temporalio/temporal
+DuckDB — https://github.com/duckdb/duckdb
+Apache Arrow — https://github.com/apache/arrow
+Apache OpenDAL — https://github.com/apache/opendal
+Langfuse — https://github.com/langfuse/langfuse
+OpenTelemetry Go — https://github.com/open-telemetry/opentelemetry-go
+uv — https://github.com/astral-sh/uv
+Ruff — https://github.com/astral-sh/ruff
+Meilisearch — https://github.com/meilisearch/meilisearch
+FalkorDB — https://github.com/FalkorDB/FalkorDB
+Silero Models — https://github.com/snakers4/silero-models
+Stanford HELM — https://github.com/stanford-crfm/helm
+21. Sources and verification notes
+[1] NVIDIA, NeMo Evaluator — current repository and README. Apache-2.0; scalable/reproducible evaluation; built-in and external harness integrations.
+https://github.com/NVIDIA-NeMo/Evaluator
+[2] EleutherAI, lm-evaluation-harness — current package metadata and repository. MIT; active LLM evaluation framework.
+https://github.com/EleutherAI/lm-evaluation-harness
+[3] Confident AI, DeepEval — current repository. Apache-2.0; application-level LLM evaluation framework.
+https://github.com/confident-ai/deepeval
+[4] MTEB — current repository. Apache-2.0; embeddings/retrieval evaluation toolbox.
+https://github.com/embeddings-benchmark/mteb
+[5] OpenCompass VLMEvalKit — current repository. Apache-2.0; multimodal evaluation toolkit.
+https://github.com/open-compass/VLMEvalKit
+[6] Apache AGE — current repository. Apache-2.0 graph extension for PostgreSQL.
+https://github.com/apache/age
+[7] Qdrant — current repository/docs; Apache-2.0; dense/sparse/multivector and hybrid retrieval.
+https://github.com/qdrant/qdrant
+[8] Tantivy — current repository. MIT; Rust full-text search library.
+https://github.com/quickwit-oss/tantivy
+[9] llama.cpp — current repository. MIT.
+https://github.com/ggml-org/llama.cpp
+[10] vLLM — current repository. Apache-2.0.
+https://github.com/vllm-project/vllm
+[11] SGLang — current repository. Apache-2.0.
+https://github.com/sgl-project/sglang
+[12] OpenAI Whisper — current repository/model card. MIT; multilingual ASR; documented hallucination limitations.
+https://github.com/openai/whisper
+[13] SYSTRAN faster-whisper — current repository. MIT.
+https://github.com/SYSTRAN/faster-whisper
+[14] WhisperX — current repository. BSD-2-Clause.
+https://github.com/m-bain/whisperX
+[15] Google ViSQOL — current repository. Apache-2.0; full-reference audio quality; limitations documented.
+https://github.com/google/visqol
+[16] SpeechBrain — current repository. Apache-2.0; speech toolkit; small-footprint focus noted.
+https://github.com/speechbrain/speechbrain
+[17] OpenCLIP — current repository. MIT.
+https://github.com/mlfoundations/open_clip
+[18] VideoScore — official repository. Research component for video generation evaluation.
+https://github.com/TIGER-AI-Lab/VideoScore
+[19] GenAI-Bench — official repository. Multimodal generative model preference evaluation.
+https://github.com/TIGER-AI-Lab/GenAI-Bench
+[20] NATS Server — current repository. Apache-2.0; high-performance messaging and edge deployment.
+https://github.com/nats-io/nats-server
+[21] Temporal — current repository. MIT.
+https://github.com/temporalio/temporal
+[22] DuckDB — current repository.
+https://github.com/duckdb/duckdb
+[23] Apache Arrow — current repository. Apache-2.0.
+https://github.com/apache/arrow
+[24] Apache OpenDAL — current repository. Apache-2.0; unified storage access layer.
+https://github.com/apache/opendal
+[25] Langfuse — current repository/license docs. Core MIT; EE directories separately licensed.
+https://github.com/langfuse/langfuse
+[26] uv — current repository. Dual Apache-2.0/MIT.
+https://github.com/astral-sh/uv
+[27] Ruff — current repository. MIT.
+https://github.com/astral-sh/ruff
+[28] LiteLLM — current repository/README describing 100+ LLM provider interfaces and gateway features; license should be re-audited at release time.
+https://github.com/BerriAI/litellm
+[30] Hugging Face Diffusers — current repository. Apache-2.0 code framework; individual model licenses still require separate audit.
+https://github.com/huggingface/diffusers
+[31] Wan2.2 — current repository. Apache-2.0 repository license; model/data/weight licensing must be checked separately.
+https://github.com/Wan-Video/Wan2.2
+[32] Meilisearch — current repository/license. Community Edition MIT; Enterprise code under BSL-1.1.
+https://github.com/meilisearch/meilisearch
+[33] Meilisearch MIT license file.
+https://github.com/meilisearch/meilisearch/blob/main/LICENSE-MIT
+[34] FalkorDB — current repository. Server licensed SSPL-1.0.
+https://github.com/FalkorDB/FalkorDB
+[35] Langfuse Enterprise license file.
+https://github.com/langfuse/langfuse/blob/main/ee/LICENSE
+[36] Silero Models — current repository/license text. Many models are CC-NC-BY except stated exceptions.
+https://github.com/snakers4/silero-models
+[37] Stanford HELM — current repository; maintenance mode from June 1, 2026.
+https://github.com/stanford-crfm/helm
+22. Final stack recommendation
+Core permissive baseline: PostgreSQL + AGE, Qdrant, Tantivy, NATS, Temporal, DuckDB, Arrow, OpenDAL, NeMo Evaluator, lm-evaluation-harness, DeepEval, MTEB, VLMEvalKit, llama.cpp, Whisper/faster-whisper/WhisperX, ViSQOL, SpeechBrain, OpenCLIP, Diffusers, uv and Ruff. Add vLLM/SGLang only to high-throughput GPU pools. Keep LiteLLM as a gateway adapter with release-time license verification rather than making it part of the irreducible core.
+The proprietary core should be the Universal Cognitive Fabric itself: Model Genome schema and update engine, Active Knowledge Discovery, Test Genome, Truth/Provenance layer, Augmentation Gain measurement, Capability Router, multimodal verifier orchestration, and license/policy enforcement. Those are the pieces that turn a collection of open-source components into the “brain” architecture described in this specification.
+

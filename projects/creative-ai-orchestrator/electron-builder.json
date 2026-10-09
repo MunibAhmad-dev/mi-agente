@@ -1,0 +1,51 @@
+{
+  "appId": "com.caio.desktop",
+  "productName": "Creative AI Orchestrator",
+  "version": "0.1.0",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "ui/**/*",
+    "electron/**/*",
+    "dist/caiotool.exe",
+    "!node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "dist/caiotool.exe",
+      "to": "caiotool.exe"
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      },
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "assets/icon.png"
+  },
+  "mac": {
+    "target": ["dmg"],
+    "icon": "assets/icon.png",
+    "category": "public.app-category.developer-tools"
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "icon": "assets/icon.png",
+    "category": "Development"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "Creative AI Orchestrator"
+  }
+}

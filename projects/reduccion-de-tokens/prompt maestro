@@ -1,0 +1,2373 @@
+parte 25 (reduccion de tokens
+
+
+UNIVERSAL CONTEXT INTELLIGENCE & TOKEN OPTIMIZATION ENGINE
+Production-Grade Implementation Specification — 10/10
+0. ROLE
+Actúa simultáneamente como:
+Principal AI Systems Architect
+Agent Infrastructure Engineer
+LLM Optimization Engineer
+Context Engineering Researcher
+Distributed Systems Engineer
+Security Engineer
+Performance Engineer
+Open-Source Software Auditor
+QA / Benchmark Engineer
+Production Reliability Engineer
+No quiero una demo, MVP, prototipo visual, mock, simulación ni arquitectura ficticia.
+Quiero implementar un sistema real, ejecutable, medible, mantenible y extensible.
+
+1. OBJECTIVE
+Construye un:
+Universal Context Intelligence & Token Optimization Engine
+cuyo objetivo NO sea simplemente "comprimir prompts".
+El objetivo principal es:
+Encontrar la representación mínima, suficiente, verificable y recuperable del estado necesario para que un agente complete correctamente una tarea.
+El sistema debe minimizar:
+input tokens
+output tokens cuando sea posible
+contexto redundante
+tool-output redundante
+historial repetido
+memoria innecesaria
+llamadas de retrieval innecesarias
+llamadas adicionales provocadas por una compresión excesiva
+coste de compresión
+coste de embeddings
+coste de reranking
+latencia
+coste total de inferencia
+manteniendo o mejorando:
+task success
+correctness
+factual fidelity
+instruction fidelity
+tool correctness
+code correctness
+reasoning continuity
+security
+reproducibility
+La métrica principal NO debe ser:
+"tokens ahorrados".
+Debe ser:
+Cost per Successful Task
+y:
+Successful Task Efficiency = successful tasks / total computational + token cost
+
+2. NON-NEGOTIABLE RULES
+Nunca:
+inventar endpoints
+crear mocks para aparentar funcionamiento
+crear datos falsos
+hardcodear resultados
+hardcodear ratios de compresión
+afirmar que algo funciona sin benchmark
+eliminar funcionalidad existente para simplificar
+reemplazar una arquitectura funcional sin justificarlo
+comprimir información crítica sin recuperación
+modificar código antes de auditarlo
+asumir que una técnica funciona para todos los modelos
+asumir que una compresión mayor es mejor
+introducir una dependencia pesada sin justificarla
+enviar datos a servicios externos innecesariamente
+Todo debe ser:
+real
+reproducible
+medible
+verificable
+configurable
+observable
+reversible
+
+3. FIRST STEP — FORENSIC AUDIT
+Antes de modificar cualquier código:
+inspecciona completamente el repositorio;
+identifica arquitectura;
+identifica runtime;
+identifica lenguaje;
+identifica entrypoints;
+identifica APIs;
+identifica agentes;
+identifica proveedores;
+identifica MCP;
+identifica memoria;
+identifica RAG;
+identifica caching;
+identifica token counting;
+identifica logging;
+identifica tests;
+identifica benchmarks;
+identifica infraestructura;
+identifica dependencias;
+identifica licencias;
+identifica código muerto;
+identifica duplicaciones;
+identifica puntos de integración.
+Produce primero:
+ARCHITECTURE_AUDIT.md
+y:
+CONTEXT_OPTIMIZATION_AUDIT.md
+No empieces la implementación hasta comprender el sistema existente.
+
+4. OPEN-SOURCE POLICY
+Prioriza proyectos:
+MIT
+Apache-2.0
+BSD
+MPL cuando sea compatible con la arquitectura
+Evita dependencias:
+propietarias
+cerradas
+innecesariamente pesadas
+con restricciones comerciales incompatibles
+que requieran SaaS obligatorio
+Antes de integrar cualquier proyecto:
+verificar licencia;
+verificar dependencia real;
+verificar mantenimiento;
+verificar compatibilidad;
+verificar consumo de RAM/CPU/VRAM;
+verificar seguridad;
+verificar benchmarks;
+verificar si realmente aporta valor.
+No integrar proyectos simplemente porque son populares.
+
+5. REFERENCE TECHNOLOGY STACK
+Usa como candidatos principales:
+Context layer
+Headroom
+Funciones:
+context interception
+tool-output compression
+RAG compression
+history compression
+CCR
+proxy
+MCP integration
+provider integration
+No asumir que Headroom debe controlar todo.
+Debe ser un componente intercambiable.
+
+Reversible local layer
+Winnow
+Usarlo para:
+JSON
+logs
+grandes resultados
+archivos
+tool outputs
+recuperación reversible
+Los originales deben permanecer disponibles.
+
+Long-horizon agent optimization
+Microsoft ACON
+Usarlo para:
+trajectories
+agent history
+long-running tasks
+redundant interaction history
+learned context optimization
+No convertir ACON en dependencia obligatoria.
+Debe existir una interfaz:
+TrajectoryCompressor
+
+Persistent memory
+Mem0
+Usarlo como candidato para:
+long-term memory
+user facts
+task facts
+project memory
+reusable knowledge
+Nunca usar memoria persistente como sustituto de contexto inmediato.
+
+Coding agents
+Paritok
+Usarlo exclusivamente cuando:
+task type = coding
+trajectory = coding agent
+content = code/tool trajectory
+Debe existir:
+CodeTrajectoryCompressor
+Nunca usar automáticamente el compressor de código sobre cualquier texto.
+
+Structural parsing
+Tree-sitter
+Usarlo para:
+AST
+function boundaries
+classes
+imports
+signatures
+symbols
+code structure
+safe code extraction
+Nunca eliminar sintaxis estructural crítica simplemente para ahorrar tokens.
+
+General text compression
+LLMLingua / LLMLingua-2
+Usarlo únicamente cuando el router determine que:
+el contenido es apto;
+el riesgo es bajo;
+el coste del compressor está justificado;
+el benchmark del modelo/tarea lo permite.
+Nunca convertir LLMLingua en el compressor universal.
+
+Local inference KV optimization
+NVIDIA KVPress
+Usarlo únicamente cuando:
+controlamos el inference runtime;
+el modelo corre localmente;
+KV-cache optimization produzca beneficio real.
+No confundir:
+prompt token compression
+con:
+KV-cache compression.
+Son problemas diferentes.
+
+6. UNIVERSAL CONTEXT ORCHESTRATOR
+Construye un componente central:
+ContextOrchestrator
+Debe decidir entre:
+KEEP
+DEDUPLICATE
+CACHE
+SUMMARIZE
+STRUCTURE
+COMPRESS
+EXTERNALIZE
+RETRIEVE
+REJECT
+RECOVER
+La pregunta central debe ser:
+¿Cuál es la estrategia de menor coste que mantiene suficiente información para completar correctamente la tarea?
+No:
+¿Cómo puedo eliminar más tokens?
+
+7. INFORMATION VALUE ENGINE
+Cada fragmento de contexto debe poder recibir un valor dinámico basado en:
+relevance
+recency
+task dependency
+instruction importance
+factual importance
+structural importance
+uniqueness
+future utility
+retrieval cost
+error risk
+provenance
+confidence
+Modelo conceptual:
+InformationValue = f(relevance, necessity, uniqueness, dependency, future_need, risk)
+No utilizar un score fijo universal.
+
+8. CONTEXT CLASSIFICATION
+Clasifica automáticamente:
+system instructions
+developer instructions
+user messages
+assistant messages
+tool calls
+tool outputs
+code
+logs
+JSON
+XML
+CSV
+markdown
+documentation
+search results
+RAG chunks
+database rows
+API responses
+images
+audio metadata
+video metadata
+agent plans
+execution state
+errors
+observations
+memory
+external knowledge
+Cada tipo debe tener políticas diferentes.
+
+9. FIVE-LEVEL MEMORY MODEL
+Implementa:
+L0 — Active Context
+Información necesaria inmediatamente.
+L1 — Compressed Context
+Información resumida/comprimida pero todavía activa.
+L2 — Structured Memory
+Facts, entities, decisions, constraints, state.
+L3 — Archive
+Información histórica completa.
+L4 — External Retrieval
+Información que no necesita permanecer en memoria activa.
+El sistema debe mover información entre niveles dinámicamente.
+
+10. JUST-IN-TIME CONTEXT
+No cargar todo el contexto disponible.
+En cada paso:
+identificar task state;
+identificar current objective;
+identificar dependencies;
+identificar missing information;
+retrieve only required context;
+verify;
+execute.
+Debe existir:
+ContextNeedPredictor
+que estime qué información probablemente necesitará el siguiente paso.
+
+11. THINKING CONTEXT VS ACTION CONTEXT
+Separar:
+ThinkingContext
+de:
+ActionContext
+ThinkingContext:
+hypotheses
+reasoning-relevant evidence
+task state
+constraints
+ActionContext:
+exact tool arguments
+exact identifiers
+exact code
+exact paths
+exact API parameters
+exact values
+Nunca aplicar la misma compresión a ambos.
+
+12. CONTENT-AWARE COMPRESSION CASCADE
+La cascada debe ser:
+1. Remove exact duplicates
+2. Remove semantic duplicates
+3. Remove irrelevant information
+4. Preserve structural information
+5. Compress safely
+6. Externalize large content
+7. Add retrieval pointer
+8. Validate
+9. Recover if necessary
+
+Nunca saltar directamente a aggressive semantic compression.
+
+13. COMPRESSION RISK ENGINE
+Cada contexto debe clasificarse:
+LOW
+repeated prose
+boilerplate
+search-result noise
+redundant logs
+MEDIUM
+documentation
+RAG
+historical conversation
+HIGH
+code
+API responses
+configuration
+execution state
+CRITICAL
+credentials references
+exact commands
+numerical constraints
+identifiers
+security instructions
+user instructions
+system/developer instructions
+destructive operations
+financial values
+legal constraints
+CRITICAL content debe ser:
+preserved;
+structurally protected;
+o recuperable exactamente.
+
+14. SHADOW CONTEXT
+Nunca depender únicamente del contexto comprimido.
+Mantén:
+ShadowContextStore
+que almacene el original:
+content_hash
+source
+timestamp
+task_id
+agent_id
+model
+token_count
+compressed_token_count
+compression_method
+compression_version
+provenance
+
+El modelo recibe la versión optimizada.
+El sistema mantiene el original fuera del contexto.
+
+15. RECOVERY
+Si el modelo necesita información eliminada:
+compressed context
+        ↓
+retrieval request
+        ↓
+original fragment
+        ↓
+minimal relevant expansion
+        ↓
+LLM
+
+No devolver automáticamente todo el documento.
+Debe existir:
+TargetedRecovery
+capaz de recuperar:
+líneas
+JSON fields
+code symbols
+log ranges
+documents
+chunks
+database rows
+
+16. RECOVERY COST AWARENESS
+Antes de comprimir:
+calcula:
+ExpectedCompressionSavings
+y:
+ExpectedRecoveryCost
+Solo comprimir agresivamente si:
+ExpectedSavings > CompressionCost + ExpectedRecoveryCost
+Esto evita optimizaciones que técnicamente ahorran tokens pero aumentan el coste total.
+
+17. MODEL-AWARE OPTIMIZATION
+Crear:
+ModelProfileRegistry
+Cada modelo debe registrar:
+tokenizer
+context window
+input price
+output price
+reasoning characteristics
+cache behavior
+tool behavior
+compression tolerance
+preferred compression methods
+Los tokens deben medirse con el tokenizer real del modelo destino cuando sea posible.
+Nunca confiar únicamente en:
+characters / 4
+para métricas de producción.
+
+18. TASK-AWARE OPTIMIZATION
+Clasificar:
+chat
+coding
+research
+RAG
+data analysis
+browser agent
+tool execution
+planning
+debugging
+document analysis
+multimodal
+long-horizon automation
+Cada task type debe tener:
+compression policy
+risk profile
+token budget
+recovery strategy
+evaluation suite
+
+19. AGENT TRAJECTORY OPTIMIZATION
+Registrar:
+task
+step
+observation
+action
+tool
+result
+decision
+state_change
+error
+recovery
+
+El sistema debe detectar:
+repeated observations
+repeated tool outputs
+obsolete states
+completed subtasks
+redundant reasoning context
+stale plans
+No borrar información que todavía sea causalmente necesaria.
+
+20. TOOL OUTPUT OPTIMIZATION
+Los tool outputs suelen ser uno de los mayores focos de desperdicio.
+Crear:
+ToolOutputOptimizer
+Debe reconocer:
+JSON arrays
+database results
+logs
+search results
+file reads
+API responses
+HTML
+CLI output
+Debe preservar:
+errors
+anomalies
+requested records
+IDs
+timestamps
+relationships
+relevant fields
+
+21. CODE OPTIMIZATION
+Para código:
+parsear AST cuando sea posible;
+identificar símbolos;
+preservar imports;
+preservar signatures;
+preservar types;
+preservar decorators;
+preservar dependencies;
+identificar requested regions;
+comprimir únicamente regiones seguras;
+mantener recuperación exacta.
+Nunca comprimir código simplemente eliminando líneas arbitrariamente.
+
+22. JSON OPTIMIZATION
+Para JSON:
+preserve schema;
+preserve keys;
+preserve types;
+preserve identifiers;
+preserve anomalies;
+preserve requested records;
+detect duplicates;
+aggregate safe arrays;
+provide retrieval pointers.
+El JSON comprimido debe seguir siendo válido cuando el consumidor lo requiera.
+
+23. RAG OPTIMIZATION
+Pipeline:
+retrieve
+ ↓
+deduplicate
+ ↓
+rank
+ ↓
+group
+ ↓
+compress
+ ↓
+verify
+ ↓
+context budget
+
+Nunca recuperar 100 documentos para después mandar los 100 al LLM.
+
+24. CACHE INTELLIGENCE
+Implementa:
+exact cache
+semantic cache
+prefix cache awareness
+compression cache
+tokenizer cache
+retrieval cache
+Pero nunca sacrificar corrección por cache hit.
+Debe poder operar en:
+token-saving mode
+y:
+cache-preserving mode
+según el proveedor/modelo.
+
+25. DEDUPLICATION ENGINE
+Detectar:
+exact duplicates
+near duplicates
+repeated tool outputs
+repeated documents
+repeated search results
+repeated code
+repeated instructions
+Mantener provenance de cada elemento eliminado.
+
+26. SEMANTIC EQUIVALENCE
+Antes de aceptar compresión de alto riesgo, validar:
+facts
+numbers
+dates
+names
+IDs
+constraints
+negations
+dependencies
+instructions
+code semantics
+JSON structure
+Crear:
+SemanticFidelityEvaluator
+
+27. ADVERSARIAL COMPRESSION TESTING
+Generar pruebas con:
+negations
+conflicting instructions
+similar names
+large numbers
+decimal numbers
+dates
+timestamps
+IDs
+hashes
+URLs
+paths
+security instructions
+exceptions
+nested JSON
+long code
+cross-document dependencies
+Ejemplo crítico:
+Original:
+DO NOT delete production_database
+Nunca puede transformarse en:
+delete production_database
+
+28. PROMPT-INJECTION AWARENESS
+Diferenciar:
+DATA
+de:
+INSTRUCTION
+Todo contenido externo debe conservar:
+provenance
+trust level
+source
+origin
+role
+La compresión no debe aumentar accidentalmente la autoridad de contenido externo.
+
+29. MULTIMODAL CONTEXT OPTIMIZATION
+No tratar imágenes/audio/video como texto.
+Para imágenes:
+metadata
+OCR
+visual embeddings
+regions
+captions
+object references
+Para audio:
+transcript
+timestamps
+speaker segments
+relevant windows
+Para video:
+scene segmentation
+timestamps
+transcript
+keyframes
+relevant clips
+Nunca convertir automáticamente todo el contenido multimodal a texto completo si existe una representación más eficiente.
+
+30. COMPRESSION ROUTER
+Crear:
+AdaptiveCompressionRouter
+Inputs:
+content_type
+task_type
+model
+token_budget
+risk
+latency_budget
+quality_requirement
+compression_history
+expected_recovery
+
+Outputs:
+strategy
+compressor
+target_budget
+risk_limit
+recovery_policy
+
+Ejemplo:
+code + debugging
+→ Tree-sitter
+→ structural compression
+→ preserve requested functions
+→ no aggressive token pruning
+
+large JSON
+→ structural compressor
+→ dedup
+→ statistical reduction
+→ CCR
+
+long agent trajectory
+→ ACON-style optimization
+→ state extraction
+→ historical compression
+
+plain RAG prose
+→ relevance filtering
+→ optional LLMLingua
+→ fidelity check
+
+
+31. COMPRESSION BUDGET
+No usar ratios fijos.
+En lugar de:
+compress 50%
+usar:
+target_context_budget = X tokens
+El sistema debe determinar dinámicamente cuánto contexto puede gastar.
+
+32. ADAPTIVE COMPRESSION BOUNDARY
+Implementar auto-tuning:
+low compression
+     ↓
+evaluate quality
+     ↓
+increase compression
+     ↓
+evaluate
+     ↓
+increase
+     ↓
+quality boundary
+     ↓
+stop
+
+Encontrar:
+Maximum Safe Compression
+por:
+model
+task
+context type
+agent
+provider
+
+33. POLICY LEARNER
+Crear un sistema que aprenda qué estrategias funcionan.
+Features:
+model
+task
+context type
+size
+compression method
+compression ratio
+recovery count
+task success
+latency
+cost
+quality
+Reward:
++
+task_success
++
+quality
++
+token_efficiency
+
+-
+compression_cost
+-
+retrieval_cost
+-
+latency
+-
+errors
+-
+recovery_overhead
+
+Nunca optimizar únicamente tokens.
+
+34. SAFE ONLINE LEARNING
+El Policy Learner NO puede cambiar automáticamente políticas críticas sin evaluación.
+Utilizar:
+shadow mode
+→ benchmark
+→ canary
+→ evaluation
+→ promotion
+→ rollback
+
+Estados:
+experimental
+candidate
+canary
+production
+deprecated
+
+
+35. BENCHMARK LAB
+Construir:
+ContextBenchmarkLab
+Debe comparar:
+no compression
+Headroom
+Winnow
+ACON
+LLMLingua
+Paritok
+custom strategies
+por:
+tokens
+cost
+latency
+task success
+correctness
+recovery calls
+tool calls
+output quality
+memory usage
+CPU
+RAM
+VRAM
+
+36. ABLATION TESTING
+Poder ejecutar:
+baseline
+baseline + dedup
+baseline + structural
+baseline + compression
+baseline + memory
+baseline + recovery
+baseline + adaptive routing
+full system
+
+Así se puede demostrar qué componente realmente aporta valor.
+
+37. TOTAL COST MODEL
+Medir:
+TotalCost =
+input_tokens_cost
++
+output_tokens_cost
++
+compression_cost
++
+embedding_cost
++
+reranking_cost
++
+retrieval_cost
++
+tool_cost
++
+latency_cost
++
+recovery_cost
+
+Y:
+CostPerSuccessfulTask =
+TotalCost / successful_tasks
+
+Esta métrica debe dominar las decisiones de optimización.
+
+38. RESOURCE EFFICIENCY
+Preferir:
+CPU-first
+local-first
+small models
+deterministic algorithms
+caching
+batch processing
+Rust/Go/native components cuando aporten ventajas reales
+No ejecutar un LLM de 7B únicamente para eliminar 500 tokens.
+El compresor debe justificar su propio coste.
+
+39. ZERO-COPY / LOW-MEMORY DESIGN
+Evitar:
+duplicación innecesaria de grandes strings
+múltiples copias de JSON
+cargas completas innecesarias
+embeddings para contenido trivial
+modelos residentes en VRAM sin necesidad
+Usar:
+streaming
+chunking
+mmap cuando sea apropiado
+bounded caches
+TTL
+lazy loading
+batch processing
+
+40. OBSERVABILITY
+Cada operación debe producir métricas:
+original_tokens
+compressed_tokens
+tokens_saved
+compression_ratio
+compression_method
+compression_latency
+retrieval_count
+retrieval_tokens
+task_success
+quality_score
+total_cost
+
+También:
+compression_failures
+fidelity_failures
+rollback_count
+cache_hits
+cache_misses
+
+
+41. EXPLAINABILITY
+El sistema debe poder explicar:
+Why was this context compressed?
+Ejemplo:
+Source: tool_output
+Type: JSON
+Original: 18,400 tokens
+Final: 2,100 tokens
+
+Strategy:
+- duplicate removal
+- structural aggregation
+- anomaly preservation
+- CCR
+
+Risk: LOW
+Recovery available: YES
+Expected savings: 88.6%
+
+
+42. FAILURE HANDLING
+Si un compressor:
+crashes
+exceeds latency budget
+produces invalid JSON
+fails fidelity check
+increases token count
+creates repeated retrieval
+entonces:
+rollback
+→ fallback compressor
+→ or KEEP original
+
+Nunca bloquear al agente simplemente porque el optimizador falló.
+
+43. PLUGIN ARCHITECTURE
+Crear interfaces:
+ContextCompressor
+ContextRetriever
+ContextClassifier
+ContextScorer
+ContextStore
+MemoryProvider
+TokenizerProvider
+ModelProfileProvider
+FidelityEvaluator
+CompressionPolicy
+BenchmarkProvider
+PolicyLearner
+
+Cada compressor debe poder instalarse/removerse sin modificar el core.
+
+44. NO VENDOR LOCK-IN
+El sistema debe poder funcionar:
+LiteLLM
+OpenAI-compatible
+Anthropic-compatible
+local models
+Ollama
+vLLM
+custom endpoints
+
+El optimizador no debe depender de un único proveedor.
+
+45. SECURITY
+Implementar:
+provenance tracking
+content trust levels
+prompt injection resistance
+secret detection
+PII-safe logging
+encrypted shadow context when required
+access control
+tenant isolation
+TTL
+secure deletion
+audit logs
+Nunca guardar API keys dentro del context store.
+
+46. DATA GOVERNANCE
+Cada stored context debe tener:
+tenant_id
+agent_id
+task_id
+source
+created_at
+expires_at
+classification
+sensitivity
+hash
+storage_location
+
+Debe poder eliminarse completamente.
+
+47. TESTING
+Crear tests para:
+unit
+integration
+end-to-end
+regression
+performance
+fidelity
+security
+adversarial
+load
+memory
+concurrency
+recovery
+provider compatibility
+Ningún benchmark debe reemplazar los tests funcionales.
+
+48. REAL-WORLD TEST SUITE
+Crear datasets para:
+Chat
+long conversation
+repeated questions
+changing goals
+Coding
+debugging
+refactoring
+repository exploration
+tests
+multi-file changes
+Research
+search results
+papers
+duplicate sources
+RAG
+conflicting documents
+repeated chunks
+long documents
+Agents
+long trajectories
+tool-heavy execution
+failures
+retries
+Data
+large JSON
+CSV
+database output
+logs
+
+49. QUALITY GATES
+No considerar terminado hasta demostrar:
+Functional correctness
+Context fidelity
+Token reduction
+Cost reduction
+No unacceptable task-quality regression
+Recovery correctness
+Security correctness
+Resource efficiency
+Provider compatibility
+Reproducibility
+
+50. ACCEPTANCE TARGETS
+Los siguientes NO son garantías.
+Son objetivos de ingeniería a validar:
+Chat:
+30–50%
+
+RAG:
+50–75%
+
+Tool-heavy agents:
+60–85%
+
+Research:
+60–85%
+
+Coding:
+40–70%
+
+Long-horizon agents:
+70–90%
+
+Highly redundant contexts:
+potentially >90%
+
+Nunca declarar estos números como conseguidos hasta medirlos.
+
+51. CRITICAL RULE ABOUT BENCHMARKS
+Si una técnica promete:
+95% token reduction
+NO asumir que es mejor.
+Comparar:
+95% reduction
+vs
+task success
+vs
+recovery calls
+vs
+latency
+vs
+total cost
+
+Una técnica que ahorra 95% pero necesita 8 recuperaciones puede ser peor que una que ahorra 70% sin recuperar nada.
+
+52. AUTONOMOUS BENCHMARK DISCOVERY
+El sistema debe permitir registrar nuevos compressors automáticamente:
+new compressor
+      ↓
+license audit
+      ↓
+dependency audit
+      ↓
+security audit
+      ↓
+benchmark
+      ↓
+quality test
+      ↓
+resource test
+      ↓
+comparison
+      ↓
+candidate
+
+Nunca instalar automáticamente código no confiable en producción.
+
+53. FUTURE-PROOF DESIGN
+No hardcodear:
+Headroom
+ACON
+Winnow
+Mem0
+LLMLingua
+Paritok
+como componentes obligatorios.
+Deben existir como plugins/adapters.
+Si mañana aparece:
+BetterCompressor-X
+el sistema debe poder añadirlo sin reescribir el core.
+
+54. CORE INTERNAL MODEL
+Crear una representación común:
+ContextItem
+
+con:
+id
+content
+content_type
+source
+role
+timestamp
+task_id
+agent_id
+importance
+risk
+provenance
+token_count
+compression_state
+retrieval_pointer
+hash
+dependencies
+
+Esto debe ser la unidad fundamental del sistema.
+
+55. CONTEXT GRAPH
+Construir relaciones:
+ContextItem
+   │
+   ├── depends_on
+   ├── derived_from
+   ├── contradicts
+   ├── duplicates
+   ├── supports
+   ├── supersedes
+   └── required_by
+
+Esto permite eliminar información sin romper dependencias.
+
+56. STATE-AWARE COMPRESSION
+Diferenciar:
+obsolete
+active
+future-relevant
+completed
+blocked
+critical
+recoverable
+
+El contexto debe comprimirse según su estado.
+
+57. CONTRADICTION ENGINE
+Detectar:
+conflicting instructions
+conflicting facts
+stale information
+changed requirements
+Nunca mezclar dos estados incompatibles simplemente porque ambos son relevantes históricamente.
+
+58. TEMPORAL CONTEXT
+Mantener:
+valid_from
+valid_until
+supersedes
+superseded_by
+
+Esto es fundamental para agentes de larga duración.
+
+59. CONTEXT PACKING
+Antes de enviar el contexto al modelo:
+retrieve
+→ rank
+→ deduplicate
+→ group
+→ order
+→ compress
+→ validate
+→ pack
+
+Optimizar también el orden del contexto.
+
+60. MODEL-SPECIFIC CONTEXT PACKING
+El sistema debe aprender que diferentes modelos pueden reaccionar de forma diferente al:
+order
+density
+compression
+tool placement
+system/user separation
+Nunca asumir una política universal.
+
+61. PREFIX CACHE AWARENESS
+Cuando el proveedor soporte caching:
+no comprimir únicamente para reducir tokens.
+Evaluar:
+token savings
+vs
+cache reuse
+
+Una representación ligeramente mayor puede ser mejor si aumenta drásticamente el cache hit rate.
+
+62. LATENCY-AWARE ROUTING
+Si ahorrar 5,000 tokens requiere 2 segundos de procesamiento local, determinar si vale la pena.
+El router debe tener:
+latency_budget
+
+y poder elegir:
+no compression
+fast structural compression
+ML compression
+deep compression
+
+
+63. SMALL-MODEL POLICY
+Los modelos utilizados para optimización deben ser pequeños cuando sea posible.
+Preferencia:
+deterministic algorithm
+>
+small encoder
+>
+small local model
+>
+large local model
+>
+remote LLM
+
+Nunca utilizar un modelo grande para una tarea que pueda resolverse determinísticamente.
+
+64. LOCAL-FIRST
+Siempre que sea posible:
+compression local
+classification local
+tokenization local
+caching local
+storage local
+benchmarks local
+No enviar contenido privado a terceros solamente para comprimirlo.
+
+65. DATABASE
+Para métricas y experimentación:
+usar una base ligera y eficiente, por ejemplo DuckDB cuando corresponda.
+Separar:
+operational state
+
+de:
+analytics
+
+No convertir la base analítica en dependencia del runtime de cada request.
+
+66. CLI
+Crear:
+context audit
+context benchmark
+context compress
+context inspect
+context retrieve
+context stats
+context policy
+context providers
+context benchmark compare
+
+
+67. API
+Crear APIs reales para:
+POST /context/analyze
+POST /context/compress
+POST /context/retrieve
+POST /context/pack
+POST /context/evaluate
+GET  /context/stats
+GET  /context/policies
+GET  /context/models
+GET  /context/benchmarks
+
+No crear endpoints que no estén conectados a funcionalidad real.
+
+68. MCP
+Exponer opcionalmente:
+context_compress
+context_retrieve
+context_analyze
+context_pack
+context_stats
+context_benchmark
+
+El MCP debe utilizar las mismas interfaces internas.
+No duplicar lógica.
+
+69. LITELLM INTEGRATION
+Integrar mediante middleware/hook/interceptor cuando sea apropiado.
+Flujo:
+Agent
+ ↓
+LiteLLM
+ ↓
+Context Intelligence Engine
+ ↓
+Context Optimization
+ ↓
+Provider
+
+No modificar LiteLLM innecesariamente.
+Mantener el optimizador desacoplado.
+LiteLLM ya proporciona gateway, unified API, routing/load balancing y múltiples endpoints, por lo que debe actuar como infraestructura de proveedores y no como sustituto del Context Intelligence Engine.
+
+70. BENCHMARK REPORT
+Generar automáticamente:
+BENCHMARK_REPORT.md
+con:
+baseline tokens
+optimized tokens
+tokens saved
+compression ratio
+compression latency
+retrieval count
+retrieval tokens
+total cost
+quality score
+task success
+CPU
+RAM
+VRAM
+
+Y comparación:
+baseline
+Headroom
+Winnow
+ACON
+LLMLingua
+Paritok
+full system
+
+
+71. PROOF REQUIREMENT
+Nunca afirmar:
+"10x cheaper"
+sin mostrar:
+baseline
+optimized
+tokenizer
+model
+dataset
+tasks
+sample size
+success rate
+cost
+latency
+
+Toda afirmación de rendimiento debe poder reproducirse.
+
+72. IMPLEMENTATION PHASES
+Phase 1
+Audit.
+Phase 2
+Core interfaces.
+Phase 3
+Context store + shadow context.
+Phase 4
+Context classifier.
+Phase 5
+Information Value Engine.
+Phase 6
+Context Orchestrator.
+Phase 7
+Headroom integration.
+Phase 8
+Winnow integration.
+Phase 9
+Memory integration.
+Phase 10
+Trajectory optimization.
+Phase 11
+Coding-specific optimization.
+Phase 12
+RAG optimization.
+Phase 13
+Recovery.
+Phase 14
+Fidelity engine.
+Phase 15
+Model-aware routing.
+Phase 16
+Benchmark Lab.
+Phase 17
+Policy Learner.
+Phase 18
+Canary deployment.
+Phase 19
+Security audit.
+Phase 20
+Production hardening.
+
+73. NO BIG-BANG IMPLEMENTATION
+No implementar todo en un solo cambio.
+Cada fase debe:
+compile;
+test;
+benchmark;
+document;
+commit;
+verify;
+continue.
+No avanzar si una fase rompe una anterior.
+
+74. REGRESSION POLICY
+Antes y después de cada modificación:
+tests
++
+benchmarks
++
+integration tests
+
+Comparar automáticamente.
+Si:
+quality ↓
+success ↓
+security ↓
+latency ↑ excessively
+cost ↑
+
+hacer rollback o revisar la estrategia.
+
+75. FINAL SYSTEM PRINCIPLE
+La regla más importante de todo el proyecto:
+Do not optimize for the smallest context. Optimize for the smallest sufficient context.
+Y una segunda regla:
+Never permanently discard information that may be required later when it can be cheaply externalized and recovered.
+Y una tercera:
+The best compression strategy is the one that minimizes total cost per successful task while preserving correctness.
+
+76. FINAL ACCEPTANCE CRITERIA
+El proyecto solamente puede considerarse terminado cuando:
+funciona end-to-end;
+no utiliza mocks;
+no utiliza fake success;
+no tiene endpoints desconectados;
+tiene tests;
+tiene benchmarks;
+tiene recuperación;
+tiene shadow context;
+tiene fidelity evaluation;
+tiene model-aware token counting;
+tiene task-aware routing;
+tiene content-aware compression;
+tiene security controls;
+tiene observability;
+tiene rollback;
+tiene plugin architecture;
+tiene documentación;
+tiene reproducible benchmarks;
+demuestra reducción real de coste;
+no degrada significativamente la tasa de éxito.
+Y especialmente:
+No aceptar una mejora simplemente porque reduce tokens.
+Debe demostrar:
+LESS TOKENS
++
+SAME OR BETTER QUALITY
++
+SAME OR BETTER TASK SUCCESS
++
+LOWER TOTAL COST
++
+ACCEPTABLE LATENCY
++
+SAFE RECOVERY
+
+Solo entonces considerar la implementación:
+PRODUCTION READY — 10/10
+
+
+
+
+Pila tecnológica maestra
+1. Núcleo de ejecución
+Python
+Función: lenguaje principal del Context Intelligence Engine.
+Utilizarlo para:
+ContextOrchestrator
+ContextIR
+InformationValueEngine
+ContextNeedPredictor
+ContextRiskEngine
+ContextCompiler
+FidelityEngine
+RecoveryEngine
+CostEngine
+PolicyEngine
+APIs
+integración con modelos
+No utilizar Python para hot paths si el profiling demuestra que Rust/C es claramente superior.
+
+FastAPI
+Función: API del sistema.
+Repositorio oficial:
+https://github.com/fastapi/fastapi
+Licencia MIT.
+Endpoints conceptuales:
+POST /context/analyze
+POST /context/optimize
+POST /context/compress
+POST /context/retrieve
+POST /context/recover
+POST /context/pack
+POST /context/evaluate
+GET  /context/stats
+GET  /context/policies
+GET  /context/models
+GET  /context/benchmarks
+FastAPI debe ser una capa fina. No debe contener la lógica de optimización.
+
+Pydantic
+Función: contratos y validación de todas las estructuras.
+Repositorio:
+https://github.com/pydantic/pydantic
+Licencia MIT.
+Especialmente para:
+ContextItem
+ContextIR
+ContextPolicy
+ModelProfile
+CompressionResult
+RecoveryRequest
+BenchmarkResult
+
+uv
+Función: gestión del proyecto Python y dependencias.
+Repositorio:
+https://github.com/astral-sh/uv
+Está escrito en Rust, soporta lockfiles/workspaces y busca ser una alternativa rápida a múltiples herramientas tradicionales de Python.
+
+Ruff
+Repositorio:
+https://github.com/astral-sh/ruff
+Función: linting + formatting.
+Debe formar parte del CI.
+
+ty
+Repositorio:
+https://github.com/astral-sh/ty
+Función: type checking.
+Licencia MIT, pero actualmente está en beta y su API no se considera estable; por eso lo usaría en CI/desarrollo, no como pieza funcional del producto.
+
+2. Base de datos y almacenamiento
+SQLite
+Función central:
+context state
+memory metadata
+provenance
+policies
+cache metadata
+tasks
+trajectory state
+compression versions
+recovery pointers
+Ventaja: cero servidor separado.
+
+SQLite FTS5
+Función:
+full-text retrieval
+BM25
+exact keyword retrieval
+identifiers
+code names
+logs
+documentation
+No desplegar Elasticsearch sólo para esta función.
+
+sqlite-vec
+Repositorio:
+https://github.com/asg017/sqlite-vec
+Licencia MIT en su licencia correspondiente.
+Función:
+vector search
+semantic retrieval
+local vector storage
+Arquitectura:
+SQLite
+ ├── normal tables
+ ├── FTS5
+ └── sqlite-vec
+Así no obligamos al sistema pequeño a desplegar una base vectorial independiente.
+
+DuckDB
+Repositorio:
+https://github.com/duckdb/duckdb
+Función exclusivamente analítica:
+benchmarks
+A/B tests
+ablation
+cost analysis
+policy experiments
+historical telemetry
+No utilizarlo como base de datos transaccional principal.
+
+3. Retrieval / embeddings
+FastEmbed
+Repositorio:
+https://github.com/qdrant/fastembed
+Función:
+embeddings
+dense retrieval
+sparse retrieval cuando corresponda
+reranking
+modelos ligeros locales
+El proyecto se presenta como una librería de embeddings ligera y rápida.
+Pipeline:
+query
+ ↓
+FTS5
++
+sqlite-vec
+ ↓
+candidate merge
+ ↓
+FastEmbed reranker
+ ↓
+final context
+
+Hugging Face Tokenizers
+Repositorio:
+https://github.com/huggingface/tokenizers
+Función:
+token counting
+presupuesto de contexto
+benchmarks
+model-aware accounting
+Especialmente importante para que el sistema no dependa de estimaciones como characters / 4.
+
+4. Context Intelligence Core
+Aquí no debemos depender de un framework externo.
+Crear nuestros propios módulos:
+core/
+  orchestrator/
+  context_ir/
+  scoring/
+  routing/
+  budget/
+  compiler/
+  risk/
+  fidelity/
+  recovery/
+  provenance/
+  cost/
+  policy/
+ContextOrchestrator
+Decide:
+KEEP
+DEDUP
+CACHE
+RETRIEVE
+COMPRESS
+SUMMARIZE
+EXTERNALIZE
+RECOVER
+InformationValueEngine
+Decide cuánto vale cada ContextItem.
+ContextNeedPredictor
+Predice qué información se necesitará próximamente.
+ContextCompiler
+Convierte:
+Raw Context
+→ Context IR
+→ optimized IR
+→ verified IR
+→ model-specific prompt
+CostEngine
+Calcula:
+LLM
++ retrieval
++ compression
++ embedding
++ reranking
++ recovery
++ tools
++ latency
+FidelityEngine
+Verifica que la optimización no destruyó información necesaria.
+
+5. Compresión
+Headroom
+Repositorio:
+https://github.com/headroomlabs-ai/headroom
+Función:
+tool-output compression
+conversation compression
+RAG compression
+file/log compression
+context middleware
+CCR
+MCP/proxy integration
+Licencia Apache-2.0 según el repositorio actual.
+Posición
+ContextOrchestrator
+        ↓
+Headroom adapter
+No:
+Agent → Headroom directamente
+El orquestador decide cuándo usarlo.
+
+Winnow
+Repositorio:
+https://github.com/jpoindexter/winnow
+Función:
+reversible compression
+JSON
+logs
+file output
+tool output
+large context
+Su diseño es local-first y reversible; el original puede recuperarse posteriormente.
+Éste será nuestro compressor preferido para contenido grande y recuperable.
+
+Microsoft ACON
+Repositorio:
+https://github.com/microsoft/acon
+Licencia MIT y específicamente orientado a optimización del contexto de agentes de larga duración.
+Usarlo para:
+long-horizon agents
+trajectories
+observations
+historical interactions
+agent state
+No usarlo universalmente.
+
+Paritok-4B
+Repositorio:
+https://github.com/Paritok-official/paritok-4b-v1
+Función: compresión de trayectorias de coding agents.
+El repositorio declara Apache-2.0 para el proyecto, pero avisa que el modelo base Qwen3 tiene su propia licencia; por tanto, antes de redistribuir modelos hay que auditar también la licencia del modelo base, no sólo la del código.
+Posición
+task=coding
++
+trajectory=coding
+        ↓
+Paritok
+No para chat normal.
+
+LLMLingua
+Repositorio:
+https://github.com/microsoft/LLMLingua
+Licencia MIT.
+Función:
+prose compression
+documentación
+RAG textual
+contexto textual redundante
+No utilizar como compresor universal de código/configuración/instrucciones críticas.
+
+6. Código: evitar contexto antes de comprimir
+Éste es uno de los puntos donde haría una mejora importantísima.
+Tree-sitter
+Repositorio:
+https://github.com/tree-sitter/tree-sitter
+MIT; el runtime está escrito en C y está diseñado para ser rápido y embebible.
+Función:
+parse
+AST
+functions
+classes
+imports
+symbols
+dependencies
+regions
+
+Serena
+Repositorio:
+https://github.com/oraios/serena
+MIT.
+Función:
+semantic code retrieval
+definitions
+references
+symbols
+editing
+LSP-based understanding
+Pipeline:
+user asks about auth middleware
+          ↓
+Serena
+          ↓
+find relevant symbols
+          ↓
+Tree-sitter
+          ↓
+read only required regions
+Ésta probablemente ahorra más tokens que aplicar otro compressor después.
+
+ripgrep
+Repositorio:
+https://github.com/BurntSushi/ripgrep
+Función:
+fast text search
+repository search
+logs
+exact identifiers
+Usarlo como primera pasada antes de herramientas semánticas más costosas.
+
+7. Memoria
+Mem0
+Repositorio:
+https://github.com/mem0ai/mem0
+Apache-2.0; el proyecto sigue activo y tiene un ecosistema específico de memoria y benchmarks.
+Función:
+user facts
+project facts
+durable preferences
+decisions
+long-term state
+reusable knowledge
+No almacenar todo indiscriminadamente.
+
+8. Cache intelligence
+Exact cache
+Propio.
+hash(request state)
+→ exact result
+
+Semantic cache
+Propio + adapters.
+Usará:
+FastEmbed
++
+sqlite-vec
++
+ContextIR
++
+model profile
++
+task state
+No aceptar un resultado sólo por similitud semántica.
+Debe validar:
+model
+system prompt
+tools
+knowledge version
+permissions
+freshness
+task state
+
+LMCache
+Repositorio:
+https://github.com/LMCache/LMCache
+Función:
+KV cache reuse
+context reuse
+offload
+inference optimization
+Regla
+Se utiliza solamente cuando controlamos el runtime de inferencia.
+Especialmente:
+vLLM
++
+LMCache
+No mezclar esto conceptualmente con prompt compression.
+
+9. Inferencia local
+Ollama
+Repositorio:
+https://github.com/ollama/ollama
+MIT.
+Usarlo para:
+pequeños modelos locales;
+clasificadores;
+evaluadores;
+embeddings compatibles;
+pruebas.
+
+vLLM
+Repositorio:
+https://github.com/vllm-project/vllm
+Usarlo cuando exista GPU suficiente y necesitemos:
+serving;
+throughput;
+batching;
+KV optimization;
+múltiples requests.
+No meter vLLM en la instalación mínima de una máquina pequeña.
+
+ONNX Runtime
+Repositorio:
+https://github.com/microsoft/onnxruntime
+Función:
+small classifier
+fidelity classifier
+intent model
+reranker
+predictor
+Preferir esto a cargar PyTorch entero para un modelo de 100–500 MB.
+
+10. Gateway de modelos
+LiteLLM
+Repositorio:
+https://github.com/BerriAI/litellm
+El repositorio lo posiciona como SDK/proxy para múltiples APIs de LLM con routing, tracking de costes, load balancing y logging.
+Su licencia tiene una separación importante: el contenido fuera de enterprise/ está bajo MIT, mientras enterprise/ tiene licencia propia.
+Función
+provider abstraction
+model routing
+cost metadata
+fallback
+load balancing
+API normalization
+No debe hacer
+context intelligence
+compression policy
+memory logic
+fidelity
+recovery
+Eso pertenece al sistema propio.
+
+11. Model Profile Registry
+Propio.
+Ejemplo:
+ModelProfile
+ ├── provider
+ ├── model
+ ├── tokenizer
+ ├── context_window
+ ├── input_price
+ ├── output_price
+ ├── cache_price
+ ├── reasoning_profile
+ ├── tool_behavior
+ ├── compression_tolerance
+ └── latency_profile
+Así el sistema puede aprender:
+Qwen-X → strategy A
+DeepSeek-Y → strategy B
+GPT-Z → strategy C
+local model → no compression
+
+12. Observabilidad
+OpenTelemetry
+Repositorio:
+https://github.com/open-telemetry/opentelemetry-python
+Apache-2.0.
+Función:
+traces
+metrics
+latency
+request lifecycle
+
+OpenInference
+Repositorio:
+https://github.com/Arize-ai/openinference
+Es una capa de convenciones/instrumentación complementaria a OpenTelemetry para aplicaciones de IA, incluyendo retrieval y tool usage.
+Trace ideal
+TASK
+ ├── MEMORY
+ ├── RETRIEVAL
+ ├── COMPRESSION
+ ├── RECOVERY
+ ├── TOOL
+ └── LLM
+
+Prometheus
+Repositorio:
+https://github.com/prometheus/client_python
+Función: métricas.
+
+Langfuse
+Repositorio:
+https://github.com/langfuse/langfuse
+Es útil para observabilidad/evaluación y tiene un core MIT, pero su repositorio también contiene componentes ee/ con licencia comercial.
+Por ello:
+OPCIONAL, no dependencia fundamental.
+Si se usa, la implementación debe consumir solamente las partes permisivas que hayan sido auditadas.
+
+13. Evaluación
+Promptfoo
+Repositorio:
+https://github.com/promptfoo/promptfoo
+MIT y orientado a evaluación/red teaming de LLMs, agentes y RAG.
+Usarlo para:
+regression
+A/B
+security
+red teaming
+model comparison
+RAG evaluation
+
+Inspect AI
+Repositorio:
+https://github.com/UKGovernmentBEIS/inspect_ai
+MIT.
+Especialmente útil para:
+multi-turn;
+herramientas;
+agentes;
+evaluaciones más experimentales.
+
+Hypothesis
+Repositorio:
+https://github.com/HypothesisWorks/hypothesis
+Función: property-based testing.
+Es muy importante para generar casos que exploten:
+numbers
+dates
+IDs
+negations
+JSON
+Unicode
+nested data
+large inputs
+edge cases
+Su propósito es descubrir automáticamente casos límite que no escribirías manualmente.
+
+14. Aprendizaje de políticas
+DSPy
+Repositorio:
+https://github.com/stanfordnlp/dspy
+MIT. Está orientado a optimizar programas LLM, pipelines RAG y loops de agentes.
+Usarlo para
+policy optimization
+retrieval policy
+compression policy
+context packing
+optimizer prompts
+No convertirlo en framework obligatorio del runtime.
+
+Agent Lightning
+Repositorio:
+https://github.com/microsoft/agent-lightning
+Usarlo para
+production traces
+ ↓
+training/evaluation dataset
+ ↓
+policy learning
+ ↓
+benchmark
+ ↓
+candidate policy
+Debe vivir en:
+Intelligence/Research Plane
+y no dentro del camino normal de cada request.
+
+15. Seguridad
+detect-secrets
+Repositorio:
+https://github.com/Yelp/detect-secrets
+Apache-2.0.
+Función:
+API keys
+passwords
+tokens
+secrets
+
+cryptography
+Repositorio:
+https://github.com/pyca/cryptography
+Usarlo para:
+encrypted shadow context;
+secure storage;
+key derivation;
+cryptographic operations.
+El proyecto ofrece primitivas criptográficas y recetas de alto nivel para Python.
+
+16. Security model propio
+No depender exclusivamente de un proyecto externo.
+Cada fragmento debe tener:
+role
+trust
+provenance
+source
+authority
+sensitivity
+Ejemplo:
+SYSTEM
+DEVELOPER
+USER
+MEMORY
+TOOL
+EXTERNAL
+UNTRUSTED
+Y la regla:
+DATA ≠ INSTRUCTION
+Esto es especialmente importante frente a prompt injection.
+
+17. Context Graph
+Propio sobre SQLite.
+No Neo4j inicialmente.
+Tablas:
+context_items
+context_edges
+context_versions
+context_sources
+context_dependencies
+context_events
+Relaciones:
+depends_on
+derived_from
+duplicates
+supports
+contradicts
+supersedes
+required_by
+Esto permite temporalidad y causalidad sin añadir otro servidor.
+
+18. Arquitectura de paquetes
+La IA que implemente esto debería crear algo similar a:
+context-engine/
+│
+├── core/
+│   ├── context_ir/
+│   ├── orchestrator/
+│   ├── information_value/
+│   ├── need_prediction/
+│   ├── risk/
+│   ├── compiler/
+│   ├── fidelity/
+│   ├── recovery/
+│   ├── cost/
+│   ├── provenance/
+│   ├── graph/
+│   └── policies/
+│
+├── adapters/
+│   ├── headroom/
+│   ├── winnow/
+│   ├── acon/
+│   ├── paritok/
+│   ├── llmlingua/
+│   ├── mem0/
+│   ├── lmcache/
+│   ├── litellm/
+│   ├── fastembed/
+│   ├── treesitter/
+│   └── serena/
+│
+├── storage/
+│   ├── sqlite/
+│   ├── fts5/
+│   ├── sqlite_vec/
+│   └── duckdb/
+│
+├── inference/
+│   ├── ollama/
+│   ├── vllm/
+│   └── onnx/
+│
+├── security/
+│   ├── provenance/
+│   ├── secret_detection/
+│   ├── injection_detection/
+│   └── encryption/
+│
+├── observability/
+│   ├── opentelemetry/
+│   ├── openinference/
+│   └── prometheus/
+│
+├── evaluation/
+│   ├── promptfoo/
+│   ├── inspect/
+│   ├── hypothesis/
+│   └── benchmarks/
+│
+└── intelligence/
+    ├── dspy/
+    ├── agent_lightning/
+    ├── policy_learning/
+    └── experiments/
+19. Qué debe ser obligatorio y qué opcional
+Instalación base
+Python
+FastAPI
+Pydantic
+uv
+SQLite
+FTS5
+sqlite-vec
+FastEmbed
+Hugging Face Tokenizers
+LiteLLM
+OpenTelemetry
+Primera línea de optimización
+Headroom
+Winnow
+Tree-sitter
+Serena
+Mem0
+Especializados
+ACON
+Paritok
+LLMLingua
+LMCache
+Sólo investigación/optimización
+DSPy
+Agent Lightning
+Promptfoo
+Inspect AI
+DuckDB
+Opcionales
+Ollama
+vLLM
+Langfuse
+ONNX Runtime
+según el deployment.
+
+20. Orden de integración
+La IA que implemente el proyecto no debe instalar 25 herramientas y conectarlas simultáneamente.
+Debe seguir:
+1. Core + ContextIR
+        ↓
+2. SQLite + FTS5
+        ↓
+3. Provenance + Shadow Store
+        ↓
+4. ContextOrchestrator
+        ↓
+5. CostEngine
+        ↓
+6. FastEmbed + sqlite-vec
+        ↓
+7. Headroom
+        ↓
+8. Winnow
+        ↓
+9. Tree-sitter + Serena
+        ↓
+10. Mem0
+        ↓
+11. Recovery
+        ↓
+12. Fidelity
+        ↓
+13. ACON
+        ↓
+14. Paritok
+        ↓
+15. LLMLingua
+        ↓
+16. LiteLLM
+        ↓
+17. Observability
+        ↓
+18. Benchmark Lab
+        ↓
+19. DSPy / Agent Lightning
+        ↓
+20. LMCache / local inference
+Cada etapa debe pasar tests y benchmarks antes de activar la siguiente.
+21. La regla de integración más importante
+La IA debe entender esto:
+              EXTERNAL PROJECTS
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+   Headroom       Winnow          ACON
+        │             │             │
+        ▼             ▼             ▼
+   Adapter      Adapter        Adapter
+        │             │             │
+        └─────────────┼─────────────┘
+                      ▼
+              OWN CORE INTERFACE
+                      │
+                      ▼
+             ContextOrchestrator
+Nunca:
+Headroom → ACON → Winnow → LLMLingua → Paritok
+en una cadena fija.
+Debe ser:
+                   ContextOrchestrator
+                            │
+                 ┌──────────┼──────────┐
+                 ▼          ▼          ▼
+             Headroom     Winnow      ACON
+                 │          │          │
+                 └──────────┼──────────┘
+                            ▼
+                      BEST STRATEGY
+22. El proyecto resultante
+Con esta definición, la IA que implemente el sistema debe entender que estamos construyendo:
+un motor universal de inteligencia de contexto, no un compresor de prompts.
+Su ciclo completo será:
+OBSERVE
+   ↓
+CLASSIFY
+   ↓
+UNDERSTAND
+   ↓
+PREDICT NEED
+   ↓
+CHECK CACHE
+   ↓
+RETRIEVE
+   ↓
+DEDUPLICATE
+   ↓
+VALUE/RISK SCORE
+   ↓
+SELECT STRATEGY
+   ↓
+COMPRESS / KEEP / EXTERNALIZE
+   ↓
+COMPILE
+   ↓
+VERIFY FIDELITY
+   ↓
+RECOVER IF NECESSARY
+   ↓
+SELECT MODEL
+   ↓
+LITELLM
+   ↓
+EXECUTE
+   ↓
+MEASURE
+   ↓
+BENCHMARK
+   ↓
+LEARN
+   ↓
+CANARY
+   ↓
+IMPROVE
+
+
+
+
+

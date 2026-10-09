@@ -1,0 +1,239 @@
+[
+  {
+    "name": "Traversaal",
+    "pluginKey": "traversaal_search",
+    "description": "Traversaal is a robust search API tailored for LLM Agents. Get an API key here: https://api.traversaal.ai",
+    "icon": "https://traversaal.ai/favicon.ico",
+    "authConfig": [
+      {
+        "authField": "TRAVERSAAL_API_KEY",
+        "label": "Traversaal API Key",
+        "description": "Get your API key here: <a href=\"https://api.traversaal.ai\" target=\"_blank\">https://api.traversaal.ai</a>"
+      }
+    ]
+  },
+  {
+    "name": "Google",
+    "pluginKey": "google",
+    "description": "Use Google Search to find information about the weather, news, sports, and more.",
+    "icon": "assets/google-search.svg",
+    "authConfig": [
+      {
+        "authField": "GOOGLE_CSE_ID",
+        "label": "Google CSE ID",
+        "description": "This is your Google Custom Search Engine ID. For instructions on how to obtain this, see <a href='https://github.com/danny-avila/LibreChat/blob/main/docs/features/plugins/google_search.md'>Our Docs</a>."
+      },
+      {
+        "authField": "GOOGLE_SEARCH_API_KEY",
+        "label": "Google API Key",
+        "description": "This is your Google Custom Search API Key. For instructions on how to obtain this, see <a href='https://github.com/danny-avila/LibreChat/blob/main/docs/features/plugins/google_search.md'>Our Docs</a>."
+      }
+    ]
+  },
+  {
+    "name": "OpenAI Image Tools",
+    "pluginKey": "image_gen_oai",
+    "toolkit": true,
+    "description": "Image Generation and Editing using OpenAI's latest state-of-the-art models",
+    "icon": "assets/image_gen_oai.png",
+    "authConfig": [
+      {
+        "authField": "IMAGE_GEN_OAI_API_KEY",
+        "label": "OpenAI Image Tools API Key",
+        "description": "Your OpenAI API Key for Image Generation and Editing"
+      }
+    ]
+  },
+  {
+    "name": "Wolfram",
+    "pluginKey": "wolfram",
+    "description": "Access computation, math, curated knowledge & real-time data through Wolfram|Alpha and Wolfram Language.",
+    "icon": "https://www.wolframcdn.com/images/icons/Wolfram.png",
+    "authConfig": [
+      {
+        "authField": "WOLFRAM_APP_ID",
+        "label": "Wolfram App ID",
+        "description": "An AppID must be supplied in all calls to the Wolfram|Alpha API. You can get one by registering at <a href='http://products.wolframalpha.com/api/'>Wolfram|Alpha</a> and going to the <a href='https://developer.wolframalpha.com/portal/myapps/'>Developer Portal</a>."
+      }
+    ]
+  },
+  {
+    "name": "DALL-E-3",
+    "pluginKey": "dalle",
+    "description": "[DALL-E-3] Create realistic images and art from a description in natural language",
+    "icon": "assets/openai.svg",
+    "authConfig": [
+      {
+        "authField": "DALLE3_API_KEY||DALLE_API_KEY",
+        "label": "OpenAI API Key",
+        "description": "You can use DALL-E with your API Key from OpenAI."
+      }
+    ]
+  },
+  {
+    "name": "Tavily Search",
+    "pluginKey": "tavily_search_results_json",
+    "description": "Tavily Search is a robust search API tailored for LLM Agents. It seamlessly integrates with diverse data sources to ensure a superior, relevant search experience.",
+    "icon": "assets/tavily.svg",
+    "authConfig": [
+      {
+        "authField": "TAVILY_API_KEY",
+        "label": "Tavily API Key",
+        "description": "Get your API key here: https://app.tavily.com/"
+      }
+    ]
+  },
+  {
+    "name": "Calculator",
+    "pluginKey": "calculator",
+    "description": "Perform simple and complex mathematical calculations.",
+    "icon": "assets/calculator.svg",
+    "authConfig": []
+  },
+  {
+    "name": "DuckDuckGo Search",
+    "pluginKey": "duckduckgo_search",
+    "description": "Free web search (DuckDuckGo) with no API key required. Uses the project's own SearchRuntime to answer questions about current events, documentation and general research.",
+    "icon": "assets/web-search.svg",
+    "authConfig": []
+  },
+  {
+    "name": "Knowledge Engine",
+    "pluginKey": "knowledge_engine",
+    "description": "Universal knowledge engine with factual verification. Searches multiple sources, detects contradictions between independent domains and returns evidence with numbered citations [1], [2]... plus an optional concise answer in Spanish citing those sources. No API key required.",
+    "icon": "assets/web-search.svg",
+    "authConfig": []
+  },
+  {
+    "name": "Image Generator",
+    "pluginKey": "image_generator",
+    "description": "Local image generator powered by ComfyUI (Stable Diffusion, no API key required). Takes a detailed prompt and returns a generated image that renders in the chat. Generation takes 1-5 minutes on CPU. Requires ComfyUI running.",
+    "icon": "assets/web-search.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Video Generator",
+    "pluginKey": "video_generator",
+    "description": "Local video generator powered by ComfyUI (AnimateDiff/SVD, no API key required). Takes a detailed prompt and returns a short animated video that renders in the chat. Generation takes 3-10 minutes on CPU. Requires ComfyUI running.",
+    "icon": "assets/web-search.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Image Analyzer",
+    "pluginKey": "image_analyzer",
+    "description": "Analyze images using a vision LLM (MiniCPM-V/LLaVA via Ollama). Can describe images, read text (OCR), identify objects, interpret charts and diagrams. No API key required.",
+    "icon": "assets/web-search.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Ask User",
+    "pluginKey": "ask_user_question",
+    "description": "Let the agent pause mid-run to ask you a clarifying question and wait for your answer.",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Browser",
+    "pluginKey": "browser_use",
+    "description": "Open a real web browser (Playwright/Chromium), navigate URLs, search with DuckDuckGo, and extract page content. Ideal for web research, verification and live data retrieval.",
+    "icon": "assets/web-search.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Filesystem",
+    "pluginKey": "filesystem_ops",
+    "description": "Read, write, create, list and delete files and directories on the local machine. Use for creating project files, reading configs, and managing local data.",
+    "icon": "assets/calculator.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Computer Control",
+    "pluginKey": "computer_control",
+    "description": "Control the desktop: take screenshots, open File Explorer, launch apps (Notepad, Chrome, Paint, Calculator), list windows, click, type, press keys, and manage the clipboard.",
+    "icon": "assets/calculator.svg",
+    "agentsOnly": true,
+    "authConfig": []
+  },
+  {
+    "name": "Stable Diffusion",
+    "pluginKey": "stable-diffusion",
+    "description": "Generate photo-realistic images given any text input.",
+    "icon": "assets/stability-ai.svg",
+    "authConfig": [
+      {
+        "authField": "SD_WEBUI_URL",
+        "label": "Your Stable Diffusion WebUI API URL",
+        "description": "You need to provide the URL of your Stable Diffusion WebUI API. For instructions on how to obtain this, see <a href='url'>Our Docs</a>."
+      }
+    ]
+  },
+  {
+    "name": "Azure AI Search",
+    "pluginKey": "azure-ai-search",
+    "description": "Use Azure AI Search to find information",
+    "icon": "assets/azure-ai-search.svg",
+    "authConfig": [
+      {
+        "authField": "AZURE_AI_SEARCH_SERVICE_ENDPOINT",
+        "label": "Azure AI Search Endpoint",
+        "description": "You need to provide your Endpoint for Azure AI Search."
+      },
+      {
+        "authField": "AZURE_AI_SEARCH_INDEX_NAME",
+        "label": "Azure AI Search Index Name",
+        "description": "You need to provide your Index Name for Azure AI Search."
+      },
+      {
+        "authField": "AZURE_AI_SEARCH_API_KEY",
+        "label": "Azure AI Search API Key",
+        "description": "You need to provide your API Key for Azure AI Search."
+      }
+    ]
+  },
+  {
+    "name": "OpenWeather",
+    "pluginKey": "open_weather",
+    "description": "Get weather forecasts and historical data from the OpenWeather API",
+    "icon": "assets/openweather.png",
+    "authConfig": [
+      {
+        "authField": "OPENWEATHER_API_KEY",
+        "label": "OpenWeather API Key",
+        "description": "Sign up at <a href=\"https://home.openweathermap.org/users/sign_up\" target=\"_blank\">OpenWeather</a>, then get your key at <a href=\"https://home.openweathermap.org/api_keys\" target=\"_blank\">API keys</a>."
+      }
+    ]
+  },
+  {
+    "name": "Flux",
+    "pluginKey": "flux",
+    "description": "Generate images using text with the Flux API.",
+    "icon": "assets/bfl-ai.svg",
+    "isAuthRequired": "true",
+    "authConfig": [
+      {
+        "authField": "FLUX_API_KEY",
+        "label": "Your Flux API Key",
+        "description": "Provide your Flux API key from your user profile."
+      }
+    ]
+  },
+  {
+    "name": "Gemini Image Tools",
+    "pluginKey": "gemini_image_gen",
+    "description": "Generate high-quality images using Google's Gemini Image Models. Supports Gemini API or Vertex AI.",
+    "icon": "assets/gemini_image_gen.svg",
+    "authConfig": [
+      {
+        "authField": "GEMINI_API_KEY||GOOGLE_KEY||GOOGLE_SERVICE_KEY_FILE",
+        "label": "Gemini API Key (optional)",
+        "description": "Your Google Gemini API Key from <a href='https://aistudio.google.com/app/apikey' target='_blank'>Google AI Studio</a>. Leave blank to use Vertex AI with a service account (GOOGLE_SERVICE_KEY_FILE or api/data/auth.json).",
+        "optional": true
+      }
+    ]
+  }
+]

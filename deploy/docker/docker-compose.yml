@@ -1,0 +1,137 @@
+# ===========================================
+# Mi LibreChat - Docker Compose
+# Development & Production configurations
+# ===========================================
+
+services:
+  # =========================================
+  # MongoDB Database
+  # =========================================
+  mongodb:
+    image: mongo:7
+    container_name: librechat-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-librechat}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-librechat_secret}
+      MONGO_INITDB_DATABASE: librechat
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27017:27017"
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand({ping:1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================================
+  # Redis Cache
+  # =========================================
+  redis:
+    image: redis:7-alpine
+    container_name: librechat-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================================
+  # API Server
+  # =========================================
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    container_name: librechat-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+      # MongoDB
+      MONGO_URI: mongodb://${MONGO_USERNAME:-librechat}:${MONGO_PASSWORD:-librechat_secret}@mongodb:27017/librechat?authSource=admin
+      # Redis
+      REDIS_URL: redis://redis:6379
+      # Security
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      CREDS_KEY: ${CREDS_KEY:-change_me}
+      CREDS_IV: ${CREDS_IV:-change_me}
+      # LLM Providers
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Optional services
+      MEILI_HOST: ${MEILI_HOST:-}
+      MEILI_API_KEY: ${MEILI_API_KEY:-}
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - uploads_data:/app/uploads
+
+  # =========================================
+  # Nginx Reverse Proxy
+  # =========================================
+  nginx:
+    image: nginx:alpine
+    container_name: librechat-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - api
+    networks:
+      - librechat-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# =========================================
+# Networks
+# =========================================
+networks:
+  librechat-network:
+    driver: bridge
+
+# =========================================
+# Volumes
+# =========================================
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  uploads_data:
+    driver: local
+  nginx_logs:
+    driver: local

@@ -1,0 +1,327 @@
+{
+  "date": "2026-09-08T16:13:41.325359+00:00",
+  "version": "0.1.0",
+  "overall_score": 10.0,
+  "all_checks_passed": true,
+  "areas": [
+    {
+      "area": "Kernel & orchestration",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "core tables",
+          "ok": true,
+          "detail": "7 tables present"
+        },
+        {
+          "name": "demo DAG executes live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "crash-resume acceptance test",
+          "ok": true,
+          "detail": "tests/test_crash_resume.py proves it"
+        },
+        {
+          "name": "core handlers registered",
+          "ok": true,
+          "detail": "handlers: ['core.concat_text', 'core.crash_once', 'core.fail_once', 'core.fail_twice', 'core.grow_text', 'core.sleep', 'core.write_text']"
+        }
+      ]
+    },
+    {
+      "area": "Auth & security",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "users table",
+          "ok": true,
+          "detail": "1 tables present"
+        },
+        {
+          "name": "auth + admin routes",
+          "ok": true,
+          "detail": "3 routes present"
+        },
+        {
+          "name": "security tests",
+          "ok": true,
+          "detail": "tests/test_security.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Licensing firewall (§4)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "licenses table + seed",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "flux.1-dev BLOCKED + gate",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_licenses.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Model registry & router (§10/§56)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "models table + seed",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "router guard + selection",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_models_router.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Resource manager (§11)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "snapshot sane",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "storage quota enforced",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API route",
+          "ok": true,
+          "detail": "1 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_resources.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Memory & search (§53/§54)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "memories table",
+          "ok": true,
+          "detail": "1 tables present"
+        },
+        {
+          "name": "add + keyword + semantic live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_memory.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Asset graph (§50/§51)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "relations table",
+          "ok": true,
+          "detail": "1 tables present"
+        },
+        {
+          "name": "link + impact live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_asset_graph.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Styles & characters (§14/§16)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "styles + characters tables",
+          "ok": true,
+          "detail": "2 tables present"
+        },
+        {
+          "name": "create + validate + consistency live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_styles_characters.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "QA framework (§45–49)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "qa_reports table",
+          "ok": true,
+          "detail": "1 tables present"
+        },
+        {
+          "name": "text/image/video checks live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "2 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_qa.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Automatic repair (§49)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "repair_attempts table",
+          "ok": true,
+          "detail": "1 tables present"
+        },
+        {
+          "name": "budget exhaustion -> QA_FAILED",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "repair converges -> COMPLETED",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_repair.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Adapters & providers (§12/§55)",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "probes honest (gpu disabled)",
+          "ok": true,
+          "detail": "8 adapters probed; gpu honestly disabled"
+        },
+        {
+          "name": "provider health/rotation live",
+          "ok": true,
+          "detail": "live run OK"
+        },
+        {
+          "name": "API routes",
+          "ok": true,
+          "detail": "3 routes present"
+        },
+        {
+          "name": "tests",
+          "ok": true,
+          "detail": "tests/test_adapters_providers.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "CLI",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "all subcommands",
+          "ok": true,
+          "detail": "19 subcommands present"
+        },
+        {
+          "name": "cli tests",
+          "ok": true,
+          "detail": "tests/test_cli.py proves it"
+        }
+      ]
+    },
+    {
+      "area": "Dashboard",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "source + build",
+          "ok": true,
+          "detail": "dashboard source + built bundle present"
+        }
+      ]
+    },
+    {
+      "area": "Documentation",
+      "score": 10.0,
+      "checks": [
+        {
+          "name": "required docs present",
+          "ok": true,
+          "detail": "6 docs present"
+        }
+      ]
+    }
+  ]
+}

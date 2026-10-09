@@ -1,0 +1,193 @@
+
+=== INTEGRATION VERIFICATION — Real Pipeline Wiring ===
+
+--- Phase A: classify → Director.decide ---
+  ✅ classify() returns intent + confidence
+  ✅ Director.decide() consumes classify result + worldContext
+  ✅ Director.decide() uses WorldModel context to add security step
+
+--- FASE 5: WorldModel ---
+  ✅ WorldModel upsertEntity + updateEnv + getContextSummary
+  ✅ WorldModel addRelation + getRelations
+
+--- FASE 19: EventSourcing ---
+  ✅ EventSourcing.append writes to in-memory buffer
+  ✅ EventSourcing.logSecurity sets severity=critical
+
+--- FASE 8: AgentFabric ---
+  ✅ AgentFabric.selectPersonas routes by intent
+  ✅ AgentFabric.routeAndPlan spawns tasks in session
+
+--- Gen B Phase 3: ContextResolution ---
+  ✅ ContextResolution.resolve extracts entities
+  ✅ ContextResolution.resolve uses prior history for pronoun linking
+
+--- Gen B Phase 7: AskVsAct ---
+  ✅ AskVsAct.evaluate returns act for clear low-risk tasks
+  ✅ AskVsAct.evaluate returns ask for irreversible operations
+  ✅ AskVsAct.evaluate returns ask for low confidence
+
+--- Gen B Phase 38: ResponseControlSystem ---
+  ✅ ResponseControlSystem profile selection by intent
+
+--- FASE 11: SimulationBeforeAction ---
+  ✅ assessRisk scores rm -rf as 10
+  ✅ simulate blocks high-risk command above threshold
+  ✅ simulate allows safe read command
+
+--- VideoGenerator: manifest fallback ---
+  ✅ VideoGenerator.generate produces manifest when ffmpeg absent
+  ✅ VideoGenerator rejects invalid format
+
+--- Gen B Phase 25: HandoffProtocol ---
+  ✅ HandoffProtocol.initiate creates pending handoff with transferrable context
+  ✅ HandoffProtocol.complete transitions pending → completed
+
+--- DSHToolAdapter: tool registration + execution ---
+[DSHToolAdapter] [DSHToolAdapter] Security layer enabled
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: read_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: write_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: edit_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: list_directory
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_files
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_code
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_command
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_status
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_diff
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_commit
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_log
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_checkout
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_fetch
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: browser_navigate
+[ComputerUse] [ComputerUse] Platform: windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_screenshot
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_click
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_key
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_scroll
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_navigate
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_text
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_clipboard
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: process_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: tts_speak
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: stt_transcribe
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: schedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: unschedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: generate_report
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: mcp_request
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: sandbox_execute
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: social_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: voice_converse
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_list
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: get_suggestions
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_background
+[DSHToolAdapter] [DSHToolAdapter] Registered 41 built-in tools
+[DSHToolAdapter] [DSHToolAdapter] Initialized with 41 tools
+  ✅ DSHToolAdapter registers 41 tools
+[DSHToolAdapter] [DSHToolAdapter] Security layer enabled
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: read_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: write_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: edit_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: list_directory
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_files
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_code
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_command
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_status
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_diff
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_commit
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_log
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_checkout
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_fetch
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: browser_navigate
+[ComputerUse] [ComputerUse] Platform: windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_screenshot
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_click
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_key
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_scroll
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_navigate
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_text
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_clipboard
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: process_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: tts_speak
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: stt_transcribe
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: schedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: unschedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: generate_report
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: mcp_request
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: sandbox_execute
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: social_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: voice_converse
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_list
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: get_suggestions
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_background
+[DSHToolAdapter] [DSHToolAdapter] Registered 41 built-in tools
+[DSHToolAdapter] [DSHToolAdapter] Initialized with 41 tools
+[DSHToolAdapter] [DSHToolAdapter] Executing read_file (attempt 1)
+[DSHToolAdapter] [DSHToolAdapter] read_file completed in 2ms
+  ✅ DSHToolAdapter can execute read_file tool
+[DSHToolAdapter] [DSHToolAdapter] Security layer enabled
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: read_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: write_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: edit_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: list_directory
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_files
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: search_code
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_command
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_status
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_diff
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_commit
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_log
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: git_checkout
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: web_fetch
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: browser_navigate
+[ComputerUse] [ComputerUse] Platform: windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_screenshot
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_click
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_key
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_scroll
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_navigate
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_type
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_browser_text
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_clipboard
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: computer_windows
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: vector_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: process_file
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: tts_speak
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: stt_transcribe
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: schedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: unschedule_job
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: generate_report
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: mcp_request
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: sandbox_execute
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: social_search
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: voice_converse
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_add
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: citation_list
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: get_suggestions
+[DSHToolAdapter] [DSHToolAdapter] Registered tool: run_background
+[DSHToolAdapter] [DSHToolAdapter] Registered 41 built-in tools
+[DSHToolAdapter] [DSHToolAdapter] Initialized with 41 tools
+  ✅ DSHToolAdapter getToolsForCapability returns tools for "filesystem"
+
+--- WorldModel: persistence ---
+  ✅ WorldModel persists entities to disk and reloads
+
+=======================================================
+  INTEGRATION RESULTS: 26 passed, 0 failed, 0 skipped
+=======================================================

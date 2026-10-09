@@ -1,0 +1,35 @@
+[
+  {
+    "id": "allow-web-search",
+    "effect": "permit",
+    "action": "web_search",
+    "description": "Allow web search tool"
+  },
+  {
+    "id": "allow-apply-patch",
+    "effect": "permit",
+    "action": "apply_patch",
+    "description": "Allow applying patches to files"
+  },
+  {
+    "id": "deny-eval",
+    "effect": "forbid",
+    "action": "code_execution",
+    "resource": "eval",
+    "description": "Deny eval() execution"
+  },
+  {
+    "id": "deny-rm-rf",
+    "effect": "forbid",
+    "action": "execute_command",
+    "resource": "rm -rf",
+    "description": "Deny recursive force delete"
+  },
+  {
+    "id": "confirm-git-push",
+    "effect": "forbid",
+    "action": "execute_command",
+    "resource": "git push",
+    "description": "Deny git push without explicit permission"
+  }
+]

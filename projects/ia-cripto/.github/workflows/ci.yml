@@ -1,0 +1,120 @@
+name: AEOS CI (ia-cripto)
+
+on:
+  push:
+    branches: [ia-cripto]
+  pull_request:
+    branches: [ia-cripto]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package (stdlib-only core + dev + trading extras)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,trading]"
+
+      - name: Sanity — zero placeholders / dead code in production
+        run: |
+          ! grep -rnE "NotImplementedError|FIXME|XXX" aeos/ --include="*.py"
+          ! grep -rn "if False" aeos/ --include="*.py"
+          ! grep -rn "__import__" aeos/ --include="*.py"
+
+      - name: Run full test suite
+        run: python -m pytest tests/ -v --tb=short
+
+      - name: CLI smoke — doctor, one autonomous cycle, status
+        run: |
+          python -m aeos.cli --db .ci-smoke/aeos.db doctor
+          python -m aeos.cli --db .ci-smoke/aeos.db start --once
+          python -m aeos.cli --db .ci-smoke/aeos.db status
+
+      - name: API smoke — unauthenticated 401, authenticated 200, dashboard
+        run: |
+          python -m aeos.api.server --port 8477 --db .ci-smoke/api.db &
+          API_PID=$!
+          for i in $(seq 1 30); do
+            curl -s -o /dev/null http://127.0.0.1:8477/api/v1/status && break
+            sleep 0.5
+          done
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8477/api/v1/status)
+          test "$code" = "401" || (echo "expected 401 without key, got $code" && kill $API_PID && exit 1)
+          KEY=$(python -m aeos.cli --db .ci-smoke/api.db keys --role admin \
+                | python -c "import json,sys; print(json.load(sys.stdin)['api_key'])")
+          auth=$(curl -s -o /dev/null -w "%{http_code}" -H "X-Api-Key: $KEY" http://127.0.0.1:8477/api/v1/status)
+          test "$auth" = "200" || (echo "expected 200 with admin key, got $auth" && kill $API_PID && exit 1)
+          dash=$(curl -s -o /dev/null -w "%{http_code}" -H "X-Api-Key: $KEY" http://127.0.0.1:8477/dashboard)
+          test "$dash" = "200" || (echo "expected 200 on dashboard, got $dash" && kill $API_PID && exit 1)
+          kill $API_PID
+
+      - name: Upload test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-smoke-db-${{ matrix.python-version }}
+          path: .ci-smoke/
+          retention-days: 5
+          if-no-files-found: ignore
+
+  license-audit:
+    name: License allowlist (§110)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package + pip-licenses
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pip-licenses
+
+      - name: Runtime dependency allowlist check (PEP 639 aware)
+        run: python .github/scripts/license_check.py
+
+      - name: Full environment allowlist check (incl. dev tools)
+        run: |
+          pip-licenses --format=json --output-file=/tmp/licenses.json
+          python .github/scripts/license_check.py --file /tmp/licenses.json
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-report
+          path: /tmp/licenses.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  upstream-hygiene:
+    name: Upstream reference hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: _upstream stays reference-only (never imported by aeos)
+        run: |
+          ! grep -rn "from _upstream\|import _upstream" aeos/ --include="*.py"
+      - name: No committed secrets
+        run: |
+          # hard fail on aeos/, tests/, .github/ — advisory elsewhere
+          ! grep -rnE "ghp_[A-Za-z0-9]{36}|AKIA[0-9A-Z]{16}" aeos/ tests/ .github/

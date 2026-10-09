@@ -1,0 +1,96 @@
+/* AgentStatusBar - Panel inferior simple */
+
+.agent-status-bar {
+  width: 100%;
+  background: var(--bg-secondary, #f9fafb);
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.agent-status-bar.dark {
+  --bg-secondary: #1f2937;
+  --border-color: #374151;
+}
+
+/* Animación de spin para el loader */
+.agent-status-bar .animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Transición suave para el progreso */
+.agent-status-bar .progress-fill {
+  transition: width 0.3s ease-in-out;
+}
+
+/* Contenedor de la barra de progreso */
+.agent-status-bar .progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.agent-status-bar .progress-bar {
+  width: 5rem;
+  height: 0.25rem;
+  background: var(--border-color, #e5e7eb);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.agent-status-bar .progress-fill {
+  height: 100%;
+  background: var(--accent-color, #6366f1);
+  border-radius: 9999px;
+}
+
+/* Estados */
+.agent-status-bar .status-idle {
+  color: var(--text-secondary, #6b7280);
+}
+
+.agent-status-bar .status-thinking {
+  color: var(--warning-color, #f59e0b);
+}
+
+.agent-status-bar .status-executing {
+  color: var(--accent-color, #6366f1);
+}
+
+.agent-status-bar .status-completed {
+  color: var(--success-color, #22c55e);
+}
+
+.agent-status-bar .status-error {
+  color: var(--error-color, #ef4444);
+}
+
+/* Badge de herramienta */
+.agent-status-bar .tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--bg-tertiary, #f3f4f6);
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+}
+
+.agent-status-bar.dark .tool-badge {
+  background: var(--bg-primary, #374151);
+  color: var(--text-secondary, #9ca3af);
+}
+
+/* Duración con fuente monospace */
+.agent-status-bar .duration {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}

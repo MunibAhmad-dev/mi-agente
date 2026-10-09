@@ -1,0 +1,448 @@
+# LiteLLM Gateway Configuration
+# ================================================
+# Configuración centralizada para todos los
+# proveedores de LLM con enrutamiento inteligente
+
+# ---- CONFIGURACIÓN GENERAL ----
+general_settings:
+  # Nombre del deployment
+  master_key: os.environ/LITELLM_MASTER_KEY
+  
+  # UI Admin
+  admin_key: os.environ/LITELLM_ADMIN_KEY
+  
+  # Database
+  database_url: os.environ/DATABASE_URL
+  
+  # Redis
+  redis_url: os.environ/REDIS_URL
+  
+  # CORS
+  allow_cORS: true
+  CORS_ALLOW_ORIGINS: "*"
+  
+  # Max parallel requests
+  max_parallel_requests: 100
+  
+  # Health check
+  health_check: true
+  
+  # Store all requests (audit)
+  store_model_inference_input: true
+  store_model_inference_output: true
+
+# ---- MODELOS ----
+# Lista de modelos por proveedor
+model_list:
+  # ===============================
+  # OPENAI
+  # ===============================
+  - model_name: gpt-4o
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      context_window: 128000
+  
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 128000
+  
+  - model_name: gpt-4-turbo
+    litellm_params:
+      model: openai/gpt-4-turbo
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 128000
+  
+  - model_name: gpt-3.5-turbo
+    litellm_params:
+      model: openai/gpt-3.5-turbo
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 16385
+  
+  - model_name: o1-preview
+    litellm_params:
+      model: openai/o1-preview
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      context_window: 128000
+  
+  - model_name: o1-mini
+    litellm_params:
+      model: openai/o1-mini
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      mode: chat
+      context_window: 128000
+
+  # ===============================
+  # ANTHROPIC (Claude)
+  # ===============================
+  - model_name: claude-3.5-sonnet
+    litellm_params:
+      model: anthropic/claude-3-5-sonnet-20240620
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      context_window: 200000
+  
+  - model_name: claude-3.5-haiku
+    litellm_params:
+      model: anthropic/claude-3-5-haiku-20240620
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 200000
+  
+  - model_name: claude-3-opus
+    litellm_params:
+      model: anthropic/claude-3-opus-20240229
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      context_window: 200000
+  
+  - model_name: claude-3-sonnet
+    litellm_params:
+      model: anthropic/claude-3-sonnet-20240229
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      supports_vision: true
+      context_window: 200000
+
+  # ===============================
+  # GOOGLE (Gemini)
+  # ===============================
+  - model_name: gemini-2.0-flash
+    litellm_params:
+      model: gemini/gemini-2.0-flash
+      api_key: os.environ/GOOGLE_API_KEY
+    model_info:
+      mode: chat
+      supports_vision: true
+      context_window: 1000000
+  
+  - model_name: gemini-1.5-pro
+    litellm_params:
+      model: gemini/gemini-1.5-pro
+      api_key: os.environ/GOOGLE_API_KEY
+    model_info:
+      mode: chat
+      supports_vision: true
+      context_window: 2000000
+  
+  - model_name: gemini-1.5-flash
+    litellm_params:
+      model: gemini/gemini-1.5-flash
+      api_key: os.environ/GOOGLE_API_KEY
+    model_info:
+      mode: chat
+      supports_vision: true
+      context_window: 1000000
+  
+  - model_name: gemini-1.5-flash-8b
+    litellm_params:
+      model: gemini/gemini-1.5-flash-8b
+      api_key: os.environ/GOOGLE_API_KEY
+    model_info:
+      mode: chat
+      context_window: 1000000
+
+  # ===============================
+  # GROQ
+  # ===============================
+  - model_name: llama-3.1-70b
+    litellm_params:
+      model: groq/llama-3.1-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      mode: chat
+      context_window: 131072
+  
+  - model_name: llama-3.1-8b
+    litellm_params:
+      model: groq/llama-3.1-8b-instant
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      mode: chat
+      context_window: 131072
+  
+  - model_name: mixtral-8x7b
+    litellm_params:
+      model: groq/mixtral-8x7b-32768
+      api_key: os.environ/GROQ_API_KEY
+    model_info:
+      mode: chat
+      context_window: 32768
+
+  # ===============================
+  # MISTRAL
+  # ===============================
+  - model_name: mistral-large
+    litellm_params:
+      model: mistral/mistral-large
+      api_key: os.environ/MISTRAL_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 128000
+  
+  - model_name: mistral-small
+    litellm_params:
+      model: mistral/mistral-small
+      api_key: os.environ/MISTRAL_API_KEY
+    model_info:
+      mode: chat
+      context_window: 128000
+  
+  - model_name: mistral-tiny
+    litellm_params:
+      model: mistral/mistral-tiny
+      api_key: os.environ/MISTRAL_API_KEY
+    model_info:
+      mode: chat
+      context_window: 128000
+
+  # ===============================
+  # DEEPSEEK
+  # ===============================
+  - model_name: deepseek-chat
+    litellm_params:
+      model: deepseek/deepseek-chat
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 64000
+  
+  - model_name: deepseek-coder
+    litellm_params:
+      model: deepseek/deepseek-coder
+      api_key: os.environ/DEEPSEEK_API_KEY
+    model_info:
+      mode: chat
+      context_window: 64000
+
+  # ===============================
+  # COHERE
+  # ===============================
+  - model_name: command-r-plus
+    litellm_params:
+      model: cohere/command-r-plus
+      api_key: os.environ/COHERE_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 128000
+  
+  - model_name: command-r
+    litellm_params:
+      model: cohere/command-r
+      api_key: os.environ/COHERE_API_KEY
+    model_info:
+      mode: chat
+      supports_function_calling: true
+      context_window: 128000
+
+  # ===============================
+  # TOGETHER AI
+  # ===============================
+  - model_name: meta-llama-3.1-70b
+    litellm_params:
+      model: together_ai/meta-llama/Llama-3.1-70B-Instruct-Turbo
+      api_key: os.environ/TOGETHER_API_KEY
+    model_info:
+      mode: chat
+      context_window: 131072
+  
+  - model_name: meta-llama-3.1-8b
+    litellm_params:
+      model: together_ai/meta-llama/Llama-3.1-8B-Instruct-Turbo
+      api_key: os.environ/TOGETHER_API_KEY
+    model_info:
+      mode: chat
+      context_window: 131072
+
+  # ===============================
+  # NVIDIA NIM
+  # ===============================
+  - model_name: nvidia-llama-3.1-nemotron
+    litellm_params:
+      model: nvidia/nim/meta-llama-3.1-70b-instruct
+      api_key: os.environ/NVIDIA_API_KEY
+    model_info:
+      mode: chat
+      context_window: 131072
+
+  # ===============================
+  # PERPLEXITY
+  # ===============================
+  - model_name: sonar
+    litellm_params:
+      model: perplexity/sonar
+      api_key: os.environ/PERPLEXITY_API_KEY
+    model_info:
+      mode: chat
+      context_window: 127072
+  
+  - model_name: sonar-pro
+    litellm_params:
+      model: perplexity/sonar-pro
+      api_key: os.environ/PERPLEXITY_API_KEY
+    model_info:
+      mode: chat
+      context_window: 127072
+
+  # ===============================
+  # OLLAMA (Local)
+  # ===============================
+  - model_name: llama-3.2
+    litellm_params:
+      model: ollama/llama3.2
+      api_base: http://ollama:11434
+    model_info:
+      mode: chat
+      context_window: 131072
+  
+  - model_name: codellama
+    litellm_params:
+      model: ollama/codellama
+      api_base: http://ollama:11434
+    model_info:
+      mode: chat
+      context_window: 16384
+  
+  - model_name: mistral
+    litellm_params:
+      model: ollama/mistral
+      api_base: http://ollama:11434
+    model_info:
+      mode: chat
+      context_window: 8192
+
+# ---- GRUPOS DE MODELOS (Alias) ----
+# Enrutamiento por rol
+router_settings:
+  model_group_alias:
+    # Chat general
+    chat:
+      - gpt-4o
+      - claude-3.5-sonnet
+      - gemini-1.5-pro
+    
+    # Programación
+    coding:
+      - claude-3.5-sonnet
+      - gpt-4-turbo
+      - deepseek-coder
+      - codellama
+    
+    # Visión
+    vision:
+      - gpt-4o
+      - claude-3.5-sonnet
+      - claude-3-opus
+      - gemini-1.5-pro
+    
+    # Rápido (baja latencia)
+    fast:
+      - gpt-4o-mini
+      - claude-3.5-haiku
+      - llama-3.1-8b
+      - gemini-1.5-flash
+    
+    # Barato
+    cheap:
+      - gpt-3.5-turbo
+      - mistral-small
+      - llama-3.1-8b
+      - deepseek-chat
+    
+    # Contexto largo
+    long-context:
+      - claude-3.5-sonnet
+      - gemini-1.5-pro
+      - gemini-1.5-flash
+  
+  # Configuración de routing
+  routing_strategy: latency-based-routing  # latency-based | simple-round-robin | weighted-round-robin
+  
+  # Fallbacks automáticos
+  fallback_config:
+    gpt-4o:
+      - claude-3.5-sonnet
+      - gemini-1.5-pro
+    claude-3.5-sonnet:
+      - gpt-4o
+      - gemini-1.5-pro
+    gemini-1.5-pro:
+      - claude-3.5-sonnet
+      - gpt-4o
+  
+  # Health checks
+  enable_pre_call_checks: true
+  health_check_interval: 60
+  model_retries: 2
+  
+  # Rate limiting
+  enable_rate_limiting: true
+  limits:
+    default_limits:
+      duration: 60  # segundos
+      requests_allowed: 60
+      tokens_allowed: 100000
+
+# ---- LITELLM CALL HOOKS ----
+# Hooks para logging y transformación
+litellm_settings:
+  # Call hooks
+  call_hooks:
+    - name: "audit_logging"
+      type: "pre_call"
+      function: "hooks.audit_log"
+    
+    - name: "cost_tracking"
+      type: "post_call"
+      function: "hooks.track_cost"
+  
+  # Custom callbacks
+  callbacks:
+    - langfuse  # Tracing
+  
+  # Retry settings
+  num_retries: 2
+  timeout: 60
+
+# ---- UI SETTINGS ----
+environment_variables:
+  # UI
+  LITELLM_UI_USERNAME: "admin"
+  LITELLM_UI_PASSWORD: "${LITELLM_UI_PASSWORD}"
+  
+  # Database
+  DATABASE_URL: "${DATABASE_URL}"
+  
+  # Redis
+  REDIS_URL: "${REDIS_URL}"

@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: mi-agente-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: standard
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3080
+      - key: HOST
+        value: 0.0.0.0
+      - key: DOMAIN_SERVER
+        value: https://mi-agente-api.onrender.com
+      - key: DOMAIN_CLIENT
+        value: https://mi-agente.vercel.app
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CREDS_KEY
+        sync: false
+      - key: CREDS_IV
+        sync: false
+      - key: REDIS_URI
+        sync: false
+      - key: LOG_TO_FILE
+        value: "true"
+      - key: LOG_DIR
+        value: /var/log/mi-agente
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "1"
+      - key: PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+        value: /usr/bin/chromium-browser

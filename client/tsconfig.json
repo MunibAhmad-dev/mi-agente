@@ -1,0 +1,77 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "noEmit": true,
+    "jsx": "preserve",
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ],
+      "test/*": [
+        "./test/*"
+      ],
+      "*": [
+        "./*",
+        "../../node_modules/*"
+      ],
+      "librechat-data-provider": [
+        "../packages/data-provider/src/index.ts"
+      ],
+      "librechat-data-provider/dist/types": [
+        "../packages/data-provider/src/index.ts"
+      ],
+      "librechat-data-provider/dist/types/*": [
+        "../packages/data-provider/src/types/*"
+      ],
+      "librechat-data-provider/*": [
+        "../packages/data-provider/src/*"
+      ],
+      "@librechat/data-provider": [
+        "../packages/data-provider/src/index.ts"
+      ],
+      "@librechat/data-provider/*": [
+        "../packages/data-provider/src/*"
+      ],
+      "src/*": [
+        "../packages/data-provider/src/*"
+      ],
+      "src/artifacts": [
+        "../packages/data-provider/src/artifacts"
+      ]
+    }
+  },
+  "types": [
+    "node",
+    "jest",
+    "@testing-library/jest-dom"
+  ],
+  "exclude": [
+    "node_modules",
+    "vite.config.ts"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*",
+    "test/setupTests.js",
+    "env.d.ts",
+    "../packages/client/src/hooks/useDelayedRender.tsx",
+    "../packages/client/src/components/InfoHoverCard.tsx"
+  ]
+}

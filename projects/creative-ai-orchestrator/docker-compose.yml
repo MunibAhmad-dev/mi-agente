@@ -1,0 +1,98 @@
+# ============================================================================
+# Creative AI Orchestrator — Docker Compose
+# ============================================================================
+# One-click deployment: CAIO + ComfyUI with GPU passthrough.
+#
+# Usage:
+#   docker compose up -d              Start CAIO
+#   docker compose up -d --profile comfyui   Start CAIO + ComfyUI
+#   docker compose logs -f caio       View logs
+#   docker compose down               Stop all
+#
+# GPU Support:
+#   - NVIDIA: Requires nvidia-container-toolkit
+#   - Apple Silicon: Uses MPS (default)
+#   - CPU-only: Remove deploy.resources section
+#
+# Data Persistence:
+#   ./data/projects  → /data/projects
+#   ./data/models    → /data/models
+#   ./data/cache     → /data/cache
+# ============================================================================
+
+services:
+  caio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: caio
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3456}:3456"
+    environment:
+      - NODE_ENV=production
+      - PORT=3456
+      - HOST=0.0.0.0
+      - DATA_DIR=/data
+      - COMFYUI_URL=http://comfyui:8188
+      # LLM Provider (set your API key)
+      - LLM_PROVIDER=${LLM_PROVIDER:-}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+    volumes:
+      - ./data/projects:/data/projects
+      - ./data/models:/data/models
+      - ./data/cache:/data/cache
+      - ./data/logs:/data/logs
+    networks:
+      - caio-net
+    depends_on:
+      comfyui:
+        condition: service_healthy
+        required: false
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # ============================================================================
+  # ComfyUI — First Runtime (GPL-3.0 boundary)
+  # ============================================================================
+  # ComfyUI runs as a SEPARATE service/process.
+  # CAIO communicates via HTTP API at http://comfyui:8188
+  # NO GPL code is embedded in the CAIO container.
+  # ============================================================================
+  comfyui:
+    image: ghcr.io/ai-dock/comfyui:latest
+    container_name: comfyui
+    restart: unless-stopped
+    profiles: ["comfyui"]
+    ports:
+      - "8188:8188"
+    environment:
+      - WEB_ENABLE_AUTH=false
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./data/models:/workspace/ComfyUI/models
+      - ./data/comfyui-workflows:/workspace/ComfyUI/user/default/workflows
+    networks:
+      - caio-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188/system_stats"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+networks:
+  caio-net:
+    driver: bridge

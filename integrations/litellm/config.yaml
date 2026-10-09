@@ -1,0 +1,138 @@
+# Config de ejemplo para el proxy nativo de LiteLLM (Puente 1 del documento de
+# integración AI-OS). Se levanta como servicio propio, independiente de AI-OS y
+# de LibreChat:
+#
+#   litellm --config integrations/litellm/config.yaml --port 4000
+#
+# LibreChat lo consume como "custom endpoint" 100% compatible con OpenAI (ver
+# la entrada 'LiteLLM (AI-OS Gateway)' en librechat.yaml).
+#
+# Reemplaza esto al bug de prioridad de AI-OS (_migrate_add_priority_column
+# nunca se llama desde init_db()): en vez de una tabla de prioridad propia,
+# aquí la prioridad y el fallback por salud los resuelve el Router de LiteLLM
+# de forma nativa.
+#
+# QUÉ MODELOS ACTIVAR: ver integrations/litellm/SELECCION_MODELOS.md — cada
+# bloque de abajo corresponde a una fila de esa tabla. Los marcados "Usar"
+# van descomentados aquí; el resto queda comentado (no se borra).
+
+model_list:
+  # ============================================================
+  # Rol: aios-principal (tareas complejas / reasoning)
+  # order=1 se intenta primero; si falla o entra en cooldown, pasa a order=2, etc.
+  # ============================================================
+
+  # --- Anthropic - claude-sonnet-4-5 (order 1) - USAR ---
+  - model_name: aios-principal
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      order: 1
+
+  # --- OpenAI - gpt-4o (order 2, fallback) - EVALUANDO ---
+  - model_name: aios-principal
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      order: 2
+
+  # --- Google - gemini-2.0-flash (comentado, sin decidir) ---
+  # - model_name: aios-principal
+  #   litellm_params:
+  #     model: gemini/gemini-2.0-flash
+  #     api_key: os.environ/GEMINI_API_KEY
+  #   model_info:
+  #     order: 3
+
+  # --- Azure OpenAI (comentado, solo si hay contrato/compliance Azure) ---
+  # - model_name: aios-principal
+  #   litellm_params:
+  #     model: azure/<deployment-name>
+  #     api_base: os.environ/AZURE_API_BASE
+  #     api_key: os.environ/AZURE_API_KEY
+  #     api_version: '2024-02-15-preview'
+  #   model_info:
+  #     order: 4
+
+  # --- AWS Bedrock (comentado, solo si hay infra AWS) ---
+  # - model_name: aios-principal
+  #   litellm_params:
+  #     model: bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+  #   model_info:
+  #     order: 5
+
+  # ============================================================
+  # Rol: aios-rapido (tareas simples / clasificación / barato)
+  # ============================================================
+
+  # --- Anthropic - claude-3-5-haiku (order 1) - USAR ---
+  - model_name: aios-rapido
+    litellm_params:
+      model: anthropic/claude-3-5-haiku-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+    model_info:
+      order: 1
+
+  # --- OpenAI - gpt-4o-mini (order 2, fallback) - EVALUANDO ---
+  - model_name: aios-rapido
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+    model_info:
+      order: 2
+
+  # --- Mistral - mistral-small (comentado, sin decidir) ---
+  # - model_name: aios-rapido
+  #   litellm_params:
+  #     model: mistral/mistral-small-latest
+  #     api_key: os.environ/MISTRAL_API_KEY
+  #   model_info:
+  #     order: 3
+
+  # --- Groq (comentado, util si la latencia es critica) ---
+  # - model_name: aios-rapido
+  #   litellm_params:
+  #     model: groq/llama-3.3-70b-versatile
+  #     api_key: os.environ/GROQ_API_KEY
+  #   model_info:
+  #     order: 4
+
+  # --- DeepSeek (comentado, sin decidir) ---
+  # - model_name: aios-rapido
+  #   litellm_params:
+  #     model: deepseek/deepseek-chat
+  #     api_key: os.environ/DEEPSEEK_API_KEY
+  #   model_info:
+  #     order: 5
+
+  # --- Cohere (comentado, sin caso de uso claro) ---
+  # - model_name: aios-rapido
+  #   litellm_params:
+  #     model: cohere/command-r
+  #     api_key: os.environ/COHERE_API_KEY
+  #   model_info:
+  #     order: 6
+
+  # --- OpenRouter (comentado, solo como catalogo de respaldo) ---
+  # - model_name: aios-rapido
+  #   litellm_params:
+  #     model: openrouter/openrouter/auto
+  #     api_key: os.environ/OPENROUTER_API_KEY
+  #   model_info:
+  #     order: 7
+
+# Cooldown y health checks: esto es lo que reemplaza el "fallback automatico
+# de prioridad por salud/rol" que AI-OS intenta (y hoy falla) construir a mano.
+router_settings:
+  cooldown_time: 60          # segundos que un deployment queda fuera de rotacion tras fallar
+  allowed_fails_policy:
+    AuthenticationErrorAllowedFails: 0   # fuera de rotacion inmediato si falla la API key
+    TimeoutErrorAllowedFails: 2          # fuera de rotacion al 3er timeout
+    RateLimitErrorAllowedFails: 5        # fuera de rotacion al 6to 429
+
+general_settings:
+  background_health_checks: true   # pings periodicos por deployment
+  health_check_interval: 30        # segundos entre pings
+  # master_key: os.environ/LITELLM_MASTER_KEY   # descomentar para proteger el proxy

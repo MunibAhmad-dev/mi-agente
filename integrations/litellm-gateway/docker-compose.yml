@@ -1,0 +1,180 @@
+# LiteLLM Gateway Docker Compose
+# ================================================
+# Gateway centralizado para gestión de modelos LLM
+# con balanceo de carga, fallbacks y métricas
+
+version: '3.8'
+
+services:
+  # ===============================
+  # LiteLLM Gateway
+  # ===============================
+  litellm:
+    image: ghcr.io/berriai/litellm:main
+    container_name: litellm-gateway
+    ports:
+      - "4000:4000"  # Proxy API
+      - "4001:4001"  # Health check UI
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./logs:/app/logs
+    environment:
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-litellm}:${POSTGRES_PASSWORD:-litellm123}@postgres:5432/${POSTGRES_DB:-litellm_db}
+      
+      # Redis Cache
+      REDIS_URL: redis://redis:6379
+      
+      # Master Key (Cambiar en producción!)
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-12345}
+      
+      # UI Settings
+      LITELLM_UI_USERNAME: ${LITELLM_UI_USERNAME:-admin}
+      LITELLM_UI_PASSWORD: ${LITELLM_UI_PASSWORD:-admin123}
+      
+      # Server Settings
+      PORT: 4000
+      HOST: "0.0.0.0"
+      
+      # CORS
+      CORS_ALLOW_ORIGINS: "*"
+      
+      # Database Settings
+      DATABASE_TYPE: "postgres"
+      DATABASE_TABLE_NAME: " LiteLLM"
+      
+      # Store Medical隔 (audit logs)
+      STORE_MODEL_INFERENCE_INPUT_IN_DB: "True"
+      STORE_MODEL_INFERENCE_OUTPUT_IN_DB: "True"
+      
+      # Alerting
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      SLACK_WEBHOOK_USERNAME: "LiteLLM Alerts"
+      
+      # Auth
+      LITELLM_KEY_ALLOWED_ROUTES: '/health,/metrics,/config/jwt,/config/team'
+      LITELLM_DYNAMIC_KEY_GENERATION: "True"
+      LITELLM_MAX_PARALLEL_REQUESTS: "100"
+      
+      # Proxy Config
+      LITELLM_CONFIG_FILE: "/app/config.yaml"
+      
+      # OpenTelemetry (optional)
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ===============================
+  # PostgreSQL - Base de datos
+  # ===============================
+  postgres:
+    image: postgres:15-alpine
+    container_name: litellm-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-litellm_db}
+      POSTGRES_USER: ${POSTGRES_USER:-litellm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-litellm123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-litellm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # Redis - Cache y rate limiting
+  # ===============================
+  redis:
+    image: redis:7-alpine
+    container_name: litellm-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # Prometheus - Métricas (opcional)
+  # ===============================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: litellm-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    profiles:
+      - monitoring
+
+  # ===============================
+  # Grafana - Dashboard (opcional)
+  # ===============================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: litellm-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+# ===============================
+# Networks
+# ===============================
+networks:
+  litellm-network:
+    driver: bridge
+
+# ===============================
+# Volumes
+# ===============================
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:

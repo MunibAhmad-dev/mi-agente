@@ -1,0 +1,2 @@
+# Estado local del puente (se persiste en el volumen Docker en producción)
+bridge-state.json

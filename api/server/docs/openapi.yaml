@@ -1,0 +1,1296 @@
+openapi: 3.0.3
+info:
+  title: Mi LibreChat Enterprise API
+  description: |
+    API REST para el sistema Mi LibreChat - Arquitectura Enterprise v3.0
+    
+    ## Características
+    - **Arquitectura de Microservicios**: Sistema modular con múltiples runtimes
+    - **LLM Gateway**: Integración con 14+ proveedores de modelos de lenguaje
+    - **Sistema de Runtimes**: LLMRuntime, SearchRuntime, ImageRuntime, BrowserRuntime
+    - **Métricas y Telemetry**: Observabilidad completa con Prometheus
+    - **Workflow Engine**: Ejecución de flujos de trabajo automatizados
+    
+    ## Autenticación
+    Esta API utiliza autenticación Bearer Token. Incluya el token en el header:
+    ```
+    Authorization: Bearer <token>
+    ```
+  version: 3.0.0
+  contact:
+    name: Mi LibreChat Team
+    url: https://github.com/aoi555/mi-libre-chat
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3001
+    description: Servidor de desarrollo
+  - url: https://api.librechat.example.com
+    description: Servidor de producción
+
+tags:
+  - name: Health
+    description: Endpoints de salud del sistema
+  - name: System
+    description: Estado general del sistema
+  - name: Runtimes
+    description: Gestión de runtimes
+  - name: Metrics
+    description: Métricas y监控系统
+  - name: Telemetry
+    description: Logging, tracing y alertas
+  - name: Capabilities
+    description: Capacidades del sistema
+  - name: Workflows
+    description: Flujos de trabajo
+  - name: API Keys
+    description: Gestión de claves API
+  - name: Cache
+    description: Sistema de caché
+  - name: Rate Limits
+    description: Control de límites
+
+paths:
+  # ==================== HEALTH ====================
+  /api/health:
+    get:
+      tags:
+        - Health
+      summary: Health check del sistema
+      description: Verifica el estado de salud del sistema y sus componentes
+      operationId: getHealth
+      responses:
+        '200':
+          description: Sistema saludable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '503':
+          description: Sistema no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ==================== SYSTEM ====================
+  /api/system/status:
+    get:
+      tags:
+        - System
+      summary: Estado del sistema
+      description: Obtiene información detallada del estado del sistema
+      operationId: getSystemStatus
+      responses:
+        '200':
+          description: Estado del sistema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
+
+  # ==================== RUNTIMES ====================
+  /api/runtimes:
+    get:
+      tags:
+        - Runtimes
+      summary: Lista de runtimes
+      description: Obtiene lista de todos los runtimes registrados
+      operationId: listRuntimes
+      responses:
+        '200':
+          description: Lista de runtimes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeList'
+        '503':
+          description: RuntimeRegistry no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/runtimes/{name}/status:
+    get:
+      tags:
+        - Runtimes
+      summary: Estado de un runtime
+      description: Obtiene el estado de un runtime específico
+      operationId: getRuntimeStatus
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Nombre del runtime
+          schema:
+            type: string
+            enum:
+              - LLMRuntime
+              - SearchRuntime
+              - ImageRuntime
+              - BrowserRuntime
+      responses:
+        '200':
+          description: Estado del runtime
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeStatus'
+        '404':
+          description: Runtime no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/runtimes/execute:
+    post:
+      tags:
+        - Runtimes
+      summary: Ejecutar en runtime
+      description: Ejecuta una tarea en un runtime específico
+      operationId: executeRuntime
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuntimeExecuteRequest'
+      responses:
+        '200':
+          description: Resultado de la ejecución
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeExecuteResponse'
+
+  # ==================== METRICS ====================
+  /api/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Métricas Prometheus
+      description: Obtiene métricas en formato Prometheus
+      operationId: getMetricsPrometheus
+      parameters:
+        - name: format
+          in: query
+          description: Formato de salida
+          schema:
+            type: string
+            enum: [prometheus, json]
+            default: json
+      responses:
+        '200':
+          description: Métricas
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  # HELP librechat_requests_total Total number of requests
+                  # TYPE librechat_requests_total counter
+                  librechat_requests_total 1234
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+        '503':
+          description: MetricsCollector no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/metrics/summary:
+    get:
+      tags:
+        - Metrics
+      summary: Resumen de métricas
+      description: Obtiene un resumen de todas las métricas del sistema
+      operationId: getMetricsSummary
+      responses:
+        '200':
+          description: Resumen de métricas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsSummary'
+
+  /api/metrics/dashboard:
+    get:
+      tags:
+        - Metrics
+      summary: Datos del dashboard
+      description: Obtiene datos completos para el dashboard de administración
+      operationId: getDashboardData
+      responses:
+        '200':
+          description: Datos del dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardData'
+
+  # ==================== TELEMETRY ====================
+  /api/telemetry/health:
+    get:
+      tags:
+        - Telemetry
+      summary: Estado de salud
+      description: Obtiene el estado de salud del sistema de telemetry
+      operationId: getTelemetryHealth
+      responses:
+        '200':
+          description: Estado de salud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryHealth'
+        '503':
+          description: Telemetry no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/telemetry/logs:
+    get:
+      tags:
+        - Telemetry
+      summary: Logs recientes
+      description: Obtiene logs recientes del sistema
+      operationId: getLogs
+      parameters:
+        - name: limit
+          in: query
+          description: Número máximo de logs a devolver
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+      responses:
+        '200':
+          description: Lista de logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogsResponse'
+        '503':
+          description: Telemetry no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/telemetry/alerts:
+    get:
+      tags:
+        - Telemetry
+      summary: Alertas activas
+      description: Obtiene lista de alertas activas
+      operationId: getAlerts
+      responses:
+        '200':
+          description: Lista de alertas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsResponse'
+    post:
+      tags:
+        - Telemetry
+      summary: Crear alerta
+      description: Crea una nueva alerta manualmente
+      operationId: createAlert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertRequest'
+      responses:
+        '200':
+          description: Alerta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '400':
+          description: Datos inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/telemetry/alerts/{id}:
+    delete:
+      tags:
+        - Telemetry
+      summary: Resolver alerta
+      description: Marca una alerta como resuelta
+      operationId: resolveAlert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la alerta
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alerta resuelta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+        '404':
+          description: Alerta no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/telemetry/traces:
+    get:
+      tags:
+        - Telemetry
+      summary: Traces recientes
+      description: Obtiene traces distribuidos recientes
+      operationId: getTraces
+      parameters:
+        - name: limit
+          in: query
+          description: Número máximo de traces
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 50
+      responses:
+        '200':
+          description: Lista de traces
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TracesResponse'
+
+  # ==================== CAPABILITIES ====================
+  /api/capabilities:
+    get:
+      tags:
+        - Capabilities
+      summary: Lista de capacidades
+      description: Obtiene lista de capacidades disponibles del sistema
+      operationId: listCapabilities
+      responses:
+        '200':
+          description: Lista de capacidades
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilitiesList'
+
+  /api/capabilities/execute:
+    post:
+      tags:
+        - Capabilities
+      summary: Ejecutar capacidad
+      description: Ejecuta una tarea usando una capacidad específica
+      operationId: executeCapability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteCapabilityRequest'
+      responses:
+        '200':
+          description: Resultado de la ejecución
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteCapabilityResponse'
+
+  # ==================== WORKFLOWS ====================
+  /api/workflows:
+    get:
+      tags:
+        - Workflows
+      summary: Lista de workflows
+      description: Obtiene lista de workflows disponibles
+      operationId: listWorkflows
+      responses:
+        '200':
+          description: Lista de workflows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowList'
+    post:
+      tags:
+        - Workflows
+      summary: Crear workflow
+      description: Crea un nuevo workflow
+      operationId: createWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkflowRequest'
+      responses:
+        '201':
+          description: Workflow creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+
+  /api/workflows/{id}:
+    get:
+      tags:
+        - Workflows
+      summary: Estado de workflow
+      description: Obtiene el estado de un workflow
+      operationId: getWorkflowStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del workflow
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Estado del workflow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+
+  /api/workflows/{id}/execute:
+    post:
+      tags:
+        - Workflows
+      summary: Ejecutar workflow
+      description: Ejecuta un workflow existente
+      operationId: executeWorkflow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del workflow
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Workflow en ejecución
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowExecution'
+
+  # ==================== API KEYS ====================
+  /api/apikeys:
+    get:
+      tags:
+        - API Keys
+      summary: Lista de API keys
+      description: Obtiene lista de claves API configuradas
+      operationId: listApiKeys
+      responses:
+        '200':
+          description: Lista de API keys
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyList'
+
+  /api/apikeys/validate:
+    post:
+      tags:
+        - API Keys
+      summary: Validar API key
+      description: Valida una clave API para un proveedor específico
+      operationId: validateApiKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateApiKeyRequest'
+      responses:
+        '200':
+          description: Resultado de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateApiKeyResponse'
+
+  /api/apikeys/test:
+    post:
+      tags:
+        - API Keys
+      summary: Probar API key
+      description: Prueba una clave API haciendo una solicitud de prueba
+      operationId: testApiKey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestApiKeyRequest'
+      responses:
+        '200':
+          description: Resultado de la prueba
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestApiKeyResponse'
+
+  # ==================== CACHE ====================
+  /api/cache/stats:
+    get:
+      tags:
+        - Cache
+      summary: Estadísticas de caché
+      description: Obtiene estadísticas del sistema de caché
+      operationId: getCacheStats
+      responses:
+        '200':
+          description: Estadísticas de caché
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheStats'
+
+  /api/cache/clear:
+    post:
+      tags:
+        - Cache
+      summary: Limpiar caché
+      description: Limpia todas las entradas del caché
+      operationId: clearCache
+      responses:
+        '200':
+          description: Caché limpiado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheClearResponse'
+
+  /api/cache/{key}:
+    delete:
+      tags:
+        - Cache
+      summary: Invalidar entrada de caché
+      description: Invalida una entrada específica del caché
+      operationId: invalidateCacheEntry
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: Clave a invalidar
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entrada invalidada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheInvalidateResponse'
+
+  # ==================== RATE LIMITS ====================
+  /api/ratelimit/stats:
+    get:
+      tags:
+        - Rate Limits
+      summary: Estadísticas de límites
+      description: Obtiene estadísticas de uso de rate limits
+      operationId: getRateLimitStats
+      responses:
+        '200':
+          description: Estadísticas de rate limits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitStats'
+
+  /api/ratelimit/{provider}:
+    get:
+      tags:
+        - Rate Limits
+      summary: Estado de rate limit
+      description: Obtiene el estado de rate limit para un proveedor
+      operationId: getProviderRateLimit
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          description: Nombre del proveedor
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Estado de rate limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderRateLimit'
+
+# ==================== COMPONENTS ====================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ==================== COMMON ====================
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Mensaje de error
+        code:
+          type: string
+          description: Código de error
+        details:
+          type: object
+          description: Detalles adicionales del error
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, critical]
+          description: Estado del sistema
+        timestamp:
+          type: integer
+          format: int64
+          description: Timestamp Unix
+        uptime:
+          type: number
+          description: Tiempo de actividad en segundos
+        version:
+          type: string
+          example: "3.0.0"
+        environment:
+          type: string
+          example: "production"
+        message:
+          type: string
+          description: Mensaje adicional si está degradado
+
+    SystemStatus:
+      type: object
+      properties:
+        integrationManager:
+          type: object
+          properties:
+            initialized:
+              type: boolean
+            components:
+              type: array
+              items:
+                type: string
+        system:
+          type: object
+          properties:
+            platform:
+              type: string
+              example: "linux"
+            nodeVersion:
+              type: string
+              example: "v22.23.1"
+            memory:
+              type: object
+            cpu:
+              type: integer
+        timestamp:
+          type: integer
+          format: int64
+
+    # ==================== RUNTIMES ====================
+    RuntimeList:
+      type: object
+      properties:
+        runtimes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuntimeStatus'
+        count:
+          type: integer
+
+    RuntimeStatus:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "LLMRuntime"
+        status:
+          type: string
+          enum: [healthy, degraded, error, unknown]
+        capabilities:
+          type: array
+          items:
+            type: string
+        metrics:
+          type: object
+
+    RuntimeExecuteRequest:
+      type: object
+      required:
+        - runtime
+        - action
+      properties:
+        runtime:
+          type: string
+          enum: [LLMRuntime, SearchRuntime, ImageRuntime, BrowserRuntime]
+        action:
+          type: string
+        params:
+          type: object
+          description: Parámetros específicos de la acción
+
+    RuntimeExecuteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+        error:
+          type: string
+
+    # ==================== METRICS ====================
+    MetricsResponse:
+      type: object
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+        count:
+          type: integer
+
+    Metric:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [counter, gauge, histogram, summary]
+        value:
+          type: number
+        labels:
+          type: object
+        timestamp:
+          type: integer
+          format: int64
+
+    MetricsSummary:
+      type: object
+      properties:
+        system:
+          $ref: '#/components/schemas/SystemMetrics'
+        requests:
+          $ref: '#/components/schemas/RequestMetrics'
+        errors:
+          $ref: '#/components/schemas/ErrorMetrics'
+
+    SystemMetrics:
+      type: object
+      properties:
+        cpu:
+          type: object
+          properties:
+            usage:
+              type: string
+            cores:
+              type: integer
+            load:
+              type: array
+              items:
+                type: number
+        memory:
+          type: object
+          properties:
+            systemTotal:
+              type: string
+            systemUsed:
+              type: string
+            heapTotal:
+              type: string
+            heapUsed:
+              type: string
+            rss:
+              type: string
+        uptime:
+          type: number
+
+    RequestMetrics:
+      type: object
+      properties:
+        total:
+          type: integer
+        success:
+          type: integer
+        failed:
+          type: integer
+        latency:
+          $ref: '#/components/schemas/LatencyMetrics'
+
+    LatencyMetrics:
+      type: object
+      properties:
+        p50:
+          type: number
+        p90:
+          type: number
+        p95:
+          type: number
+        p99:
+          type: number
+
+    ErrorMetrics:
+      type: object
+      properties:
+        total:
+          type: integer
+        byType:
+          type: object
+
+    DashboardData:
+      type: object
+      properties:
+        system:
+          $ref: '#/components/schemas/SystemMetrics'
+        requests:
+          $ref: '#/components/schemas/RequestMetrics'
+        errors:
+          $ref: '#/components/schemas/ErrorMetrics'
+        health:
+          $ref: '#/components/schemas/HealthStatus'
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+
+    # ==================== TELEMETRY ====================
+    TelemetryHealth:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, critical]
+        uptime:
+          type: number
+        logsCount:
+          type: integer
+        alertsCount:
+          type: integer
+        tracesCount:
+          type: integer
+
+    LogEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        level:
+          type: integer
+          minimum: 0
+          maximum: 4
+          description: "0=DEBUG, 1=INFO, 2=WARN, 3=ERROR, 4=FATAL"
+        message:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+        context:
+          type: object
+        traceId:
+          type: string
+        spanId:
+          type: string
+
+    LogsResponse:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogEntry'
+        count:
+          type: integer
+
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+          enum: [info, warning, error, critical]
+        status:
+          type: string
+          enum: [active, resolved]
+        createdAt:
+          type: integer
+          format: int64
+        resolvedAt:
+          type: integer
+          format: int64
+        metadata:
+          type: object
+
+    AlertsResponse:
+      type: object
+      properties:
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        count:
+          type: integer
+
+    CreateAlertRequest:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          description: Tipo de alerta
+        message:
+          type: string
+          description: Mensaje de la alerta
+        severity:
+          type: string
+          enum: [info, warning, error, critical]
+          default: warning
+        metadata:
+          type: object
+
+    Trace:
+      type: object
+      properties:
+        id:
+          type: string
+        traceId:
+          type: string
+        operationName:
+          type: string
+        startTime:
+          type: integer
+          format: int64
+        endTime:
+          type: integer
+          format: int64
+        duration:
+          type: number
+        status:
+          type: string
+          enum: [ok, error]
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
+
+    Span:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        startTime:
+          type: integer
+          format: int64
+        endTime:
+          type: integer
+          format: int64
+        duration:
+          type: number
+
+    TracesResponse:
+      type: object
+      properties:
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trace'
+        count:
+          type: integer
+
+    # ==================== CAPABILITIES ====================
+    CapabilitiesList:
+      type: object
+      properties:
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+        count:
+          type: integer
+
+    Capability:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        runtime:
+          type: string
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              required:
+                type: boolean
+
+    ExecuteCapabilityRequest:
+      type: object
+      required:
+        - capability
+      properties:
+        capability:
+          type: string
+        parameters:
+          type: object
+
+    ExecuteCapabilityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        result:
+          type: object
+        error:
+          type: string
+
+    # ==================== WORKFLOWS ====================
+    WorkflowList:
+      type: object
+      properties:
+        workflows:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workflow'
+        count:
+          type: integer
+
+    Workflow:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, paused, completed]
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowStep'
+        createdAt:
+          type: integer
+          format: int64
+        updatedAt:
+          type: integer
+          format: int64
+
+    WorkflowStep:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        action:
+          type: string
+        parameters:
+          type: object
+        nextStep:
+          type: string
+
+    CreateWorkflowRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        steps:
+          type: array
+          items:
+            type: object
+
+    WorkflowExecution:
+      type: object
+      properties:
+        id:
+          type: string
+        workflowId:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed]
+        startedAt:
+          type: integer
+          format: int64
+        completedAt:
+          type: integer
+          format: int64
+        result:
+          type: object
+        error:
+          type: string
+
+    # ==================== API KEYS ====================
+    ApiKeyList:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKey'
+        count:
+          type: integer
+
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, expired, invalid]
+        expiresAt:
+          type: integer
+          format: int64
+
+    ValidateApiKeyRequest:
+      type: object
+      required:
+        - provider
+        - apiKey
+      properties:
+        provider:
+          type: string
+        apiKey:
+          type: string
+          format: password
+
+    ValidateApiKeyResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        provider:
+          type: string
+        message:
+          type: string
+
+    TestApiKeyRequest:
+      type: object
+      required:
+        - provider
+      properties:
+        provider:
+          type: string
+
+    TestApiKeyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        latency:
+          type: number
+        message:
+          type: string
+
+    # ==================== CACHE ====================
+    CacheStats:
+      type: object
+      properties:
+        size:
+          type: integer
+        hits:
+          type: integer
+        misses:
+          type: integer
+        hitRate:
+          type: number
+        memoryUsage:
+          type: string
+
+    CacheClearResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        clearedEntries:
+          type: integer
+
+    CacheInvalidateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+
+    # ==================== RATE LIMITS ====================
+    RateLimitStats:
+      type: object
+      properties:
+        providers:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ProviderRateLimit'
+
+    ProviderRateLimit:
+      type: object
+      properties:
+        provider:
+          type: string
+        requestsUsed:
+          type: integer
+        requestsLimit:
+          type: integer
+        resetAt:
+          type: integer
+          format: int64
+        remaining:
+          type: integer

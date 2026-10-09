@@ -1,0 +1,117 @@
+# ===========================================
+# Mi LibreChat - Docker Compose Development
+# ===========================================
+
+services:
+  # =========================================
+  # MongoDB Database
+  # =========================================
+  mongodb:
+    image: mongo:7
+    container_name: librechat-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: librechat
+      MONGO_INITDB_ROOT_PASSWORD: dev_secret
+      MONGO_INITDB_DATABASE: librechat
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_dev_data:/data/db
+    networks:
+      - librechat-dev
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand({ping:1})"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================================
+  # Redis Cache
+  # =========================================
+  redis:
+    image: redis:7-alpine
+    container_name: librechat-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - librechat-dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================================
+  # API Server (Development Mode)
+  # =========================================
+  api:
+    image: node:20-alpine
+    container_name: librechat-api-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGO_URI: mongodb://librechat:dev_secret@mongodb:27017/librechat?authSource=admin
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev_jwt_secret_change_in_production
+    ports:
+      - "3001:3001"
+    volumes:
+      - ../../api:/app/api
+      - ../../frontend:/app/frontend
+      - node_modules_api:/app/node_modules
+      - node_modules_frontend:/app/frontend/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - librechat-dev
+
+  # =========================================
+  # Frontend (Development Mode)
+  # =========================================
+  frontend:
+    image: node:20-alpine
+    container_name: librechat-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../../frontend:/app
+      - node_modules_frontend:/app/node_modules
+    depends_on:
+      - api
+    networks:
+      - librechat-dev
+
+# =========================================
+# Networks
+# =========================================
+networks:
+  librechat-dev:
+    driver: bridge
+
+# =========================================
+# Volumes
+# =========================================
+volumes:
+  mongodb_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+  node_modules_api:
+    driver: local
+  node_modules_frontend:
+    driver: local

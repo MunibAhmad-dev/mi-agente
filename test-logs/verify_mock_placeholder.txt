@@ -1,0 +1,37 @@
+
+=== BEHAVIORAL MODULE VERIFICATION ===
+
+  ✅ VideoGenerator: instantiate
+  ✅ VideoGenerator: parseScript parses text
+  ✅ PresentationGenerator: instantiate + generatePPTX/HTML methods
+  ✅ WebsiteGenerator: instantiate + generateSite/generateBlog methods
+  ✅ DiagramGenerator: instantiate + generateFlowchart/generateChart methods
+  ✅ CanvasManager: instantiate + createDocument/listDocuments methods
+  ✅ PluginMarketplace: instantiate + search method
+  ✅ CloudAgent: instantiate + executeTask/listActive methods
+  ✅ CompanionManager: instantiate + createCompanion method
+  ✅ DesktopController: instantiate + screenshot/click method exists
+  ✅ PlaybookManager: instantiate + create + list
+  ✅ CollectionsEngine: instantiate + create + query
+  ✅ DeeperSearchV2: instantiate + research/summarize/getStats
+  ✅ MemoryFacade: getContext returns { context, sources }
+  ✅ MemoryFacade: recordEpisode + learnFact + recallFact
+  ✅ ConstitutionEngine: validate clean text passes
+  ✅ ConstitutionEngine: validate PII text catches violation
+  ✅ MultiModelJudge: judge function exists and accepts params
+  ✅ CreativeEngineOrchestrator: singleton + createProject method
+  ✅ PolicyEngine: instantiate + checkCommand
+  ✅ CredentialVault: instantiate + store/retrieve interface
+  ✅ DesignForensicsAgent: analyze extracts designDNA
+  ✅ AutoRepairAgent: detect + repair HTML issues
+  ✅ VisualQAAgent: analyzeHTML returns risk assessment
+  ✅ BehaviorBenchmark: runs 3 built-in benchmarks post-response
+  ✅ BehaviorPolicy: check/evaluate with baseline policy
+  ✅ AlternativeHypothesisEngine: generate alternatives for a claim
+  ✅ DecisionEngine: decide yes/no/ask on a question
+  ✅ RegressionBenchmark: record metrics and check regression
+  ✅ ModelAgnosticTesting: run behavioral contracts on a response
+  ✅ BuilderCritic: critique a draft and run a cycle
+
+=======================================================
+PASSED: 31 | FAILED: 0

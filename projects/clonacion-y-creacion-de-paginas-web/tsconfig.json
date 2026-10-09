@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@core/*": ["./core/*"],
+      "@agents/*": ["./agents/*"],
+      "@skills/*": ["./skills/*"],
+      "@tools/*": ["./tools/*"],
+      "@evaluators/*": ["./evaluators/*"],
+      "@memory/*": ["./memory/*"],
+      "@registry/*": ["./registry/*"]
+    },
+    "types": ["node"]
+  },
+  "include": ["core/**/*", "agents/**/*", "skills/**/*", "tools/**/*", "evaluators/**/*", "memory/**/*", "registry/**/*"],
+  "exclude": ["node_modules", "dist", "apps", "projects", "tests"]
+}

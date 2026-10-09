@@ -1,0 +1,31 @@
+# Dockerfile.computeruse
+# Browser automation container — Playwright + Chromium for website cloning
+# (Face 18) and computer-use features.
+#
+# The official Playwright image already has the correct Chromium, Firefox, and
+# WebKit builds for the pinned Playwright version — no separate install needed.
+
+FROM mcr.microsoft.com/playwright:v1.49.0-noble
+
+WORKDIR /app
+
+# Install only the Node packages required to run the lightweight HTTP shim
+# that the main API calls when running inside Docker.
+COPY package.json ./
+RUN npm install --omit=dev --ignore-scripts 2>/dev/null || true
+
+# Copy the browser-automation service
+COPY api/server/services/BrowserRuntime ./api/server/services/BrowserRuntime
+
+# Copy the tiny HTTP health + dispatch server (see below)
+COPY docker/computeruse-server.js ./server.js
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+ENV PORT=3099
+
+EXPOSE 3099
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD curl -f http://localhost:3099/health || exit 1
+
+CMD ["node", "server.js"]

@@ -1,0 +1,441 @@
+/**
+ * PromotionWorkflow Styles
+ */
+
+.promotion-workflow {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  position: relative;
+}
+
+/* Loading */
+.workflow-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+/* Header */
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #252525;
+  border-bottom: 1px solid #333;
+}
+
+.workflow-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.workflow-title h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.workflow-count {
+  padding: 2px 8px;
+  background: #3b82f6;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #fff;
+}
+
+.workflow-actions-header {
+  display: flex;
+  gap: 8px;
+}
+
+.workflow-btn-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.workflow-btn-close:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* Stats Bar */
+.workflow-stats {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px;
+  background: #1f1f1f;
+  border-bottom: 1px solid #333;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.stat-additions {
+  color: #22c55e;
+}
+
+.stat-deletions {
+  color: #ef4444;
+}
+
+/* Selection */
+.workflow-selection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.workflow-selection label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.selection-options {
+  display: flex;
+  gap: 4px;
+}
+
+.selection-btn {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.selection-btn:hover {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.selection-btn.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.stage-selected-btn {
+  padding: 4px 12px;
+  background: #f59e0b;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #000;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.stage-selected-btn:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.stage-selected-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Content */
+.workflow-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.workflow-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+}
+
+/* File List */
+.file-list {
+  padding: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 4px 0;
+  background: #252525;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-item:hover {
+  background: #2a2a2a;
+}
+
+.file-item.selected {
+  background: #1e3a5f;
+  border: 1px solid #3b82f6;
+}
+
+.file-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.file-icon {
+  font-size: 18px;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-path {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.stat-add {
+  color: #22c55e;
+}
+
+.stat-del {
+  color: #ef4444;
+}
+
+.file-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.file-badge.modified {
+  background: #f59e0b;
+  color: #000;
+}
+
+.file-badge.added {
+  background: #22c55e;
+  color: #000;
+}
+
+.file-badge.deleted {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Diff View */
+.workflow-diff {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.diff-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+.back-btn {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.diff-file-name {
+  font-size: 12px;
+  font-family: monospace;
+  color: #888;
+}
+
+/* Footer */
+.workflow-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #252525;
+  border-top: 1px solid #333;
+}
+
+.selected-count {
+  font-size: 12px;
+  color: #888;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.discard-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.discard-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.promote-btn {
+  background: #22c55e;
+  color: #000;
+}
+
+.promote-btn:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+/* Confirmation Modal */
+.confirmation-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.confirmation-modal {
+  background: #252525;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.confirmation-modal h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+.confirmation-modal p {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.confirmation-modal p strong {
+  color: #ef4444;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-btn.cancel-btn {
+  background: #333;
+  color: #e0e0e0;
+}
+
+.modal-btn.cancel-btn:hover:not(:disabled) {
+  background: #444;
+}
+
+.modal-btn.discard-btn {
+  background: #ef4444;
+  color: #fff;
+}
+
+.modal-btn.discard-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.modal-btn.promote-btn {
+  background: #22c55e;
+  color: #000;
+}
+
+.modal-btn.promote-btn:hover:not(:disabled) {
+  background: #16a34a;
+}

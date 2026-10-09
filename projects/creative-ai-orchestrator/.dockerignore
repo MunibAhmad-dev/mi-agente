@@ -1,0 +1,17 @@
+node_modules/
+dist/
+release/
+data/
+*.exe
+*.dll
+*.so
+*.dylib
+.git/
+.github/
+.vscode/
+*.md
+!README.md
+.env
+.env.*
+caiotool.exe
+caiotool

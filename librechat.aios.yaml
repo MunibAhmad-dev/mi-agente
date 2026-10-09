@@ -1,0 +1,190 @@
+#=====================================================================#
+#           LibreChat Configuration for AI-OS                        #
+#                                                                     #
+# Default provider: Ollama (100% FREE, local)                        #
+# All endpoints are free, local, or user-provided                    #
+#=====================================================================#
+
+version: 1.2.1
+cache: true
+interface:
+  endpointsMenu: true
+  modelSelect: true
+  sidePanel: true
+  plugins: true
+  liveToggle: true
+
+# ============================================================
+# Custom Endpoints (AI-OS Providers)
+# ============================================================
+endpoints:
+  # --- Ollama (Default - 100% Free) ---
+  custom:
+    - name: "Ollama (Local - Free)"
+      apiKey: "ollama"
+      baseURL: "http://ollama:11434/v1"
+      models:
+        default: ["qwen3:1.7b", "qwen3:8b", "llama3.2:3b", "llama3.1:8b", "phi4-mini", "deepseek-r1:8b", "gemma3:4b", "mistral:7b", "minicpm-v", "llava:7b"]
+        fetch: false
+      titleConvo: true
+      titleModel: "qwen3:1.7b"
+      summarize: false
+      forcePrompt: false
+      modelDisplayLabel: "Ollama"
+      dropParams:
+        - "stop"
+
+    - name: "LM Studio (Local - Free)"
+      apiKey: "lmstudio"
+      baseURL: "http://host.docker.internal:1234/v1"
+      models:
+        default: ["auto"]
+        fetch: true
+      titleConvo: true
+      titleModel: "auto"
+      modelDisplayLabel: "LM Studio"
+      dropParams:
+        - "stop"
+
+    - name: "LiteLLM Gateway (AI-OS)"
+      apiKey: "sk-local-no-auth"
+      baseURL: "http://host.docker.internal:4000/v1"
+      models:
+        default: ["gpt-3.5-turbo", "gpt-4", "claude-3-haiku", "gemini-pro"]
+        fetch: false
+      titleConvo: true
+      modelDisplayLabel: "LiteLLM"
+      dropParams:
+        - "stop"
+
+    - name: "OpenCode Bridge"
+      apiKey: "${OPENCODE_BRIDGE_KEY}"
+      baseURL: "http://host.docker.internal:8787/v1"
+      models:
+        default: ["opencode-default"]
+        fetch: false
+      titleConvo: true
+      modelDisplayLabel: "OpenCode"
+
+# ============================================================
+# Model Specifications
+# ============================================================
+modelSpecs:
+  list:
+    - name: "Qwen3 1.7B (Free)"
+      value: "qwen3:1.7b"
+      endpoint: "Ollama (Local - Free)"
+      description: "Fast, lightweight LLM. Best for quick tasks, coding, and chat."
+      capabilities: ["chat", "code", "vision"]
+      
+    - name: "Qwen3 8B (Free)"
+      value: "qwen3:8b"
+      endpoint: "Ollama (Local - Free)"
+      description: "Balanced LLM. Good for reasoning and complex tasks."
+      capabilities: ["chat", "code", "reasoning"]
+      
+    - name: "LLaMA 3.2 3B (Free)"
+      value: "llama3.2:3b"
+      endpoint: "Ollama (Local - Free)"
+      description: "Meta's lightweight model. Fast and efficient."
+      capabilities: ["chat", "general"]
+      
+    - name: "DeepSeek R1 8B (Free)"
+      value: "deepseek-r1:8b"
+      endpoint: "Ollama (Local - Free)"
+      description: "Excellent for math, reasoning, and coding."
+      capabilities: ["chat", "code", "reasoning", "math"]
+      
+    - name: "MiniCPM-V (Free, Vision)"
+      value: "minicpm-v"
+      endpoint: "Ollama (Local - Free)"
+      description: "Multimodal model with vision capabilities."
+      capabilities: ["chat", "vision", "image-analysis"]
+
+# ============================================================
+# Actions / Plugins
+# ============================================================
+actions:
+  enabled: true
+  url: ""
+
+plugins:
+  enabled: true
+  programs:
+    - name: "aios-agent"
+      pluginKey: "aios-agent"
+      description: "AI-OS Universal Agent with 54 tools and 46 cognitive modules"
+
+# ============================================================
+# File Config
+# ============================================================
+fileConfig:
+  upload:
+    enabled: true
+    maxFileSize: 50mb
+    supportedExtensions:
+      - ".txt"
+      - ".md"
+      - ".json"
+      - ".csv"
+      - ".pdf"
+      - ".docx"
+      - ".xlsx"
+      - ".pptx"
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".jsx"
+      - ".tsx"
+      - ".html"
+      - ".css"
+      - ".yaml"
+      - ".yml"
+      - ".toml"
+      - ".xml"
+
+# ============================================================
+# Speech / Voice
+# ============================================================
+speech:
+  tts:
+    enabled: true
+    provider: "browser"
+  stt:
+    enabled: true
+    provider: "browser"
+
+# ============================================================
+# Web Search (via AI-OS)
+# ============================================================
+webSearch:
+  enabled: true
+  provider: "serper"
+  
+# ============================================================
+# MCP Servers
+# ============================================================
+mcpServers:
+  - name: "aios-tools"
+    type: "stdio"
+    command: "node"
+    args: ["api/server/services/Harness/MCPServer.js"]
+    env: {}
+    
+# ============================================================
+# Agent / AI Features
+# ============================================================
+agentEndpoint: "Ollama (Local - Free)"
+
+# ============================================================
+# Balance / Rate Limits
+# ============================================================
+balance:
+  enabled: false
+
+# ============================================================
+# Registration
+# ============================================================
+registration:
+  socialLogins: []
+  allowedDomains: []

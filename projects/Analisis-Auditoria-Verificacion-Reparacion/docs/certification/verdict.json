@@ -1,0 +1,206 @@
+{
+  "run_id": "run-1789141104540952800",
+  "started_at": "2026-09-11T15:38:31.3177491Z",
+  "finished_at": "2026-09-11T15:38:32.3177491Z",
+  "project_root": ".",
+  "decision": "PASS",
+  "reasons": null,
+  "total_evidence": 82,
+  "max_severity": "MEDIUM",
+  "plan_steps": 4,
+  "repairs": [
+    {
+      "rule": "R0100",
+      "target": "internal\\rules\\rules.go",
+      "location": "internal\\rules\\rules.go:118",
+      "action": "annotated",
+      "detail": "placeholder finding recorded for repair queue",
+      "applied_code": false
+    },
+    {
+      "rule": "R0100",
+      "target": "internal\\rules\\rules.go",
+      "location": "internal\\rules\\rules.go:119",
+      "action": "annotated",
+      "detail": "placeholder finding recorded for repair queue",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "init",
+      "location": "cmd\\verify\\main.go:98",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0200",
+      "location": "internal\\rules\\rules.go:153",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "main",
+      "location": "cmd\\verify\\main.go:19",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "Engine.stubTest",
+      "location": "internal\\repair\\repair.go:94",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0400",
+      "location": "internal\\rules\\rules.go:228",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0100",
+      "location": "internal\\rules\\rules.go:125",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0900",
+      "location": "internal\\rules\\rules.go:521",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.newEv",
+      "location": "internal\\rules\\rules.go:93",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0600",
+      "location": "internal\\rules\\rules.go:297",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0810",
+      "location": "internal\\rules\\rules.go:437",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0300",
+      "location": "internal\\rules\\rules.go:176",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "Model.dependentsOfTypes",
+      "location": "internal\\truthmodel\\truthmodel.go:381",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0910",
+      "location": "internal\\rules\\rules.go:549",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0500",
+      "location": "internal\\rules\\rules.go:271",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0800",
+      "location": "internal\\rules\\rules.go:385",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "Model.entitiesRequiring",
+      "location": "internal\\truthmodel\\truthmodel.go:399",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0700",
+      "location": "internal\\rules\\rules.go:355",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0200",
+      "target": "runCtx.r0820",
+      "location": "internal\\rules\\rules.go:490",
+      "action": "report",
+      "detail": "dead code candidate requires human decision (delete or wire)",
+      "applied_code": false
+    },
+    {
+      "rule": "",
+      "target": "rule:",
+      "location": "verificationengine/internal/perf",
+      "action": "report",
+      "detail": "51 finding(s) recorded; no automatic repair (details in evidence.jsonl)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0500",
+      "target": "rule:R0500",
+      "location": "internal\\core\\core.go:268",
+      "action": "report",
+      "detail": "9 finding(s) recorded; no automatic repair (details in evidence.jsonl)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0700",
+      "target": "rule:R0700",
+      "location": "internal\\runtime\\runtime.go:43",
+      "action": "report",
+      "detail": "1 finding(s) recorded; no automatic repair (details in evidence.jsonl)",
+      "applied_code": false
+    },
+    {
+      "rule": "R0900",
+      "target": "rule:R0900",
+      "location": "internal\\rules\\rules_test.go:175",
+      "action": "report",
+      "detail": "1 finding(s) recorded; no automatic repair (details in evidence.jsonl)",
+      "applied_code": false
+    }
+  ],
+  "artifacts": {}
+}

@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal AI Agent Platform — Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a2e;
+            --bg-card: #16161f;
+            --border: #1e1e2e;
+            --border-hover: #2e2e3e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --text-muted: #555;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --accent-dark: #5b21b6;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --gradient-1: linear-gradient(135deg, #7c3aed, #a78bfa);
+            --gradient-2: linear-gradient(135deg, #3b82f6, #06b6d4);
+            --gradient-3: linear-gradient(135deg, #22c55e, #10b981);
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ── Scrollbar ─────────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* ── Layout ────────────────────────────────────── */
+        .app { display: flex; height: 100vh; }
+
+        /* ── Sidebar ───────────────────────────────────── */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo .icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.6); }
+        }
+
+        .sidebar-logo h1 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sidebar-logo .version {
+            font-size: 11px;
+            color: var(--accent-light);
+            font-weight: 400;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 8px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-light);
+        }
+
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .nav-item i { width: 18px; text-align: center; font-size: 14px; }
+
+        /* ── Main Content ──────────────────────────────── */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Top Bar ───────────────────────────────────── */
+        .topbar {
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .topbar-breadcrumb {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .topbar-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        .topbar-btn .notification-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--success);
+        }
+
+        .status-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ── Content Area ──────────────────────────────── */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ── Cards ─────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card:hover::before { opacity: 1; }
+
+        .stat-card .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .icon.purple { background: rgba(124, 58, 237, 0.15); color: var(--accent-light); }
+        .stat-card .icon.blue { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .stat-card .icon.green { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .stat-card .icon.orange { background: rgba(234, 179, 8, 0.15); color: var(--warning); }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-card .change {
+            font-size: 12px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-card .change.up { color: var(--success); }
+        .stat-card .change.down { color: var(--danger); }
+
+        /* ── Grid Layouts ──────────────────────────────── */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body { padding: 16px 20px; }
+
+        /* ── Status Items ──────────────────────────────── */
+        .status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .status-item:last-child { border-bottom: none; }
+        .status-item:hover { padding-left: 8px; }
+
+        .status-item .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-dot.green { background: var(--success); box-shadow: 0 0 8px rgba(34, 197, 94, 0.4); }
+        .status-dot.yellow { background: var(--warning); box-shadow: 0 0 8px rgba(234, 179, 8, 0.4); }
+        .status-dot.red { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+        .status-dot.gray { background: #666; }
+        .status-dot.blue { background: var(--info); box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+
+        .status-item .name { font-size: 13px; color: var(--text-primary); }
+        .status-item .meta { font-size: 11px; color: var(--text-muted); }
+        .status-item .value { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+
+        /* ── Progress Bar ──────────────────────────────── */
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .progress-fill.purple { background: var(--gradient-1); }
+        .progress-fill.blue { background: var(--gradient-2); }
+        .progress-fill.green { background: var(--gradient-3); }
+
+        /* ── Tables ────────────────────────────────────── */
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        /* ── Buttons ───────────────────────────────────── */
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+        /* ── Tags ──────────────────────────────────────── */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .tag.green { background: rgba(34,197,94,0.15); color: var(--success); }
+        .tag.yellow { background: rgba(234,179,8,0.15); color: var(--warning); }
+        .tag.red { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .tag.blue { background: rgba(59,130,246,0.15); color: var(--info); }
+        .tag.purple { background: rgba(124,58,237,0.15); color: var(--accent-light); }
+
+        /* ── Chat ──────────────────────────────────────── */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 140px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user { display: flex; justify-content: flex-end; }
+
+        .message .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .avatar { background: var(--gradient-1); }
+        .message.user .avatar { background: var(--gradient-2); }
+
+        .message .bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.assistant .bubble {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            margin-left: 10px;
+        }
+
+        .message.user .bubble {
+            background: var(--accent);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .message .tools-used {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .message .tool-tag {
+            padding: 2px 8px;
+            background: rgba(124,58,237,0.2);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--accent-light);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .chat-input button {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-input button:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ── Modal ─────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.95) translateY(20px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 { font-size: 16px; }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover { background: var(--danger); color: white; }
+
+        .modal-body { padding: 20px; overflow-y: auto; max-height: 60vh; }
+
+        /* ── Tool Grid ─────────────────────────────────── */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+        }
+
+        .tool-card .tool-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(124, 58, 237, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--accent-light);
+            margin-bottom: 10px;
+        }
+
+        .tool-card .tool-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .tool-card .tool-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* ── Activity Feed ─────────────────────────────── */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child { border-bottom: none; }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.success { background: rgba(34,197,94,0.15); color: var(--success); }
+        .activity-icon.error { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .activity-icon.info { background: rgba(59,130,246,0.15); color: var(--info); }
+        .activity-icon.warning { background: rgba(234,179,8,0.15); color: var(--warning); }
+
+        .activity-content { flex: 1; }
+        .activity-text { font-size: 13px; color: var(--text-primary); }
+        .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* ── Tabs ──────────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { background: var(--accent); color: white; }
+
+        /* ── Chart Placeholder ─────────────────────────── */
+        .chart-area {
+            height: 200px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 160px;
+            padding: 0 20px;
+        }
+
+        .chart-bar {
+            width: 30px;
+            border-radius: 4px 4px 0 0;
+            transition: height 1s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover { opacity: 0.8; }
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ── Loading Animation ─────────────────────────── */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Typing Animation ──────────────────────────── */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 12px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* ── Toast Notifications ───────────────────────── */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 3s forwards;
+            min-width: 300px;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="icon">🤖</div>
+                    <div>
+                        <h1>Universal AI Agent</h1>
+                        <div class="version">v1.0.0 — AI-OS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item active" onclick="showSection('overview')">
+                        <i class="fas fa-chart-pie"></i> Overview
+                    </div>
+                    <div class="nav-item" onclick="showSection('chat')">
+                        <i class="fas fa-comments"></i> Chat
+                        <span class="badge">Live</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('agents')">
+                        <i class="fas fa-robot"></i> Agents
+                        <span class="badge">53</span>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">AI & Models</div>
+                    <div class="nav-item" onclick="showSection('models')">
+                        <i class="fas fa-brain"></i> Models
+                    </div>
+                    <div class="nav-item" onclick="showSection('routing')">
+                        <i class="fas fa-route"></i> Routing
+                    </div>
+                    <div class="nav-item" onclick="showSection('pipelines')">
+                        <i class="fas fa-layer-group"></i> Pipelines
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Data & Knowledge</div>
+                    <div class="nav-item" onclick="showSection('memory')">
+                        <i class="fas fa-database"></i> Memory
+                    </div>
+                    <div class="nav-item" onclick="showSection('rag')">
+                        <i class="fas fa-search"></i> RAG
+                    </div>
+                    <div class="nav-item" onclick="showSection('knowledge')">
+                        <i class="fas fa-project-diagram"></i> Knowledge Graph
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools & Execution</div>
+                    <div class="nav-item" onclick="showSection('tools')">
+                        <i class="fas fa-wrench"></i> Tools
+                        <span class="badge">54</span>
+                    </div>
+                    <div class="nav-item" onclick="showSection('browser')">
+                        <i class="fas fa-globe"></i> Browser
+                    </div>
+                    <div class="nav-item" onclick="showSection('terminal')">
+                        <i class="fas fa-terminal"></i> Terminal
+                    </div>
+                    <div class="nav-item" onclick="showSection('workflows')">
+                        <i class="fas fa-project-diagram"></i> Workflows
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">System</div>
+                    <div class="nav-item" onclick="showSection('security')">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </div>
+                    <div class="nav-item" onclick="showSection('monitoring')">
+                        <i class="fas fa-heartbeat"></i> Monitoring
+                    </div>
+                    <div class="nav-item" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i> Settings
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Top Bar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-title" id="pageTitle">Overview</span>
+                    <span class="topbar-breadcrumb" id="pageBreadcrumb">Dashboard / Overview</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="status-indicator">
+                        <span class="dot"></span>
+                        <span>System Online</span>
+                    </div>
+                    <button class="topbar-btn" onclick="showToast('info', 'Refreshing data...')">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="topbar-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="topbar-btn" onclick="openModal('settingsModal')">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- ═══ OVERVIEW ═══ -->
+                <div id="overview" class="section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="icon purple"><i class="fas fa-wrench"></i></div>
+                            <div class="label">Tools</div>
+                            <div class="value" id="stat-tools">55</div>
+                            <div class="change up"><i class="fas fa-arrow-up"></i> All functional</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon blue"><i class="fas fa-brain"></i></div>
+                            <div class="label">Cognitive Modules</div>
+                            <div class="value" id="stat-modules">58</div>
+                            <div class="change up"><i class="fas fa-arrow-up"></i> +16 this session</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon green"><i class="fas fa-check-circle"></i></div>
+                            <div class="label">Coverage</div>
+                            <div class="value">98%</div>
+                            <div class="progress-bar"><div class="progress-fill green" style="width: 98%"></div></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="icon orange"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="label">Total Cost</div>
+                            <div class="value">$0</div>
+                            <div class="change up"><i class="fas fa-check"></i> 100% Free</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-bar" style="color: var(--accent-light)"></i> System Performance</h3>
+                                <button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Refreshing...')">Refresh</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <div class="chart-bars" id="performanceChart">
+                                        <div class="chart-bar" style="height: 80%; background: var(--gradient-1);" data-value="80%"></div>
+                                        <div class="chart-bar" style="height: 65%; background: var(--gradient-2);" data-value="65%"></div>
+                                        <div class="chart-bar" style="height: 90%; background: var(--gradient-3);" data-value="90%"></div>
+                                        <div class="chart-bar" style="height: 75%; background: var(--gradient-1);" data-value="75%"></div>
+                                        <div class="chart-bar" style="height: 85%; background: var(--gradient-2);" data-value="85%"></div>
+                                        <div class="chart-bar" style="height: 70%; background: var(--gradient-3);" data-value="70%"></div>
+                                        <div class="chart-bar" style="height: 95%; background: var(--gradient-1);" data-value="95%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-stream" style="color: var(--info)"></i> Recent Activity</h3>
+                            </div>
+                            <div class="card-body" style="max-height: 240px; overflow-y: auto;">
+                                <div class="activity-item">
+                                    <div class="activity-icon success"><i class="fas fa-check"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Task completed: Code refactoring</div>
+                                        <div class="activity-time">2 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info"><i class="fas fa-search"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Research: 5 sources analyzed</div>
+                                        <div class="activity-time">5 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Loop detected and recovered</div>
+                                        <div class="activity-time">8 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon success"><i class="fas fa-check"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Lesson learned: Tool timeout handling</div>
+                                        <div class="activity-time">12 min ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon info"><i class="fas fa-brain"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Model routed: GPT-4o → coding task</div>
+                                        <div class="activity-time">15 min ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-cogs" style="color: var(--success)"></i> Cognitive Modules (58)</h3>
+                            <div class="tabs" style="margin: 0;">
+                                <div class="tab active" onclick="filterModules('all', this)">All</div>
+                                <div class="tab" onclick="filterModules('core', this)">Core</div>
+                                <div class="tab" onclick="filterModules('memory', this)">Memory</div>
+                                <div class="tab" onclick="filterModules('learning', this)">Learning</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="tools-grid" id="modulesGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ CHAT ═══ -->
+                <div id="chat" class="section">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message assistant">
+                                <div class="avatar"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <div class="bubble">Hello! I'm your Universal AI Agent with 54 tools and 58 cognitive modules. I can help you with coding, research, file operations, web browsing, and much more. What would you like to do?</div>
+                                    <div class="tools-used">
+                                        <span class="tool-tag">AgentLoop</span>
+                                        <span class="tool-tag">IntelligentRouter</span>
+                                        <span class="tool-tag">MemoryEngine</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Type your message... (Press Enter to send)" onkeypress="if(event.key==='Enter')sendMessage()">
+                            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MODELS ═══ -->
+                <div id="models" class="section">
+                    <h2 style="margin-bottom: 20px;">Model Providers</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-server" style="color: var(--info)"></i> Provider Status</h3></div>
+                            <div class="card-body">
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">OpenAI (GPT)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">xAI (Grok)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">Ollama (Local)</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot green"></span><span class="name">LM Studio</span></div>
+                                    <span class="tag green">Healthy</span>
+                                </div>
+                                <div class="status-item">
+                                    <div class="left"><span class="status-dot gray"></span><span class="name">Anthropic</span></div>
+                                    <span class="tag yellow">Not Configured</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-line" style="color: var(--success)"></i> Model Performance</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="name">GPT-4o</span></div><span class="value">92% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">Grok-2</span></div><span class="value">89% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">llama3.1:8b</span></div><span class="value">78% success</span></div>
+                                <div class="status-item"><div class="left"><span class="name">qwen2.5:7b</span></div><span class="value">75% success</span></div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="card" style="margin-top:16px">
+                            <div class="card-header"><h3><i class="fas fa-server" style="color: var(--success)"></i> Ollama Local Models (Live)</h3></div>
+                            <div class="card-body">
+                                <div class="tools-grid" id="ollama-models-grid"><p style="color:var(--text-secondary)">Loading models...</p></div>
+                            </div>
+                        </div>
+
+                <!-- ═══ TOOLS ═══ -->
+                <div id="tools" class="section">
+                    <h2 style="margin-bottom: 20px;">Tools (54)</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-wrench" style="color: var(--accent-light)"></i> All Tools</h3>
+                            <button class="btn btn-sm btn-primary" onclick="openModal('toolInfoModal')"><i class="fas fa-info-circle"></i> Tool Info</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="tools-grid" id="toolsGrid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MEMORY ═══ -->
+                <div id="memory" class="section">
+                    <h2 style="margin-bottom: 20px;">Memory System</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-memory" style="color: var(--accent-light)"></i> Memory Types</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Working Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Episodic Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Semantic Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Procedural Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Long-term Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">User Preferences</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Cross-Session Memory</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Experience Replay</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--info)"></i> Memory Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Total Memories</span><span class="value">2,847</span></div>
+                                <div class="status-item"><span class="name">Recall Operations</span><span class="value">15,234</span></div>
+                                <div class="status-item"><span class="name">Consolidations</span><span class="value">456</span></div>
+                                <div class="status-item"><span class="name">Lessons Learned</span><span class="value">156</span></div>
+                                <div class="status-item"><span class="name">Avg Recall Time</span><span class="value">12ms</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ RAG ═══ -->
+                <div id="rag" class="section">
+                    <h2 style="margin-bottom: 20px;">RAG System</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-layer-group" style="color: var(--accent-light)"></i> RAG Components</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Smart Chunker</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Semantic Compressor</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Vector Store</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">BM25 Search</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Hybrid Search</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Adaptive RAG</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Contextual Retriever</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-line" style="color: var(--success)"></i> RAG Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Documents Ingested</span><span class="value">1,234</span></div>
+                                <div class="status-item"><span class="name">Total Chunks</span><span class="value">15,678</span></div>
+                                <div class="status-item"><span class="name">Retrievals</span><span class="value">8,901</span></div>
+                                <div class="status-item"><span class="name">Avg Retrieval Time</span><span class="value">45ms</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ AGENTS ═══ -->
+                <div id="agents" class="section">
+                    <h2 style="margin-bottom: 20px;">Sub-Agents</h2>
+                    <div class="card">
+                        <div class="card-header"><h3><i class="fas fa-robot" style="color: var(--accent-light)"></i> Available Agents</h3></div>
+                        <div class="card-body">
+                            <table>
+                                <tr><th>Agent</th><th>Type</th><th>Status</th><th>Tasks</th><th>Actions</th></tr>
+                                <tr><td>Code Reviewer</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>234</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Code Reviewer...')">Launch</button></td></tr>
+                                <tr><td>Debugger</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>156</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Debugger...')">Launch</button></td></tr>
+                                <tr><td>Test Writer</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>89</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Test Writer...')">Launch</button></td></tr>
+                                <tr><td>Security Auditor</td><td><span class="tag purple">Specialized</span></td><td><span class="tag green">Ready</span></td><td>67</td><td><button class="btn btn-sm btn-secondary" onclick="showToast('info', 'Launching Security Auditor...')">Launch</button></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ SECURITY ═══ -->
+                <div id="security" class="section">
+                    <h2 style="margin-bottom: 20px;">Security</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-shield-alt" style="color: var(--success)"></i> Security Features</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Docker Sandbox</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Approval Gates</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Credential Vault</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Audit Logging</span></div><span class="tag green">Active</span></div>
+                                <div class="status-item"><div class="left"><span class="status-dot green"></span><span class="name">Agent Firewall</span></div><span class="tag green">Active</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color: var(--info)"></i> Security Stats</h3></div>
+                            <div class="card-body">
+                                <div class="status-item"><span class="name">Blocked Commands</span><span class="value">45</span></div>
+                                <div class="status-item"><span class="name">Approval Requests</span><span class="value">234</span></div>
+                                <div class="status-item"><span class="name">Audit Events</span><span class="value">12,456</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ MONITORING ═══ -->
+                <div id="monitoring" class="section">
+                    <h2 style="margin-bottom: 20px;">System Monitoring</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="icon green"><i class="fas fa-microchip"></i></div><div class="label">CPU</div><div class="value" id="monitor-cpu">15%</div><div class="progress-bar"><div class="progress-fill green" id="monitor-cpu-bar" style="width: 15%"></div></div></div>
+                        <div class="stat-card"><div class="icon blue"><i class="fas fa-memory"></i></div><div class="label">RAM</div><div class="value" id="monitor-ram">950MB</div><div class="progress-bar"><div class="progress-fill blue" id="monitor-ram-bar" style="width: 6%"></div></div></div>
+                        <div class="stat-card"><div class="icon purple"><i class="fas fa-hdd"></i></div><div class="label">Disk</div><div class="value">200MB</div><div class="progress-bar"><div class="progress-fill purple" style="width: 2%"></div></div></div>
+                        <div class="stat-card"><div class="icon orange"><i class="fas fa-network-wired"></i></div><div class="label">Network</div><div class="value" id="monitor-network">Active</div></div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top:16px">
+                        <div class="card-header"><h3><i class="fas fa-tachometer-alt" style="color: var(--accent-light)"></i> Performance</h3></div>
+                        <div class="card-body" id="perf-data">
+                            <div class="status-item"><span class="name">Status</span><span class="tag green">Loading...</span></div>
+                        </div>
+                    </div>
+
+                <!-- ═══ SETTINGS ═══ -->
+                <div id="settings" class="section">
+                    <h2 style="margin-bottom: 20px;">Settings</h2>
+                    <div class="card">
+                        <div class="card-header"><h3><i class="fas fa-cog" style="color: var(--accent-light)"></i> System Configuration</h3></div>
+                        <div class="card-body">
+                            <div class="status-item"><span class="name">Max Iterations</span><span class="value">20</span></div>
+                            <div class="status-item"><span class="name">Max Retries</span><span class="value">3</span></div>
+                            <div class="status-item"><span class="name">Timeout</span><span class="value">300s</span></div>
+                            <div class="status-item"><span class="name">Self-healing</span><span class="tag green">Enabled</span></div>
+                            <div class="status-item"><span class="name">Auto-checkpoint</span><span class="tag green">Enabled</span></div>
+                            <div class="status-item"><span class="name">Tool Compression</span><span class="tag green">Enabled</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder sections -->
+                <div id="routing" class="section"><h2>Intelligent Routing</h2><p style="color: var(--text-secondary); margin-top: 16px;">Model routing based on task complexity, cost, and performance.</p></div>
+                <div id="pipelines" class="section"><h2>Model Pipelines</h2><p style="color: var(--text-secondary); margin-top: 16px;">Sequential, parallel, fallback, and voting pipelines.</p></div>
+                <div id="knowledge" class="section"><h2>Knowledge Graph</h2><p style="color: var(--text-secondary); margin-top: 16px;">Causal relationships between concepts.</p></div>
+                <div id="browser" class="section"><h2>Browser Engine</h2><p style="color: var(--text-secondary); margin-top: 16px;">Playwright-based browser automation.</p></div>
+                <div id="terminal" class="section"><h2>Terminal</h2><p style="color: var(--text-secondary); margin-top: 16px;">Shell command execution.</p></div>
+                <div id="workflows" class="section"><h2>Workflows</h2><p style="color: var(--text-secondary); margin-top: 16px;">Dynamic workflow engine.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Modal: Tool Info -->
+    <div class="modal-overlay" id="toolInfoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Tool Information</h3>
+                <button class="modal-close" onclick="closeModal('toolInfoModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">Click on any tool to see details.</p>
+                <div class="status-item"><span class="name">Total Tools</span><span class="value">54</span></div>
+                <div class="status-item"><span class="name">Core Tools</span><span class="value">13</span></div>
+                <div class="status-item"><span class="name">Cognitive Modules</span><span class="value">58</span></div>
+                <div class="status-item"><span class="name">Verification</span><span class="value">2</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Settings -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Quick Settings</h3>
+                <button class="modal-close" onclick="closeModal('settingsModal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="status-item"><span class="name">Max Iterations</span><span class="value">20</span></div>
+                <div class="status-item"><span class="name">Self-healing</span><span class="tag green">Enabled</span></div>
+                <div class="status-item"><span class="name">Auto-checkpoint</span><span class="tag green">Enabled</span></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- ═══ COMPUTER USE ═══ -->
+    <section id="computeruse" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-desktop"></i> Computer Use — Desktop Control</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">16 tools: screenshot, click, type, keyboard, mouse, windows, clipboard — Cross-platform</p>
+        </div>
+        <div class="grid-3">
+            <div class="card glass">
+                <h3><i class="fas fa-camera"></i> Screenshot</h3>
+                <p>Capture screen, active window, or region</p>
+                <button class="btn btn-sm" onclick="callTool('computer_screenshot', {})">Take Screenshot</button>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-mouse-pointer"></i> Mouse Control</h3>
+                <p>Click, double-click, right-click, move, drag, scroll</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-sm" onclick="callTool('computer_click', {x:500,y:300})">Click</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_scroll', {direction:'down'})">Scroll ↓</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_scroll', {direction:'up'})">Scroll ↑</button>
+                </div>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-keyboard"></i> Keyboard</h3>
+                <p>Type text, press keys, hotkey combos</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-sm" onclick="callTool('computer_press_key', {key:'ctrl+c'})">Ctrl+C</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_press_key', {key:'ctrl+v'})">Ctrl+V</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_press_key', {key:'ctrl+z'})">Ctrl+Z</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_press_key', {key:'ctrl+s'})">Ctrl+S</button>
+                </div>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-clipboard"></i> Clipboard</h3>
+                <p>Read/write clipboard content</p>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-sm" onclick="callTool('computer_clipboard_read', {})">Read</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_clipboard_write', {text:'AI-OS Clipboard'})">Write</button>
+                </div>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-window-maximize"></i> Windows</h3>
+                <p>List, focus, resize windows</p>
+                <button class="btn btn-sm" onclick="callTool('computer_window_list', {})">List Windows</button>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-arrows-alt"></i> Screen</h3>
+                <p>Get screen size, mouse position</p>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-sm" onclick="callTool('computer_screen_size', {})">Screen Size</button>
+                    <button class="btn btn-sm" onclick="callTool('computer_mouse_position', {})">Mouse Pos</button>
+                </div>
+            </div>
+        </div>
+        <div id="computeruse-results" style="margin-top:16px;"></div>
+    </section>
+
+    <!-- ═══ MCP SERVERS ═══ -->
+    <section id="mcp" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-plug"></i> MCP Servers — Model Context Protocol</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">Connect to MCP servers for extended tool capabilities</p>
+        </div>
+        <div class="grid-2">
+            <div class="card glass">
+                <h3><i class="fas fa-server"></i> Server Status</h3>
+                <div id="mcp-servers">
+                    <div style="padding:12px;color:var(--text-secondary);">Loading MCP servers...</div>
+                </div>
+                <button class="btn btn-sm" onclick="loadMCPServers()" style="margin-top:8px;">Refresh</button>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-tools"></i> MCP Tools</h3>
+                <div id="mcp-tools">
+                    <div style="padding:12px;color:var(--text-secondary);">No MCP tools loaded</div>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="margin-top:16px;">
+            <h3><i class="fas fa-cog"></i> MCP Configuration</h3>
+            <pre id="mcp-config" style="font-size:12px;max-height:200px;overflow:auto;color:var(--text-primary);">Loading...</pre>
+        </div>
+    </section>
+
+    <!-- ═══ VISION ROUTER ═══ -->
+    <section id="vision" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-eye"></i> Vision Complexity Router</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">Auto-selects vision model by task complexity: Simple → Medium → Hard</p>
+        </div>
+        <div class="grid-3">
+            <div class="card glass" style="border-left:3px solid #4ade80;">
+                <h3><i class="fas fa-bolt"></i> Simple (1.8B)</h3>
+                <p><strong>Moondream2</strong> — MIT License</p>
+                <p style="font-size:12px;">OCR, UI detection, basic recognition</p>
+                <div class="badge badge-success">500ms target</div>
+            </div>
+            <div class="card glass" style="border-left:3px solid #60a5fa;">
+                <h3><i class="fas fa-chart-bar"></i> Medium (7B)</h3>
+                <p><strong>LLaVA 1.6 / Qwen2-VL</strong> — Apache-2.0</p>
+                <p style="font-size:12px;">Object detection, scene analysis, diagrams</p>
+                <div class="badge badge-info">2s target</div>
+            </div>
+            <div class="card glass" style="border-left:3px solid #f97316;">
+                <h3><i class="fas fa-brain"></i> Hard (13B-34B)</h3>
+                <p><strong>LLaVA 13B / Qwen2-VL 32B</strong> — Apache-2.0</p>
+                <p style="font-size:12px;">Complex reasoning, multi-step visual tasks</p>
+                <div class="badge badge-warning">5s target</div>
+            </div>
+        </div>
+        <div class="card glass" style="margin-top:16px;">
+            <h3><i class="fas fa-vial"></i> Test Vision Router</h3>
+            <textarea id="visionPrompt" placeholder="Describe what you want to analyze..." style="width:100%;height:60px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text-primary);"></textarea>
+            <button class="btn btn-primary" onclick="testVisionRouter()" style="margin-top:8px;">Classify & Route</button>
+            <div id="visionResult" style="margin-top:12px;"></div>
+        </div>
+    </section>
+
+    <!-- ═══ WEBLLM ═══ -->
+    <section id="webllm" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-globe"></i> WebLLM — Browser AI</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">Run LLMs directly in your browser via WebGPU — Zero server cost</p>
+        </div>
+        <div class="grid-3">
+            <div class="card glass">
+                <h3><i class="fas fa-bolt"></i> Phi-3.5 Mini</h3>
+                <p>3.8B params — ~2.4 GB</p>
+                <p style="font-size:12px;">MIT License</p>
+                <div class="badge badge-success">Fast</div>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-fire"></i> Llama 3.1 8B</h3>
+                <p>8B params — ~4.9 GB</p>
+                <p style="font-size:12px;">Llama 3.1 Community License</p>
+                <div class="badge badge-info">Balanced</div>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-globe-asia"></i> Qwen 2.5 7B</h3>
+                <p>7B params — ~4.6 GB</p>
+                <p style="font-size:12px;">Apache-2.0</p>
+                <div class="badge badge-info">Multilingual</div>
+            </div>
+        </div>
+        <div class="card glass" style="margin-top:16px;">
+            <h3><i class="fas fa-play"></i> Browser Inference</h3>
+            <p style="font-size:13px;color:var(--text-secondary);">WebLLM runs in the browser. Open this page to load a model:</p>
+            <div id="webllm-status" style="margin-top:8px;">
+                <div class="badge badge-warning">Requires WebGPU-enabled browser (Chrome 113+)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FINE-TUNING ═══ -->
+    <section id="finetune" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-graduation-cap"></i> Fine-Tuning — LoRA/QLoRA</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">Train custom LoRA adapters locally using Unsloth (Apache-2.0)</p>
+        </div>
+        <div class="grid-3">
+            <div class="card glass" style="border-left:3px solid #4ade80;">
+                <h3><i class="fas fa-bolt"></i> Quick LoRA</h3>
+                <p>r=8, 1 epoch, ~10-30 min</p>
+                <p style="font-size:12px;">RAM: 4-6 GB</p>
+                <div class="badge badge-success">Fastest</div>
+            </div>
+            <div class="card glass" style="border-left:3px solid #60a5fa;">
+                <h3><i class="fas fa-balance-scale"></i> Balanced LoRA</h3>
+                <p>r=16, 3 epochs, ~1-3 hours</p>
+                <p style="font-size:12px;">RAM: 6-8 GB</p>
+                <div class="badge badge-info">Best value</div>
+            </div>
+            <div class="card glass" style="border-left:3px solid #f97316;">
+                <h3><i class="fas fa-gem"></i> Quality LoRA</h3>
+                <p>r=32, 5 epochs, ~4-12 hours</p>
+                <p style="font-size:12px;">RAM: 8-16 GB</p>
+                <div class="badge badge-warning">Best quality</div>
+            </div>
+        </div>
+        <div class="card glass" style="margin-top:16px;">
+            <h3><i class="fas fa-flask"></i> Training Status</h3>
+            <div id="finetune-status">
+                <p style="font-size:13px;color:var(--text-secondary);">No active training jobs. Configure a dataset and preset to start.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ AUTO LAUNCHER ═══ -->
+    <section id="launcher" class="section">
+        <div class="section-header">
+            <h2><i class="fas fa-rocket"></i> Auto Launcher</h2>
+            <p style="color:var(--text-secondary);font-size:13px;">Automatic service management — starts services when Agent Loop initializes</p>
+        </div>
+        <div class="grid-2">
+            <div class="card glass">
+                <h3><i class="fas fa-server"></i> Service Status</h3>
+                <div id="launcher-services">
+                    <div style="padding:12px;color:var(--text-secondary);">Loading services...</div>
+                </div>
+                <button class="btn btn-sm" onclick="loadLauncherStatus()" style="margin-top:8px;">Check All</button>
+                <button class="btn btn-sm btn-primary" onclick="autoStartAll()" style="margin-top:8px;margin-left:8px;">Auto-Start All</button>
+            </div>
+            <div class="card glass">
+                <h3><i class="fas fa-info-circle"></i> Services Overview</h3>
+                <div style="font-size:13px;">
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                        <span>🟢 Ollama (LLM)</span><span>localhost:11434</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                        <span>🟡 MongoDB</span><span>localhost:27017</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                        <span>🟡 Redis</span><span>localhost:6379</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                        <span>🟡 Docker</span><span>Sandbox</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;padding:6px 0;">
+                        <span>🟢 Playwright</span><span>Browser</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<script>
+        // ══════════════════════════════════════════════
+        // AI-OS DASHBOARD — BACKEND CONNECTED
+        // All data fetched from real APIs
+        // ══════════════════════════════════════════════
+
+        const API = window.location.origin;
+        let _refreshInterval = null;
+
+        // ── Navigation ──
+        const titles = {
+            computeruse: 'Computer Use', mcp: 'MCP Servers', vision: 'Vision Router',
+            webllm: 'WebLLM Browser', finetune: 'Fine-Tuning', launcher: 'Auto Launcher',
+            overview: 'Overview', chat: 'Chat', agents: 'Agents', models: 'Models',
+            routing: 'Intelligent Routing', pipelines: 'Model Pipelines', memory: 'Memory',
+            rag: 'RAG System', knowledge: 'Knowledge Graph', tools: 'Tools',
+            browser: 'Browser Engine', terminal: 'Terminal', workflows: 'Workflows',
+            security: 'Security', monitoring: 'Monitoring', settings: 'Settings'
+        };
+
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const section = document.getElementById(name);
+            if (section) section.classList.add('active');
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+            document.getElementById('pageTitle').textContent = titles[name] || name;
+            document.getElementById('pageBreadcrumb').textContent = 'Dashboard / ' + (titles[name] || name);
+            if (name === 'monitoring') fetchPerformance();
+            if (name === 'models') fetchOllamaModels();
+        }
+
+        // ── Toast ──
+        function showToast(type, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle', warning: 'exclamation-triangle' };
+            const colors = { success: 'var(--success)', error: 'var(--danger)', info: 'var(--info)', warning: 'var(--warning)' };
+            toast.innerHTML = '<i class="fas fa-' + icons[type] + '" style="color: ' + colors[type] + '; font-size: 16px;"></i><span style="font-size: 13px;">' + message + '</span>';
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        // ── Modal ──
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        document.querySelectorAll('.modal-overlay').forEach(m => {
+            m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
+        });
+
+        // ═══ BACKEND API FETCHERS ═══
+        async function apiFetch(path) {
+            try {
+                const res = await fetch(API + path);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return await res.json();
+            } catch (e) { console.warn('[API] ' + path + ':', e.message); return null; }
+        }
+
+        async function fetchHealth() {
+            const d = await apiFetch('/api/health');
+            if (!d) return;
+            const u = document.getElementById('stat-uptime');
+            const s = document.getElementById('stat-status');
+            const v = document.getElementById('stat-version');
+            if (u) { const hrs = Math.floor((d.uptime||0)/3600); const m = Math.floor(((d.uptime||0)%3600)/60); u.textContent = hrs > 0 ? hrs+'h '+m+'m' : m+'m'; }
+            if (s) { s.textContent = d.status; s.className = 'tag ' + (d.status==='healthy'?'green':'orange'); }
+            if (v) v.textContent = d.version || '?';
+        }
+
+        async function fetchMetrics() {
+            const d = await apiFetch('/api/metrics/dashboard');
+            if (!d) return;
+            const mem = document.getElementById('stat-memory');
+            const cpu = document.getElementById('stat-cpu');
+            const req = document.getElementById('stat-requests');
+            if (mem && d.system && d.system.memory) mem.textContent = d.system.memory.heapUsed || '?';
+            if (cpu && d.system && d.system.cpu) cpu.textContent = d.system.cpu.usage || '?';
+            if (req && d.requests) req.textContent = d.requests.total || '0';
+            // Monitoring section
+            const mc = document.getElementById('monitor-cpu');
+            const mcb = document.getElementById('monitor-cpu-bar');
+            const mr = document.getElementById('monitor-ram');
+            const mrb = document.getElementById('monitor-ram-bar');
+            const mreq = document.getElementById('monitor-requests');
+            const merr = document.getElementById('monitor-errors');
+            if (mc && d.system && d.system.cpu) mc.textContent = d.system.cpu.usage;
+            if (mcb && d.system && d.system.cpu) mcb.style.width = Math.min(parseFloat(d.system.cpu.usage)||0,100) + '%';
+            if (mr && d.system && d.system.memory) mr.textContent = d.system.memory.heapUsed;
+            if (mrb && d.system && d.system.memory) { const used = parseFloat(d.system.memory.heapUsed)||0; const total = parseFloat(d.system.memory.systemTotal)||8; mrb.style.width = Math.min((used/(total*1024))*100,100) + '%'; }
+            if (mreq && d.requests) mreq.textContent = d.requests.total || '0';
+            if (merr && d.errors) merr.textContent = d.errors.total || '0';
+        }
+
+        async function fetchPerformance() {
+            const d = await apiFetch('/api/performance/summary');
+            if (!d) return;
+            const el = document.getElementById('perf-data');
+            if (el) el.innerHTML = '<div class="status-item"><span class="name">Status</span><span class="tag '+(d.status==='ok'?'green':'orange')+'">'+d.status+'</span></div><div class="status-item"><span class="name">Requests</span><span class="value">'+(d.system&&d.system.requests||0)+'</span></div><div class="status-item"><span class="name">Latency</span><span class="value">'+(d.system&&d.system.latency||0)+'ms</span></div>';
+
+                    <div class="nav-item" onclick="showSection('computeruse')">
+                        <i class="fas fa-desktop"></i> Computer Use
+                    </div>
+                    <div class="nav-item" onclick="showSection('mcp')">
+                        <i class="fas fa-plug"></i> MCP Servers
+                    </div>
+                    <div class="nav-item" onclick="showSection('vision')">
+                        <i class="fas fa-eye"></i> Vision Router
+                    </div>
+                    <div class="nav-item" onclick="showSection('webllm')">
+                        <i class="fas fa-globe"></i> WebLLM
+                    </div>
+                    <div class="nav-item" onclick="showSection('finetune')">
+                        <i class="fas fa-graduation-cap"></i> Fine-Tuning
+                    </div>
+                    <div class="nav-item" onclick="showSection('launcher')">
+                        <i class="fas fa-rocket"></i> Auto Launcher
+                    </div>
+        }
+
+        async function fetchOllamaModels() {
+            try {
+                const res = await fetch('http://localhost:11434/api/tags');
+                const data = await res.json();
+                const grid = document.getElementById('ollama-models-grid');
+                if (!grid) return;
+                grid.innerHTML = (data.models||[]).map(m =>
+                    '<div class="tool-card"><div class="tool-icon">🧠</div><div class="tool-name">'+m.name+'</div><div class="tool-desc">'+(m.details&&m.details.parameter_size||'?')+' · '+(m.details&&m.details.quantization_level||'?')+' · '+(m.size/1e9).toFixed(1)+'GB</div><div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">'+((m.capabilities||[]).map(c=>'<span class="tag green" style="font-size:10px">'+c+'</span>').join(''))+'</div></div>'
+                ).join('');
+            } catch(e) { console.warn('[Ollama]', e.message); }
+        }
+
+        // ── Chat (connected to backend) ──
+        function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML += '<div class="message user"><div class="avatar"><i class="fas fa-user"></i></div><div><div class="bubble">'+escapeHtml(message)+'</div></div></div>';
+            input.value = '';
+            const typingId = 'typing-' + Date.now();
+            messagesDiv.innerHTML += '<div class="message assistant" id="'+typingId+'"><div class="avatar"><i class="fas fa-robot"></i></div><div><div class="bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div></div>';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            try {
+                const res = await fetch(API + '/api/harness/pre-llm', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({message}) });
+                const data = await res.json();
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+                const reply = data.compacted || data.message || data.reply || JSON.stringify(data).substring(0,500);
+                messagesDiv.innerHTML += '<div class="message assistant"><div class="avatar"><i class="fas fa-robot"></i></div><div><div class="bubble">'+escapeHtml(reply)+'</div><div class="tools-used"><span class="tool-tag">Harness</span><span class="tool-tag">AgentLoop</span></div></div></div>';
+            } catch(e) {
+                const typing = document.getElementById(typingId);
+                if (typing) typing.remove();
+                messagesDiv.innerHTML += '<div class="message assistant"><div class="avatar"><i class="fas fa-robot"></i></div><div><div class="bubble">Backend offline. For full chat use <a href="'+API+'" style="color:var(--accent-light)">LibreChat</a></div></div></div>';
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // ── Modules (static list) ──
+        const modules = [
+            { name: 'AgentLoop', icon: '🔄', desc: 'Core agent loop', cat: 'core' },
+            { name: 'IntelligentRouter', icon: '🧠', desc: 'Model routing', cat: 'core' },
+            { name: 'ContextCompactor', icon: '📦', desc: 'Context compression', cat: 'core' },
+            { name: 'DAGScheduler', icon: '📊', desc: 'DAG execution', cat: 'core' },
+            { name: 'ProviderHealthChecker', icon: '💓', desc: 'Provider health', cat: 'core' },
+            { name: 'APIKeyRotation', icon: '🔑', desc: 'Key rotation', cat: 'core' },
+            { name: 'QuotaManager', icon: '📋', desc: 'Quota management', cat: 'core' },
+            { name: 'MemoryEngine', icon: '💾', desc: '8 memory types', cat: 'memory' },
+            { name: 'CrossSessionMemory', icon: '🔗', desc: 'Cross-session', cat: 'memory' },
+            { name: 'ExperienceReplay', icon: '🔁', desc: 'Experience replay', cat: 'memory' },
+            { name: 'RAGEngine', icon: '📚', desc: 'RAG retrieval', cat: 'memory' },
+            { name: 'HybridSearch', icon: '🔍', desc: 'Hybrid search', cat: 'memory' },
+            { name: 'AdaptiveRAG', icon: '🎯', desc: 'Adaptive RAG', cat: 'memory' },
+            { name: 'LearningEngine', icon: '📖', desc: 'Learning system', cat: 'learning' },
+            { name: 'LoopDetector', icon: '🔁', desc: 'Loop detection', cat: 'learning' },
+            { name: 'RootCauseAnalyzer', icon: '🔍', desc: 'Root cause', cat: 'learning' },
+            { name: 'LessonEngine', icon: '📝', desc: 'Lesson extraction', cat: 'learning' },
+            { name: 'FactChecker', icon: '✅', desc: 'Fact verification', cat: 'learning' },
+            { name: 'SourceEvaluator', icon: '📰', desc: 'Source evaluation', cat: 'learning' },
+            { name: 'ModelPipeline', icon: '🔗', desc: 'Multi-model pipeline', cat: 'core' },
+            { name: 'WorkspaceManager', icon: '📁', desc: 'Workspaces', cat: 'core' },
+            { name: 'DistributedTracer', icon: '📡', desc: 'Tracing', cat: 'core' },
+            { name: 'ModelEvaluator', icon: '📊', desc: 'Model evaluation', cat: 'learning' },
+            { name: 'RAGEvaluator', icon: '📈', desc: 'RAG evaluation', cat: 'learning' },
+            { name: 'PeerReviewer', icon: '👥', desc: 'Peer review', cat: 'learning' },
+            { name: 'AccessibilityTree', icon: '🌳', desc: 'A11y tree', cat: 'core' },
+            { name: 'GhostDetector', icon: '👻', desc: 'Ghost detection', cat: 'learning' },
+            { name: 'DuplicateDetector', icon: '📋', desc: 'Duplicate detection', cat: 'learning' },
+            { name: 'MicroVMManager', icon: '🖥️', desc: 'MicroVM', cat: 'core' },
+            { name: 'RemoteExecutor', icon: '🌐', desc: 'Remote execution', cat: 'core' },
+            { name: 'PromptManager', icon: '💬', desc: 'Prompt engineering', cat: 'core' },
+            { name: 'ContextualRetriever', icon: '🎯', desc: 'Contextual retrieval', cat: 'memory' },
+            { name: 'NewsEngine', icon: '📰', desc: 'News aggregation', cat: 'core' },
+            { name: 'EditorialAnalyzer', icon: '📊', desc: 'Editorial analysis', cat: 'core' },
+            { name: 'GPUManager', icon: '🎮', desc: 'GPU management', cat: 'core' },
+            { name: 'BenchmarkSuite', icon: '🏆', desc: 'Benchmarking', cat: 'learning' },
+            { name: 'CodebaseForensics', icon: '🔍', desc: 'Codebase forensics', cat: 'learning' },
+        ];
+
+        function renderModules(filter) {
+            filter = filter || 'all';
+            const grid = document.getElementById('modulesGrid');
+            if (!grid) return;
+            const filtered = filter === 'all' ? modules : modules.filter(m => m.cat === filter);
+            grid.innerHTML = filtered.map(m =>
+                '<div class="tool-card" onclick="showToast('info', 'Opening ' + m.name + '...')"><div class="tool-icon">' + m.icon + '</div><div class="tool-name">' + m.name + '</div><div class="tool-desc">' + m.desc + '</div></div>'
+            ).join('');
+        }
+
+        function filterModules(filter, el) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderModules(filter);
+        }
+
+        // ── Tools (static list) ──
+        const tools = [
+            { name: 'read_file', icon: '📄', desc: 'Read file contents' },
+            { name: 'write_file', icon: '✏️', desc: 'Write file contents' },
+            { name: 'edit_file', icon: '🔧', desc: 'Edit by replacement' },
+            { name: 'list_directory', icon: '📁', desc: 'List directory' },
+            { name: 'execute_command', icon: '⚡', desc: 'Run shell commands' },
+            { name: 'grep', icon: '🔍', desc: 'Search in files' },
+            { name: 'glob', icon: '🌐', desc: 'Find files by pattern' },
+            { name: 'git_integration', icon: '📦', desc: 'Git operations' },
+            { name: 'code_executor', icon: '💻', desc: 'Execute code' },
+            { name: 'browser_manager', icon: '🌍', desc: 'Web browsing' },
+            { name: 'computer_use', icon: '🖥️', desc: 'Vision + Actions' },
+            { name: 'docker_sandbox', icon: '🐳', desc: 'Container execution' },
+            { name: 'web_scraper', icon: '🕸️', desc: 'Scrape web pages' },
+            { name: 'email_manager', icon: '📧', desc: 'IMAP/SMTP email' },
+            { name: 'calendar_manager', icon: '📅', desc: 'CalDAV calendar' },
+            { name: 'drive_manager', icon: '💾', desc: 'WebDAV files' },
+            { name: 'social_scraper', icon: '📱', desc: 'Social media' },
+            { name: 'rss_aggregator', icon: '📰', desc: 'RSS/Atom feeds' },
+            { name: 'image_generator', icon: '🎨', desc: 'Image generation' },
+            { name: 'tts_manager', icon: '🔊', desc: 'Text to speech' },
+            { name: 'stt_manager', icon: '🎤', desc: 'Speech to text' },
+            { name: 'video_generator', icon: '🎬', desc: 'Video generation' },
+            { name: 'presentation_generator', icon: '📊', desc: 'Presentations' },
+            { name: 'website_generator', icon: '🌐', desc: 'Website generation' },
+            { name: 'diagram_generator', icon: '📐', desc: 'Diagrams' },
+            { name: 'backup_manager', icon: '💾', desc: 'Backup system' },
+            { name: 'health_dashboard', icon: '💓', desc: 'Health monitoring' },
+            { name: 'webhook_manager', icon: '🔔', desc: 'Webhooks' },
+            { name: 'queue_manager', icon: '📋', desc: 'Job queue' },
+            { name: 'log_manager', icon: '📝', desc: 'Logging' },
+            { name: 'metrics_collector', icon: '📈', desc: 'Metrics' },
+            { name: 'clipboard_manager', icon: '📋', desc: 'Clipboard' },
+            { name: 'rate_limiter', icon: '⏱️', desc: 'Rate limiting' },
+            { name: 'cache_manager', icon: '💾', desc: 'Caching' },
+            { name: 'alert_manager', icon: '🔔', desc: 'Alerts' },
+        ];
+
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            if (!grid) return;
+            grid.innerHTML = tools.map(t =>
+                '<div class="tool-card" onclick="showToast('info', 'Tool: ' + t.name + '')"><div class="tool-icon">' + t.icon + '</div><div class="tool-name">' + t.name + '</div><div class="tool-desc">' + t.desc + '</div></div>'
+            ).join('');
+        }
+
+        // ── Initialize ──
+        (async function() {
+            renderModules();
+            renderTools();
+            await Promise.allSettled([fetchHealth(), fetchMetrics(), fetchPerformance()]);
+            showToast('success', 'Dashboard connected to backend');
+            _refreshInterval = setInterval(() => { fetchHealth(); fetchMetrics(); }, 10000);
+        })();
+
+        document.getElementById('chatInput') && document.getElementById('chatInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+    
+    // ═══ Computer Use ═══
+    async function callTool(name, params) {
+        const resultsDiv = document.getElementById('computeruse-results') || document.getElementById('visionResult');
+        try {
+            const res = await fetch('/api/harness/tool/' + name, {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(params),
+            });
+            const data = await res.json();
+            if (resultsDiv) resultsDiv.innerHTML = '<pre style="font-size:12px;max-height:300px;overflow:auto;">' + JSON.stringify(data, null, 2) + '</pre>';
+        } catch (e) {
+            if (resultsDiv) resultsDiv.innerHTML = '<div style="color:var(--danger);">Error: ' + e.message + '</div>';
+        }
+    }
+
+    // ═══ MCP Servers ═══
+    async function loadMCPServers() {
+        try {
+            const res = await fetch('/api/mcp/status');
+            const data = await res.json();
+            const div = document.getElementById('mcp-servers');
+            if (div && data.servers) {
+                div.innerHTML = Object.entries(data.servers).map(([id, s]) => 
+                    '<div style="padding:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">' +
+                    '<span><strong>' + id + '</strong> — ' + (s.config?.description || 'MCP Server') + '</span>' +
+                    '<span class="badge ' + (s.connected ? 'badge-success' : 'badge-warning') + '">' + (s.connected ? 'Connected' : 'Disconnected') + '</span>' +
+                    '</div>'
+                ).join('');
+            }
+            const configDiv = document.getElementById('mcp-config');
+            if (configDiv) configDiv.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+            console.log('MCP status not available');
+        }
+    }
+
+    // ═══ Vision Router ═══
+    async function testVisionRouter() {
+        const prompt = document.getElementById('visionPrompt')?.value || '';
+        const resultDiv = document.getElementById('visionResult');
+        try {
+            const res = await fetch('/api/vision/route', {
+                method: 'POST', headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ prompt }),
+            });
+            const data = await res.json();
+            if (resultDiv) {
+                resultDiv.innerHTML = '<div class="card glass" style="margin-top:8px;">' +
+                    '<p><strong>Complexity:</strong> ' + (data.complexity || 'unknown') + '</p>' +
+                    '<p><strong>Model:</strong> ' + (data.model?.name || 'N/A') + ' (' + (data.model?.size || '?') + ')</p>' +
+                    '<p><strong>License:</strong> ' + (data.model?.license || 'N/A') + '</p>' +
+                    '<p><strong>Tier:</strong> ' + (data.tierConfig?.name || 'N/A') + '</p>' +
+                    '</div>';
+            }
+        } catch (e) {
+            if (resultDiv) resultDiv.innerHTML = '<div style="color:var(--danger);">Error: ' + e.message + '</div>';
+        }
+    }
+
+    // ═══ Auto Launcher ═══
+    async function loadLauncherStatus() {
+        try {
+            const res = await fetch('/api/launcher/status');
+            const data = await res.json();
+            const div = document.getElementById('launcher-services');
+            if (div && data.services) {
+                div.innerHTML = Object.entries(data.services).map(([id, s]) =>
+                    '<div style="padding:8px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">' +
+                    '<span>' + (s.name || id) + '</span>' +
+                    '<span class="badge ' + (s.up ? 'badge-success' : 'badge-warning') + '">' + (s.up ? 'Running' : 'Stopped') + '</span>' +
+                    '</div>'
+                ).join('');
+            }
+        } catch (e) {
+            console.log('Launcher status not available');
+        }
+    }
+
+    async function autoStartAll() {
+        try {
+            const res = await fetch('/api/launcher/auto-start', { method: 'POST' });
+            const data = await res.json();
+            loadLauncherStatus();
+            showToast('info', 'Auto-start completed');
+        } catch (e) {
+            showToast('error', 'Auto-start failed: ' + e.message);
+        }
+    }
+
+</script>
+</body>
+</html>

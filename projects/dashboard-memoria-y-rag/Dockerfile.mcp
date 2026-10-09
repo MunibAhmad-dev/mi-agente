@@ -1,0 +1,38 @@
+FROM python:3.12-slim AS base
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r brain && useradd -r -g brain -d /app brain
+
+WORKDIR /app
+
+# Copy source first so pip install -e . works
+COPY src/ src/
+COPY pyproject.toml .
+
+# Install minimal deps including mcp
+RUN pip install --no-cache-dir \
+    "mcp>=1.0.0" \
+    "psycopg[binary]>=3.2.0" \
+    "psycopg-pool>=3.2.0" \
+    "pgvector>=0.3.0" \
+    "httpx>=0.27.0" \
+    "structlog>=24.1.0" \
+    "pydantic>=2.8.0" \
+    "pydantic-settings>=2.4.0" \
+    "python-dotenv>=1.0.0" \
+    && pip install --no-cache-dir -e . 2>/dev/null || true
+
+# Fix permissions
+RUN chown -R brain:brain /app
+
+# Environment
+ENV PYTHONPATH=/app/src
+
+USER brain
+
+EXPOSE 3000
+
+CMD ["python", "-m", "brain.mcp.__main__"]

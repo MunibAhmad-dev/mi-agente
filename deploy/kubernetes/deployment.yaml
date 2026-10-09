@@ -1,0 +1,224 @@
+# ===========================================
+# Mi LibreChat - Kubernetes Deployment
+# ===========================================
+
+---
+# API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librechat-api
+  namespace: librechat
+  labels:
+    app: librechat-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: librechat-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: librechat-api
+    spec:
+      containers:
+        - name: api
+          image: librechat/api:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3001
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: librechat-config
+            - secretRef:
+                name: librechat-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: librechat-uploads
+---
+# Frontend Deployment (static files served by API)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librechat-frontend
+  namespace: librechat
+  labels:
+    app: librechat-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: librechat-frontend
+  template:
+    metadata:
+      labels:
+        app: librechat-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: librechat/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5173
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+# Service for API
+apiVersion: v1
+kind: Service
+metadata:
+  name: librechat-api
+  namespace: librechat
+  labels:
+    app: librechat-api
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3001
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: librechat-api
+---
+# Service for Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: librechat-frontend
+  namespace: librechat
+  labels:
+    app: librechat-frontend
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 5173
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: librechat-frontend
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: librechat-ingress
+  namespace: librechat
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: librechat.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: librechat-api
+                port:
+                  number: 3001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: librechat-frontend
+                port:
+                  number: 5173
+---
+# Horizontal Pod Autoscaler for API
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: librechat-api-hpa
+  namespace: librechat
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: librechat-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+# Persistent Volume Claim for uploads
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: librechat-uploads
+  namespace: librechat
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

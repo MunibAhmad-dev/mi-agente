@@ -1,0 +1,13 @@
+node_modules/
+dist/
+*.js
+!vitest.config.ts
+.env
+.env.local
+*.db
+*.db-journal
+*.log
+coverage/
+.turbo/
+.DS_Store
+Thumbs.db

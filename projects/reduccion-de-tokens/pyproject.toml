@@ -1,0 +1,28 @@
+[project]
+name = "token-optimization-engine"
+version = "0.1.0"
+description = "Universal Context Intelligence & Token Optimization Engine - minimal sufficient context with verifiable recovery"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.5",
+    "tiktoken>=0.5; platform_machine != 'aarch64' or sys_platform != 'win32'",
+]
+
+[project.optional-dependencies]
+api = ["fastapi>=0.110", "uvicorn>=0.27"]
+dev = ["pytest>=8.0", "hypothesis>=6.100"]
+
+[project.scripts]
+context-engine = "token_optimization.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

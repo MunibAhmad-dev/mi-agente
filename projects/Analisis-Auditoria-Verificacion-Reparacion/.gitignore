@@ -1,0 +1,15 @@
+# Build outputs
+*.exe
+verify
+
+# Runtime verification store and per-run reports (certification evidence is
+# curated under docs/certification/)
+.verification/
+reports/
+
+# Tooling metadata
+.freebuff/
+
+# Read-only audit clones of external repos (never committed)
+.audit/
+*.log

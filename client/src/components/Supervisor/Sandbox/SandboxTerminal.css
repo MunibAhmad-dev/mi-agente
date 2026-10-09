@@ -1,0 +1,161 @@
+/**
+ * SandboxTerminal Styles
+ */
+
+.sandbox-terminal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0d0d0d;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.terminal-title {
+  font-size: 12px;
+  color: #888;
+}
+
+.terminal-btn {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+}
+
+.terminal-btn:hover {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.terminal-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.terminal-empty {
+  color: #666;
+  font-style: italic;
+}
+
+.terminal-entry {
+  margin-bottom: 16px;
+}
+
+.terminal-command {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.terminal-prompt {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.terminal-cmd {
+  color: #e0e0e0;
+}
+
+.terminal-stdout {
+  margin: 0;
+  padding: 8px;
+  background: #141414;
+  border-radius: 4px;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-stderr {
+  margin: 4px 0;
+  padding: 8px;
+  background: #2d1212;
+  border-radius: 4px;
+  color: #ef4444;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-exit {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #666;
+}
+
+.terminal-exit.success {
+  color: #22c55e;
+}
+
+.terminal-exit.error {
+  color: #ef4444;
+}
+
+.terminal-input-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+}
+
+.terminal-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #e0e0e0;
+}
+
+.terminal-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.terminal-input::placeholder {
+  color: #666;
+}
+
+.terminal-input:disabled {
+  opacity: 0.5;
+}
+
+.terminal-submit {
+  padding: 8px 16px;
+  background: #3b82f6;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+}
+
+.terminal-submit:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.terminal-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

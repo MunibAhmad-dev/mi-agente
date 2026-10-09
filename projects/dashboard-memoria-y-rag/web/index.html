@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Brain — AI Knowledge & Memory System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0f; --surface: #12121a; --surface2: #1a1a25;
+            --border: #2a2a3a; --text: #e0e0f0; --text-dim: #8888aa;
+            --accent: #6366f1; --accent2: #818cf8; --green: #22c55e;
+            --red: #ef4444; --yellow: #eab308; --blue: #3b82f6;
+        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+        .app { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: 56px 1fr; height: 100vh; }
+
+        /* Header */
+        .header { grid-column: 1/-1; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+        .header h1 { font-size: 18px; font-weight: 700; }
+        .header h1 span { color: var(--accent); }
+        .header .status { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
+        .header .status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+        .header .status.error .dot { background: var(--red); }
+
+        /* Sidebar */
+        .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 12px 0; overflow-y: auto; }
+        .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: var(--text-dim); text-decoration: none; font-size: 14px; transition: all 0.15s; cursor: pointer; }
+        .sidebar a:hover { background: var(--surface2); color: var(--text); }
+        .sidebar a.active { color: var(--accent2); background: rgba(99,102,241,0.1); border-right: 2px solid var(--accent); }
+        .sidebar a .icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar .section { padding: 8px 16px 4px; font-size: 11px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em; }
+
+        /* Main */
+        .main { overflow-y: auto; padding: 24px; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Cards */
+        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+        .card .label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+        .card .value { font-size: 24px; font-weight: 700; }
+        .card .value.accent { color: var(--accent); }
+
+        /* Tables */
+        .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 10px 12px; background: var(--surface2); color: var(--text-dim); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+        td { padding: 10px 12px; border-top: 1px solid var(--border); }
+        tr:hover td { background: rgba(99,102,241,0.05); }
+
+        /* Buttons */
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent2); }
+        .btn-sm { padding: 4px 10px; font-size: 12px; }
+        .btn-danger { background: var(--red); color: white; }
+
+        /* Inputs */
+        input, textarea, select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: 6px; font-size: 13px; width: 100%; }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        textarea { min-height: 80px; resize: vertical; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+
+        /* Search */
+        .search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+        .search-bar input { flex: 1; font-size: 15px; padding: 12px 16px; }
+        .search-result { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 8px; }
+        .search-result .score { color: var(--accent); font-size: 12px; font-weight: 600; }
+        .search-result .content { margin-top: 6px; font-size: 13px; line-height: 1.5; }
+        .search-result .meta { margin-top: 6px; font-size: 11px; color: var(--text-dim); }
+
+        /* Graph */
+        .graph-container { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; height: 500px; position: relative; overflow: hidden; }
+        .graph-canvas { width: 100%; height: 100%; }
+        .graph-empty { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--text-dim); }
+        .graph-empty .icon { font-size: 48px; margin-bottom: 12px; }
+
+        /* Chat */
+        .chat-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; height: calc(100vh - 180px); }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 16px; }
+        .chat-msg { margin-bottom: 12px; max-width: 80%; }
+        .chat-msg.user { margin-left: auto; }
+        .chat-msg .bubble { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+        .chat-msg.user .bubble { background: var(--accent); color: white; border-bottom-right-radius: 4px; }
+        .chat-msg.assistant .bubble { background: var(--surface2); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+        .chat-msg .sources { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+        .chat-input { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); }
+        .chat-input input { flex: 1; }
+
+        /* Loading */
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 1px solid var(--green); border-radius: 8px; padding: 12px 16px; font-size: 13px; z-index: 1000; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>🧠 <span>Brain</span></h1>
+            <div class="status" id="status"><div class="dot"></div> <span>Connecting...</span></div>
+        </header>
+
+        <nav class="sidebar">
+            <div class="section">Overview</div>
+            <a class="active" data-page="dashboard"><span class="icon">📊</span> Dashboard</a>
+            <div class="section">Knowledge</div>
+            <a data-page="memory"><span class="icon">💾</span> Memory</a>
+            <a data-page="graph"><span class="icon">🕸️</span> Graph</a>
+            <a data-page="search"><span class="icon">🔍</span> Search</a>
+            <div class="section">Tools</div>
+            <a data-page="ingest"><span class="icon">📥</span> Ingest</a>
+            <a data-page="chat"><span class="icon">💬</span> Chat</a>
+            <div class="section">System</div>
+            <a href="/docs" target="_blank"><span class="icon">📖</span> API Docs</a>
+        </nav>
+
+        <main class="main">
+            <!-- Dashboard -->
+            <div class="page active" id="page-dashboard">
+                <h2 style="margin-bottom:16px">Dashboard</h2>
+                <div class="cards" id="stats-cards"></div>
+                <h3 style="margin-bottom:12px">Recent Memories</h3>
+                <div class="table-wrap" id="recent-memories"></div>
+            </div>
+
+            <!-- Memory -->
+            <div class="page" id="page-memory">
+                <h2 style="margin-bottom:16px">Memory</h2>
+                <div class="cards" id="memory-stats"></div>
+                <div class="table-wrap" id="memory-list"></div>
+            </div>
+
+            <!-- Graph -->
+            <div class="page" id="page-graph">
+                <h2 style="margin-bottom:16px">Knowledge Graph</h2>
+                <div class="graph-container" id="graph-container">
+                    <canvas class="graph-canvas" id="graph-canvas"></canvas>
+                    <div class="graph-empty" id="graph-empty">
+                        <div class="icon">🕸️</div>
+                        <div>No entities yet</div>
+                        <div style="font-size:12px;margin-top:4px">Ingest documents to build the knowledge graph</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="page" id="page-search">
+                <h2 style="margin-bottom:16px">Search</h2>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Search the Brain..." />
+                    <button class="btn btn-primary" onclick="doSearch()">Search</button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+
+            <!-- Ingest -->
+            <div class="page" id="page-ingest">
+                <h2 style="margin-bottom:16px">Ingest Content</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="ingest-content" placeholder="Paste text content to ingest into the Brain..."></textarea>
+                    </div>
+                    <div style="display:flex;gap:8px">
+                        <div class="form-group" style="flex:1">
+                            <label>Source Name</label>
+                            <input type="text" id="ingest-source" value="manual" />
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>Space</label>
+                            <input type="text" id="ingest-space" value="default" />
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="doIngest()">📥 Ingest</button>
+                    <div id="ingest-result" style="margin-top:12px"></div>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="page" id="page-chat">
+                <h2 style="margin-bottom:16px">Brain Chat</h2>
+                <div class="chat-panel">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-msg assistant"><div class="bubble">Hello! I'm Brain. Ask me anything about your knowledge base.</div></div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="Ask Brain anything..." onkeydown="if(event.key==='Enter')doChat()" />
+                        <button class="btn btn-primary" onclick="doChat()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    const API = window.location.origin;
+    let chatHistory = [];
+
+    // Navigation
+    document.querySelectorAll('.sidebar a[data-page]').forEach(a => {
+        a.addEventListener('click', () => {
+            document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
+            a.classList.add('active');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + a.dataset.page).classList.add('active');
+            if (a.dataset.page === 'dashboard') loadDashboard();
+            if (a.dataset.page === 'memory') loadMemory();
+            if (a.dataset.page === 'graph') loadGraph();
+        });
+    });
+
+    // API helpers
+    async function api(path, opts = {}) {
+        const res = await fetch(API + path, opts);
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return res.json();
+    }
+
+    // Toast
+    function toast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    // Dashboard
+    async function loadDashboard() {
+        try {
+            const stats = await api('/api/memory/stats');
+            document.getElementById('stats-cards').innerHTML = `
+                <div class="card"><div class="label">Total Memories</div><div class="value accent">${stats.total}</div></div>
+                <div class="card"><div class="label">Active</div><div class="value" style="color:var(--green)">${stats.active}</div></div>
+                <div class="card"><div class="label">Spaces</div><div class="value">${stats.spaces}</div></div>
+                <div class="card"><div class="label">States</div><div class="value">${Object.keys(stats.by_state).length}</div></div>
+            `;
+            const data = await api('/api/memory?limit=5');
+            if (data.memories.length === 0) {
+                document.getElementById('recent-memories').innerHTML = '<div style="padding:20px;color:var(--text-dim)">No memories yet. Go to Ingest to add content.</div>';
+            } else {
+                document.getElementById('recent-memories').innerHTML = `<table><tr><th>Content</th><th>Category</th><th>Importance</th><th>Space</th></tr>${data.memories.map(m => `<tr><td>${m.content.slice(0,80)}${m.content.length>80?'...':''}</td><td>${m.category}</td><td>${m.importance.toFixed(2)}</td><td>${m.space}</td></tr>`).join('')}</table>`;
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    // Memory
+    async function loadMemory() {
+        try {
+            const stats = await api('/api/memory/stats');
+            document.getElementById('memory-stats').innerHTML = `
+                <div class="card"><div class="label">Total</div><div class="value accent">${stats.total}</div></div>
+                <div class="card"><div class="label">Active</div><div class="value">${stats.active}</div></div>
+                <div class="card"><div class="label">Forgotten</div><div class="value" style="color:var(--red)">${stats.forgotten}</div></div>
+            `;
+            const data = await api('/api/memory?limit=50');
+            document.getElementById('memory-list').innerHTML = `<table><tr><th>Content</th><th>Category</th><th>Importance</th><th>Space</th><th>State</th><th>Actions</th></tr>${data.memories.map(m => `<tr><td>${m.content.slice(0,60)}...</td><td>${m.category}</td><td>${m.importance.toFixed(2)}</td><td>${m.space}</td><td>${m.state}</td><td><button class="btn btn-danger btn-sm" onclick="forgetMemory('${m.id}')">Forget</button></td></tr>`).join('')}</table>`;
+        } catch(e) { console.error(e); }
+    }
+
+    async function forgetMemory(id) {
+        try {
+            await api(`/api/memory/${id}/forget`, { method: 'POST' });
+            toast('Memory forgotten');
+            loadMemory();
+        } catch(e) { toast('Error: ' + e.message); }
+    }
+
+    // Search
+    async function doSearch() {
+        const q = document.getElementById('search-input').value;
+        if (!q) return;
+        document.getElementById('search-results').innerHTML = '<div style="padding:20px"><div class="spinner"></div> Searching...</div>';
+        try {
+            const data = await api('/api/search', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({query:q, limit:10}) });
+            if (data.results.length === 0) {
+                document.getElementById('search-results').innerHTML = '<div style="padding:20px;color:var(--text-dim)">No results found.</div>';
+            } else {
+                document.getElementById('search-results').innerHTML = data.results.map(r => `
+                    <div class="search-result">
+                        <div class="score">Score: ${r.similarity.toFixed(4)} | Space: ${r.space}</div>
+                        <div class="content">${r.content}</div>
+                        <div class="meta">Source: ${r.source_name || 'unknown'} | ${data.latency_ms}ms</div>
+                    </div>
+                `).join('');
+            }
+        } catch(e) { document.getElementById('search-results').innerHTML = '<div style="color:var(--red)">Search error: ' + e.message + '</div>'; }
+    }
+    document.getElementById('search-input')?.addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+
+    // Ingest
+    async function doIngest() {
+        const content = document.getElementById('ingest-content').value;
+        if (!content) return;
+        const fd = new FormData();
+        fd.append('content', content);
+        fd.append('source_name', document.getElementById('ingest-source').value);
+        fd.append('space', document.getElementById('ingest-space').value);
+        document.getElementById('ingest-result').innerHTML = '<div class="spinner"></div> Ingesting...';
+        try {
+            const data = await api('/api/documents/ingest/text', { method: 'POST', body: fd });
+            document.getElementById('ingest-result').innerHTML = `<div style="color:var(--green)">✅ Ingested: ${data.chunks_created} chunks, ${data.entities_found} entities, ${data.relationships_found} relationships</div>`;
+            document.getElementById('ingest-content').value = '';
+            toast('Content ingested successfully!');
+        } catch(e) { document.getElementById('ingest-result').innerHTML = `<div style="color:var(--red)">Error: ${e.message}</div>`; }
+    }
+
+    // Chat
+    async function doChat() {
+        const input = document.getElementById('chat-input');
+        const q = input.value.trim();
+        if (!q) return;
+        input.value = '';
+
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-msg user';
+        msgDiv.innerHTML = `<div class="bubble">${q}</div>`;
+        document.getElementById('chat-messages').appendChild(msgDiv);
+
+        const respDiv = document.createElement('div');
+        respDiv.className = 'chat-msg assistant';
+        respDiv.innerHTML = '<div class="bubble"><div class="spinner"></div> Thinking...</div>';
+        document.getElementById('chat-messages').appendChild(respDiv);
+
+        try {
+            const data = await api('/api/chat', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({query: q, history: chatHistory}) });
+            let sources = '';
+            if (data.sources && data.sources.length > 0) {
+                sources = '<div class="sources">Sources: ' + data.sources.map((s,i) => `[${s.index}] ${s.source_name || 'unknown'}`).join(', ') + '</div>';
+            }
+            respDiv.innerHTML = `<div class="bubble">${data.answer || 'No answer.'}</div>${sources}`;
+            chatHistory.push({role:'user', content:q}, {role:'assistant', content:data.answer||''});
+        } catch(e) {
+            respDiv.innerHTML = `<div class="bubble" style="color:var(--red)">Error: ${e.message}</div>`;
+        }
+        document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+    }
+
+    // Graph visualization (simple canvas)
+    async function loadGraph() {
+        try {
+            const data = await api('/api/graph/visualize?limit=100&min_mentions=1');
+            if (data.nodes.length === 0) {
+                document.getElementById('graph-empty').style.display = 'block';
+                return;
+            }
+            document.getElementById('graph-empty').style.display = 'none';
+            drawGraph(data);
+        } catch(e) { console.error(e); }
+    }
+
+    function drawGraph(data) {
+        const canvas = document.getElementById('graph-canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('graph-container');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+        const cx = canvas.width / 2, cy = canvas.height / 2;
+
+        const colors = { Person:'#22c55e', Organization:'#3b82f6', Technology:'#6366f1', Concept:'#eab308', Tool:'#f97316', Event:'#ef4444', Location:'#06b6d4', Other:'#888' };
+
+        // Simple force layout (circular)
+        const nodes = data.nodes.map((n, i) => {
+            const angle = (2 * Math.PI * i) / data.nodes.length;
+            const r = 150 + Math.random() * 50;
+            return { ...n, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), vx: 0, vy: 0 };
+        });
+
+        // Build adjacency
+        const nodeMap = {};
+        nodes.forEach(n => nodeMap[n.id] = n);
+        const edges = data.edges.filter(e => nodeMap[e.source] && nodeMap[e.target]);
+
+        // Force simulation (simple)
+        for (let iter = 0; iter < 100; iter++) {
+            // Repulsion
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i+1; j < nodes.length; j++) {
+                    let dx = nodes[j].x - nodes[i].x;
+                    let dy = nodes[j].y - nodes[i].y;
+                    let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                    let force = 2000 / (dist * dist);
+                    nodes[i].vx -= (dx/dist) * force;
+                    nodes[i].vy -= (dy/dist) * force;
+                    nodes[j].vx += (dx/dist) * force;
+                    nodes[j].vy += (dy/dist) * force;
+                }
+            }
+            // Attraction
+            edges.forEach(e => {
+                const a = nodeMap[e.source], b = nodeMap[e.target];
+                if (!a || !b) return;
+                let dx = b.x - a.x, dy = b.y - a.y;
+                let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                let force = (dist - 100) * 0.01;
+                a.vx += (dx/dist) * force;
+                a.vy += (dy/dist) * force;
+                b.vx -= (dx/dist) * force;
+                b.vy -= (dy/dist) * force;
+            });
+            // Center gravity
+            nodes.forEach(n => {
+                n.vx += (cx - n.x) * 0.001;
+                n.vy += (cy - n.y) * 0.001;
+                n.x += n.vx * 0.3;
+                n.y += n.vy * 0.3;
+                n.vx *= 0.8;
+                n.vy *= 0.8;
+            });
+        }
+
+        // Draw
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Edges
+        edges.forEach(e => {
+            const a = nodeMap[e.source], b = nodeMap[e.target];
+            if (!a || !b) return;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = 'rgba(99,102,241,0.2)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        // Nodes
+        nodes.forEach(n => {
+            const r = Math.max(4, Math.min(16, n.mentions * 2));
+            const color = colors[n.type] || colors.Other;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.fillStyle = '#ccc';
+            ctx.font = '10px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(n.name, n.x, n.y + r + 12);
+        });
+    }
+
+    // Init
+    async function init() {
+        try {
+            const h = await api('/health');
+            document.getElementById('status').innerHTML = `<div class="dot"></div> <span>Connected (v${h.version})</span>`;
+            loadDashboard();
+        } catch(e) {
+            document.getElementById('status').className = 'status error';
+            document.getElementById('status').innerHTML = '<div class="dot"></div> <span>Disconnected</span>';
+        }
+    }
+    init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # API GATEWAY & REVERSE PROXY
+  # ============================================
+  traefik:
+    image: traefik:v3.0
+    container_name: crypto-ai-traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/traefik.yml:ro
+      - traefik_certs:/letsencrypt
+    environment:
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL=admin@cryptoai.local
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_STORAGE=/letsencrypt/acme.json
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_HTTPCHALLENGE=true
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  # ============================================
+  # BACKEND API
+  # ============================================
+  api:
+    build:
+      context: ../api
+      dockerfile: Dockerfile
+    container_name: crypto-ai-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://cryptoai:cryptoai2025@postgres:5432/cryptoai
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - QDRANT_HOST=qdrant
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - ../api:/app
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+      - qdrant
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.api.loadbalancer.server.port=8000"
+
+  # ============================================
+  # MESSAGE QUEUE
+  # ============================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: crypto-ai-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  # ============================================
+  # TIME-SERIES DATABASE
+  # ============================================
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: crypto-ai-timescaledb
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=cryptoai
+      - POSTGRES_USER=cryptoai
+      - POSTGRES_PASSWORD=cryptoai2025
+    volumes:
+      - timeseries_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  # ============================================
+  # VECTOR DATABASE (Memory)
+  # ============================================
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: crypto-ai-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qdrant.rule=PathPrefix(`/qdrant`)"
+      - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+
+  # ============================================
+  # ORCHESTRATION (n8n)
+  # ============================================
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: crypto-ai-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=cryptoai2025
+      - WEBHOOK_URL=http://n8n:5678
+      - EXECUTIONS_MODE=regular
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=PathPrefix(`/n8n`)"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+
+  # ============================================
+  # TRADING BOT
+  # ============================================
+  freqtrade:
+    image: freqtradeorg/freqtrade:stable
+    container_name: crypto-ai-freqtrade
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/freqtrade/user_data
+      - freqtrade_data:/freqtrade/data
+    environment:
+      - FLASK_APP=freqtrade
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freqtrade.rule=PathPrefix(`/freqtrade`)"
+      - "traefik.http.services.freqtrade.loadbalancer.server.port=8080"
+
+  # ============================================
+  # ML OPS - Experiment Tracking
+  # ============================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: crypto-ai-mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - AWS_ACCESS_KEY_ID=minio
+      - AWS_SECRET_ACCESS_KEY=minio123
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - mlflow_data:/mlflow
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mlflow.rule=PathPrefix(`/mlflow`)"
+      - "traefik.http.services.mlflow.loadbalancer.server.port=5000"
+
+  # ============================================
+  # ML OPS - MinIO (S3 compatible)
+  # ============================================
+  minio:
+    image: minio/minio:latest
+    container_name: crypto-ai-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  # ============================================
+  # DATA PIPELINES (Airflow)
+  # ============================================
+  airflow-webserver:
+    image: apache/airflow:2.8.1
+    container_name: crypto-ai-airflow
+    ports:
+      - "8090:8080"
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+      - AIRFLOW__CORE__FERNET_KEY=
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - airflow_logs:/opt/airflow/logs
+    user: "${AIRFLOW_UID:-50000}:0"
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.airflow.rule=PathPrefix(`/airflow`)"
+      - "traefik.http.services.airflow.loadbalancer.server.port=8080"
+
+  # ============================================
+  # MONITORING
+  # ============================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: crypto-ai-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: crypto-ai-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=cryptoai2025
+      - GF_INSTALL_PLUGINS=yesoreya-grafana-worldmap-panel,grafana-piechart-panel
+    volumes:
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - crypto-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  # ============================================
+  # DATA SERVICES
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: crypto-ai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: crypto-ai-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=cryptoai
+      - POSTGRES_USER=cryptoai
+      - POSTGRES_PASSWORD=cryptoai2025
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - crypto-network
+
+volumes:
+  traefik_certs:
+  qdrant_data:
+  n8n_data:
+  freqtrade_data:
+  mlflow_data:
+  minio_data:
+  airflow_logs:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+  postgres_data:
+  timeseries_data:
+  rabbitmq_data:
+
+networks:
+  crypto-network:
+    driver: bridge

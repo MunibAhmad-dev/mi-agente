@@ -1,0 +1,39 @@
+# Prometheus Configuration
+# =============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'librechat-litellm'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Rules
+rule_files: []
+
+# Scrape configurations
+scrape_configs:
+  # LiteLLM Gateway
+  - job_name: 'litellm'
+    static_configs:
+      - targets: ['litellm:4000']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # LibreChat (si expone métricas)
+  - job_name: 'librechat'
+    static_configs:
+      - targets: ['librechat:3080']
+    scrape_interval: 60s

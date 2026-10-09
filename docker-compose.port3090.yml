@@ -1,0 +1,8 @@
+# Acceso limpio al dashboard (origin nuevo = sin service worker ni cache vieja).
+# Expone el mismo LibreChat personalizado en el puerto 3090.
+# Uso: docker compose -f docker-compose.yml -f docker-compose.override.yml \
+#       -f docker-compose.f12.yml -f docker-compose.port3090.yml up -d api
+services:
+  api:
+    ports:
+      - "3090:3080"

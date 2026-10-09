@@ -1,0 +1,1 @@
+"""Documents ingestion domain init."""

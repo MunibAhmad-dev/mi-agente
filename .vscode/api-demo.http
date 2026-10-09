@@ -1,0 +1,199 @@
+### mi-agente REST API demo — open in VS Code with REST Client extension
+
+@baseUrl = http://localhost:3080
+@token = {{$dotenv JWT_TOKEN}}
+
+# ─── Authentication ──────────────────────────────────────────────────────────
+
+### Login (get your JWT token)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@mi-agente.local",
+  "password": "YourPasswordHere"
+}
+
+# ─── Capability Manifest ────────────────────────────────────────────────────
+
+### List ALL 85 API prefixes and their purposes
+GET {{baseUrl}}/api/capabilities
+Authorization: Bearer {{token}}
+
+# ─── Model Management ────────────────────────────────────────────────────────
+
+### List all available models (cloud + local)
+GET {{baseUrl}}/api/model-catalog
+Authorization: Bearer {{token}}
+
+### List locally installed Ollama models
+GET {{baseUrl}}/api/local-models
+Authorization: Bearer {{token}}
+
+### Hardware requirements for a model
+GET {{baseUrl}}/api/hardware/specs/llama3.2
+Authorization: Bearer {{token}}
+
+### Search HuggingFace for models
+GET {{baseUrl}}/api/huggingface/search?q=llama&task=text-generation
+Authorization: Bearer {{token}}
+
+### Route a task to the best available model
+POST {{baseUrl}}/api/model-router/route
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "task": "code generation",
+  "context": "Python function to sort a list",
+  "maxLatencyMs": 5000
+}
+
+# ─── Harness Tools ───────────────────────────────────────────────────────────
+
+### List all 41 registered tools
+GET {{baseUrl}}/api/harness/tools/list
+Authorization: Bearer {{token}}
+
+### Execute read_file tool live
+POST {{baseUrl}}/api/harness/tools/invoke
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tool": "read_file",
+  "args": { "path": "package.json" }
+}
+
+### Execute git_status tool live
+POST {{baseUrl}}/api/harness/tools/invoke
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tool": "git_status",
+  "args": {}
+}
+
+### Execute list_directory tool live
+POST {{baseUrl}}/api/harness/tools/invoke
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tool": "list_directory",
+  "args": { "path": "." }
+}
+
+# ─── Executive System ────────────────────────────────────────────────────────
+
+### Executive Loop — get current directive for a task
+POST {{baseUrl}}/api/executive-loop/directive
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "message": "Refactor the authentication module",
+  "context": { "project": "mi-agente" }
+}
+
+### WorldModel — query current world state
+GET {{baseUrl}}/api/cognitive/world-model
+Authorization: Bearer {{token}}
+
+# ─── Research OS ─────────────────────────────────────────────────────────────
+
+### Check Research OS API key status
+GET {{baseUrl}}/api/research-os/health
+Authorization: Bearer {{token}}
+
+### Start a research session
+POST {{baseUrl}}/api/research-os/research
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "question": "What are the best open-source LLM frameworks in 2026?",
+  "mode": "deep"
+}
+
+# ─── Website Cloning ─────────────────────────────────────────────────────────
+
+### Check cloner status (Playwright installed?)
+GET {{baseUrl}}/api/cloner/health
+Authorization: Bearer {{token}}
+
+### Analyze a website (no Playwright needed)
+POST {{baseUrl}}/api/cloner/analyze
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "url": "https://example.com"
+}
+
+### Design forensics — extract CSS design tokens
+POST {{baseUrl}}/api/cloner/design-forensics
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "html": "<div style='color:#0070f3;font-family:Inter'>Hello</div>"
+}
+
+# ─── Memory ──────────────────────────────────────────────────────────────────
+
+### Read current memory
+GET {{baseUrl}}/api/memories
+Authorization: Bearer {{token}}
+
+### RAG query
+POST {{baseUrl}}/api/rag/query
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "query": "authentication architecture",
+  "limit": 5
+}
+
+# ─── Learning & Self-Improvement ─────────────────────────────────────────────
+
+### Self-improvement loop status
+GET {{baseUrl}}/api/self-improvement/status
+Authorization: Bearer {{token}}
+
+### Learning engine evaluation
+POST {{baseUrl}}/api/learning/evaluate
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "skill": "code_generation",
+  "response": "def sort_list(l): return sorted(l)",
+  "expected": "A Python function that sorts a list"
+}
+
+# ─── Security ────────────────────────────────────────────────────────────────
+
+### Security scan a code snippet
+POST {{baseUrl}}/api/security-scan/scan
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "const secret = 'hardcoded_password_123'",
+  "type": "secrets"
+}
+
+# ─── Social Intelligence ─────────────────────────────────────────────────────
+
+### Social intelligence analysis
+GET {{baseUrl}}/api/social-intelligence/status
+Authorization: Bearer {{token}}
+
+# ─── Visual Intelligence ─────────────────────────────────────────────────────
+
+### Visual intelligence status
+GET {{baseUrl}}/api/visual-intelligence/status
+Authorization: Bearer {{token}}

@@ -1,0 +1,48 @@
+{
+  "name": "universal-web-reconstruction-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal Web & Dashboard Reconstruction Engine - Autonomous web engineering platform",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:dashboard\"",
+    "dev:api": "node --watch apps/api/server.js",
+    "dev:dashboard": "cd apps/dashboard && npm run dev",
+    "build": "npm run build:dashboard",
+    "build:dashboard": "cd apps/dashboard && npm run build",
+    "start": "node apps/api/server.js",
+    "test": "node --test tests/**/*.test.js",
+    "test:unit": "node --test tests/unit/**/*.test.js",
+    "test:integration": "node --test tests/integration/**/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "recon:url": "node scripts/recon-url.js",
+    "recon:screenshot": "node scripts/recon-screenshot.js",
+    "recon:video": "node scripts/recon-video.js",
+    "compare": "node scripts/compare.js",
+    "benchmark": "node scripts/benchmark.js"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "pixelmatch": "^6.0.0",
+    "playwright": "^1.62.1",
+    "pngjs": "^7.0.0",
+    "sql.js": "^1.14.2",
+    "uuid": "^10.0.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "concurrently": "^9.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,18 @@
+# Modelfile para registrar el GGUF de Lucebox en Ollama.
+#
+# Modelo: DeepSeek-V4-Flash-0731-DSpark (DSpark) — ~98 GB GGUF, 284B params.
+# Fuente: https://huggingface.co/Lucebox/DeepSeek-V4-Flash-0731-DSpark-GGUF
+#
+# OJO: este GGUF es MUY grande (~98 GB) y requiere ~128 GB de RAM/VRAM
+# unificada para correr. Antes de descargarlo confirmá el nombre EXACTO del
+# archivo .gguf en el repo (puede variar según la cuantización elegida).
+#
+# Uso (requiere internet):
+#   docker cp integrations/ollama/Modelfile.deepseek-v4-flash-dspark chat-ollama:/root/Modelfile.dspark
+#   docker exec chat-ollama ollama create deepseek-v4-flash-dspark -f /root/Modelfile.dspark
+#
+# Alternativa (pull directo, si el repo tiene un único .gguf en la raíz):
+#   docker exec chat-ollama ollama pull hf.co/Lucebox/DeepSeek-V4-Flash-0731-DSpark-GGUF
+
+# El archivo exacto puede llamarse distinto; ajustá <ARCHIVO.gguf>.
+FROM hf.co/Lucebox/DeepSeek-V4-Flash-0731-DSpark-GGUF:<ARCHIVO.gguf>

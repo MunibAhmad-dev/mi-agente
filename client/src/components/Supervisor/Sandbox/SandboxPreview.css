@@ -1,0 +1,132 @@
+/**
+ * SandboxPreview Styles
+ */
+
+.sandbox-preview {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #0d0d0d;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.preview-file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-file-icon {
+  font-size: 16px;
+}
+
+.preview-file-name {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.preview-file-lang {
+  padding: 2px 6px;
+  background: #333;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.preview-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #888;
+}
+
+.preview-path {
+  padding: 8px 16px;
+  background: #141414;
+  border-bottom: 1px solid #333;
+  font-family: monospace;
+  font-size: 11px;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-content {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+.preview-content pre {
+  margin: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
+
+.preview-content code {
+  font-family: inherit;
+}
+
+.preview-loading,
+.preview-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+.preview-error {
+  color: #ef4444;
+}
+
+.preview-error-detail {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Syntax highlighting basics */
+.language-javascript .token.keyword,
+.language-typescript .token.keyword {
+  color: #c678dd;
+}
+
+.language-javascript .token.string,
+.language-typescript .token.string {
+  color: #98c379;
+}
+
+.language-javascript .token.number,
+.language-typescript .token.number {
+  color: #d19a66;
+}
+
+.language-javascript .token.function,
+.language-typescript .token.function {
+  color: #61afef;
+}
+
+.language-python .token.keyword {
+  color: #c678dd;
+}
+
+.language-python .token.string {
+  color: #98c379;
+}
+
+.language-python .token.number {
+  color: #d19a66;
+}

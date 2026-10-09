@@ -1,0 +1,36 @@
+{
+  "system": {
+    "name": "Crypto AI Autonomous",
+    "version": "1.0.0",
+    "mode": "paper_trading"
+  },
+  "risk_management": {
+    "max_drawdown_percent": 20,
+    "max_position_percent": 10,
+    "stop_loss_percent": 5,
+    "take_profit_percent": 10,
+    "reserve_percent": 70,
+    "emergency_stop_enabled": true
+  },
+  "trading": {
+    "max_daily_trades": 10,
+    "min_trade_interval_minutes": 15,
+    "max_spread_percent": 1.0,
+    "min_volume_24h": 100000
+  },
+  "agents": {
+    "enabled": true,
+    "decision_interval_minutes": 60,
+    "confidence_threshold": 0.75
+  },
+  "memory": {
+    "qdrant_host": "http://qdrant:6333",
+    "collection_name": "trading_decisions",
+    "retention_days": 90
+  },
+  "monitoring": {
+    "prometheus_port": 9090,
+    "grafana_port": 3000,
+    "alert_webhook": ""
+  }
+}

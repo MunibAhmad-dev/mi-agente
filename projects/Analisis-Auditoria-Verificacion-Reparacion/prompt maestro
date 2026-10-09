@@ -1,0 +1,2056 @@
+face 27
+
+MI AGENTE
+AUTONOMOUS SOFTWARE VERIFICATION, AUDIT, ADVERSARIAL TESTING & SELF-REPAIR ENGINE
+OBJETIVO ABSOLUTO
+Construir e integrar en Mi Agente un sistema universal capaz de supervisar a una IA que desarrolla software y determinar, mediante evidencia independiente y reproducible, qué parte del sistema:
+existe;
+está realmente implementada;
+está parcialmente implementada;
+está conectada;
+está integrada;
+funciona;
+cumple el requisito;
+falla;
+es un placeholder;
+es una implementación falsa;
+es código muerto;
+está desconectada;
+produce regresiones;
+tiene vulnerabilidades;
+tiene problemas de concurrencia;
+tiene problemas de datos;
+tiene problemas de rendimiento;
+tiene errores de comportamiento;
+contiene riesgos específicos de agentes IA;
+o no puede ser verificada.
+El sistema debe ser capaz de:
+ANALIZAR
+→ PLANIFICAR
+→ IMPLEMENTAR
+→ VERIFICAR
+→ AUDITAR
+→ INTENTAR ROMPER
+→ DIAGNOSTICAR
+→ REPARAR
+→ REGRESIÓN
+→ RE-VERIFICAR
+→ RE-AUDITAR
+→ CERTIFICAR
+
+Nunca asumir que la IA constructora tiene razón.
+Nunca utilizar la afirmación del Builder como evidencia.
+Nunca considerar un proyecto terminado solamente porque:
+compila;
+inicia;
+devuelve HTTP 200;
+existen archivos;
+existen clases;
+existen funciones;
+existen endpoints;
+existen tests;
+pasan tests superficiales;
+existe documentación;
+el LLM afirma "done";
+el LLM afirma "implemented";
+el LLM afirma "100% complete".
+La regla suprema es:
+EVIDENCE > CLAIM
+
+y:
+NO EVIDENCE
+=
+NO VERIFIED IMPLEMENTATION
+
+
+1. ARQUITECTURA GENERAL
+Implementar:
+                        USER
+                           │
+                           ▼
+                       MI AGENTE
+                           │
+              ┌────────────┴────────────┐
+              │                         │
+              ▼                         ▼
+           BUILDER                PROJECT TRUTH MODEL
+              │                         │
+              └────────────┬────────────┘
+                           ▼
+                 VERIFICATION PLANNER
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+     STATIC             RUNTIME            SEMANTIC
+   VERIFICATION       VERIFICATION         AUDIT
+        │                  │                  │
+        └──────────────────┼──────────────────┘
+                           ▼
+                    CONTRACT ENGINE
+                           │
+                           ▼
+                      TEST ENGINE
+                           │
+        ┌──────────────────┼───────────────────┐
+        ▼                  ▼                   ▼
+    UNIT/INTEGRATION      E2E               FUZZ
+        │                  │                   │
+        └──────────────────┼───────────────────┘
+                           ▼
+                  ADVERSARIAL ENGINE
+                           │
+                           ▼
+                  SECURITY ENGINE
+                           │
+                           ▼
+                 RESILIENCE ENGINE
+                           │
+                           ▼
+                  REGRESSION ENGINE
+                           │
+                           ▼
+                    REPAIR ENGINE
+                           │
+                           ▼
+                  RE-VERIFICATION
+                           │
+                           ▼
+                     FINAL AUDIT
+                           │
+                           ▼
+                     QUALITY GATE
+                      │          │
+                    PASS        FAIL
+                      │          │
+                      ▼          ▼
+                 CERTIFIED     REPAIR
+
+
+2. CORE LANGUAGE AND RESOURCE POLICY
+El núcleo del Verification Engine debe implementarse principalmente en:
+Go
+
+Utilizar herramientas Rust/Go altamente eficientes cuando aporten valor.
+La arquitectura debe ser:
+local-first;
+offline-capable siempre que sea posible;
+baja memoria;
+CPU eficiente;
+incremental;
+cacheable;
+paralela con límites;
+modular;
+basada en adapters;
+sin microservicios innecesarios;
+sin Kubernetes como requisito;
+sin Kafka como requisito;
+sin servicios cloud obligatorios.
+Preferir:
+Go
+Rust
+SQLite
+CLI tools
+filesystem artifacts
+containers
+
+
+3. LICENSING POLICY
+Preferir:
+MIT
+Apache-2.0
+BSD-2-Clause
+BSD-3-Clause
+ISC
+
+No integrar como dependencia obligatoria herramientas bajo:
+GPL
+LGPL
+AGPL
+MPL
+SSPL
+BSL
+Elastic License
+Commons Clause
+
+sin una revisión explícita de compatibilidad y aprobación del proyecto.
+Los documentos/especificaciones pueden utilizar otras licencias cuando no se incorporen como software o código.
+Cada herramienta deberá registrar:
+name
+repository
+version
+license
+SPDX
+transitive-license-risk
+runtime-cost
+security-risk
+capabilities
+
+
+4. TOOL ADAPTER SYSTEM
+Nunca acoplar el núcleo a una herramienta.
+Crear:
+ToolAdapter
+
+Interfaz conceptual:
+Name()
+Version()
+Capabilities()
+Detect(project)
+Prepare()
+Run(context)
+Parse(result)
+Normalize()
+Evidence()
+Cleanup()
+ResourceProfile()
+License()
+
+Crear adapters independientes.
+
+5. PROJECT TRUTH MODEL
+Construir:
+ProjectTruthModel
+
+Debe representar:
+Requirements
+Features
+Subfeatures
+Components
+Modules
+Functions
+Classes
+Routes
+APIs
+Events
+Queues
+Services
+Databases
+Tables
+Schemas
+Migrations
+Providers
+External systems
+Configuration
+Environment variables
+Dependencies
+Tests
+E2E flows
+Security properties
+Performance requirements
+Resource requirements
+Agent capabilities
+Tool permissions
+
+Cada objeto deberá tener:
+id
+type
+source
+location
+status
+maturity
+risk
+confidence
+evidence
+requirements
+dependencies
+dependents
+tests
+runtime_observations
+
+
+6. REQUIREMENT ENGINE
+Convertir la petición humana en requisitos estructurados.
+Clasificar:
+USER_DEFINED
+SYSTEM_DERIVED
+TECHNICAL
+SECURITY
+PERFORMANCE
+RELIABILITY
+COMPATIBILITY
+OPERATIONAL
+
+Cada requisito debe generar criterios de aceptación verificables.
+Ejemplo:
+id: REQ-001
+
+description:
+  User can switch between LLM providers.
+
+acceptance:
+  - UI allows provider selection
+  - request reaches backend
+  - provider is validated
+  - provider registry resolves it
+  - adapter exists
+  - credentials load correctly
+  - request reaches selected provider
+  - response reaches caller
+  - failure activates fallback
+  - configuration persists
+  - next request uses selected provider
+
+
+7. REQUIREMENT TRACEABILITY
+Crear una matriz:
+Requirement
+ ↓
+Design
+ ↓
+Component
+ ↓
+Code
+ ↓
+API
+ ↓
+Data
+ ↓
+External dependency
+ ↓
+Test
+ ↓
+Runtime execution
+ ↓
+Evidence
+
+Toda cadena rota debe marcarse.
+Estados:
+VERIFIED
+PARTIAL
+MISSING
+BROKEN
+UNCONNECTED
+UNKNOWN
+
+
+8. REVERSE TRACEABILITY
+También analizar:
+Code
+ ↓
+What does it implement?
+ ↓
+Which requirement?
+
+Detectar:
+untraceable code
+feature drift
+unused features
+AI-generated unnecessary abstractions
+dead functionality
+
+
+9. IMPLEMENTATION MATURITY MODEL
+No utilizar:
+implemented=true
+
+Utilizar:
+L0 NOT_FOUND
+L1 DECLARED
+L2 SCAFFOLDED
+L3 PARTIAL
+L4 IMPLEMENTED
+L5 INTEGRATED
+L6 RUNTIME_VERIFIED
+L7 ADVERSARIALLY_VERIFIED
+L8 PRODUCTION_VERIFIED
+
+Una funcionalidad solamente está totalmente verificada cuando alcanza el nivel requerido por su categoría.
+
+10. PARSING
+Utilizar:
+https://github.com/tree-sitter/tree-sitter
+para parsing y AST.
+Licencia MIT.
+
+11. STRUCTURAL ANALYSIS
+Utilizar:
+https://github.com/ast-grep/ast-grep
+para:
+AST search;
+structural rules;
+code patterns;
+safe codemods;
+placeholder detection;
+dangerous patterns;
+semantic structural rules.
+Licencia MIT.
+
+12. ADVANCED CODE PROPERTY GRAPH
+Cuando el proyecto lo justifique, utilizar:
+https://github.com/joernio/joern
+para análisis profundo de:
+AST
+CFG
+data flow
+control flow
+code property graphs
+taint
+cross-function analysis
+
+Licencia Apache-2.0.
+No ejecutar Joern en cada modificación; reservar para DEEP/FORENSIC.
+
+13. STATIC ANALYSIS
+Implementar adapters para las herramientas relevantes al lenguaje.
+Python:
+https://github.com/astral-sh/ruff
+https://github.com/astral-sh/ty
+https://github.com/pytest-dev/pytest
+https://github.com/coveragepy/coveragepy
+Go:
+https://go.dev/
+https://github.com/securego/gosec
+Rust:
+https://github.com/EmbarkStudios/cargo-deny
+Java/C/C++/Objective-C:
+https://github.com/facebook/infer
+Para lenguajes adicionales, utilizar la mejor herramienta permisiva disponible y registrar la licencia antes de integración.
+
+14. PLACEHOLDER DETECTOR
+Crear:
+PlaceholderDetector
+
+Detectar:
+TODO
+FIXME
+XXX
+HACK
+NotImplemented
+pass
+empty methods
+empty handlers
+empty services
+stub
+mock
+fake
+dummy
+temporary
+example
+placeholder
+hardcoded result
+hardcoded success
+disabled branch
+commented-out implementation
+
+Pero diferenciar:
+test mock
+
+de:
+production mock
+
+Nunca considerar un mock legítimo de test como implementación real de producción.
+
+15. FAKE IMPLEMENTATION DETECTOR
+Crear:
+FakeImplementationDetector
+
+Analizar:
+AST
+call graph
+data flow
+side effects
+runtime behavior
+external calls
+database interaction
+network interaction
+state changes
+
+Ejemplo:
+process_payment()
+
+no puede certificarse solamente porque devuelve:
+{"success":true}
+
+Debe demostrarse:
+provider interaction
+transaction
+state change
+persistence
+expected response
+
+
+16. FAKE SUCCESS DETECTOR
+Detectar:
+always true
+always success
+swallowed exception
+fake provider
+hardcoded response
+fake database
+hardcoded authentication
+simulated email
+fake file generation
+fake payment
+fake API result
+
+Buscar discrepancias entre:
+claimed behavior
+actual side effects
+
+
+17. DEAD FEATURE DETECTOR
+Construir:
+Call Graph
+Import Graph
+Export Graph
+Dependency Graph
+Service Graph
+API Graph
+Data-flow Graph
+
+Detectar:
+unused module
+orphan service
+unreachable endpoint
+unused configuration
+unused environment variable
+unused provider
+unused database table
+unconnected adapter
+UI without backend
+backend without client
+
+
+18. RUNTIME PROOF ENGINE
+Crear:
+ExecutionProofEngine
+
+Cada flujo crítico debe generar:
+trace_id
+execution_id
+timestamp
+component
+operation
+input_hash
+output_hash
+status
+duration
+error
+
+Ejemplo:
+Frontend
+ ↓
+HTTP
+ ↓
+Backend
+ ↓
+Service
+ ↓
+Router
+ ↓
+Database
+ ↓
+Provider
+ ↓
+Response
+ ↓
+Frontend
+
+La evidencia debe demostrar el camino real.
+
+19. API CONTRACT VERIFICATION
+Usar:
+https://github.com/OpenAPITools/openapi-diff
+para detectar breaking changes.
+Utilizar Pact cuando exista consumer/provider architecture:
+https://github.com/pact-foundation/pact-js
+https://github.com/pact-foundation/pact-python
+
+20. ASYNCHRONOUS CONTRACT VERIFICATION
+Detectar:
+events
+queues
+messages
+webhooks
+pub/sub
+streaming
+
+Utilizar AsyncAPI como modelo cuando corresponda:
+https://github.com/asyncapi/spec
+y tooling compatible:
+https://github.com/asyncapi/generator
+Verificar:
+event name
+schema
+producer
+consumer
+required fields
+version
+error behavior
+ordering
+delivery expectations
+
+
+21. DATA / DATABASE VERIFICATION
+Analizar:
+schema
+ORM
+migrations
+indexes
+constraints
+foreign keys
+transactions
+data validation
+seed data
+rollback
+forward compatibility
+
+Utilizar herramientas ligeras como:
+https://github.com/pressly/goose
+o:
+https://github.com/amacneil/dbmate
+según el proyecto.
+Verificar:
+migration applies
+migration rollback
+fresh database
+upgrade from previous version
+data survives migration
+constraints remain valid
+
+
+22. STATE CONSISTENCY ENGINE
+Comparar:
+frontend state
+backend state
+database state
+cache state
+external provider state
+
+Detectar:
+stale state
+state divergence
+lost update
+cache inconsistency
+persistence mismatch
+incorrect provider selection
+
+
+23. PROPERTY-BASED TESTING
+No depender únicamente de ejemplos.
+Para JS/TS utilizar:
+https://github.com/dubzzz/fast-check
+Licencia MIT.
+Generar propiedades:
+invariants
+idempotence
+monotonicity
+serialization roundtrip
+parser roundtrip
+state transitions
+
+Ejemplo:
+encode(decode(x)) == x
+
+o:
+retry(operation)
+
+no debe producir corrupción.
+
+24. METAMORPHIC TESTING
+Cuando no exista un "expected output" simple, generar relaciones:
+input A
+→ result A
+
+transformed input B
+→ expected relation to result A
+
+Ejemplos:
+order-preserving transformations
+duplicate inputs
+permutation
+normalization
+equivalent representations
+
+Crear motor propio liviano.
+
+25. DIFFERENTIAL TESTING
+Comparar:
+BASELINE
+vs
+CURRENT
+
+También comparar:
+implementation A
+vs
+implementation B
+
+cuando existan.
+Registrar:
+behavioral difference
+performance difference
+error difference
+state difference
+
+
+26. MUTATION TESTING
+Usar:
+https://github.com/stryker-mutator/stryker-js
+para JS/TS.
+No considerar:
+coverage = correctness
+
+Medir:
+mutation score
+
+Si una mutación importante no rompe ningún test:
+WEAK TEST SUITE
+
+
+27. FUZZING
+Para APIs:
+https://github.com/microsoft/restler-fuzzer
+Usar únicamente en:
+sandbox
+ephemeral environment
+staging
+
+Generar:
+malformed input
+boundary values
+invalid state transitions
+unexpected types
+large input
+missing values
+sequence errors
+
+
+28. GENERAL FUZZING
+Usar fuzzer específico de cada lenguaje cuando exista una opción permisiva y apropiada.
+No introducir AFL++ como dependencia base por su licencia global AGPL-3.0-or-later.
+
+29. E2E
+Utilizar:
+https://github.com/microsoft/playwright
+para:
+browser
+navigation
+login
+registration
+settings
+forms
+uploads
+chat
+critical workflows
+permissions
+
+Generar automáticamente tests desde Acceptance Criteria.
+
+30. VISUAL REGRESSION
+Usar:
+https://github.com/reg-viz/reg-suit
+Licencia MIT.
+Combinar con screenshots de Playwright.
+Comparar:
+baseline screenshot
+vs
+current screenshot
+
+Detectar:
+layout regression
+missing component
+hidden component
+broken responsive behavior
+unexpected visual change
+
+
+31. ACCESSIBILITY
+Utilizar el ecosistema de accesibilidad disponible en Playwright/browser tooling.
+Como referencia de auditoría web utilizar:
+https://github.com/GoogleChrome/lighthouse
+Licencia Apache-2.0.
+Separar:
+automated accessibility checks
+
+de:
+manual accessibility guarantees
+
+Nunca afirmar que accesibilidad 100% está demostrada por un scanner automático.
+
+32. PERFORMANCE
+Utilizar:
+https://github.com/sharkdp/hyperfine
+para benchmarks.
+Medir:
+startup
+latency
+throughput
+memory
+CPU
+disk
+network
+
+Comparar baseline/current.
+
+33. RESOURCE REGRESSION
+Establecer budgets:
+RAM
+CPU
+VRAM
+tokens
+disk
+startup
+latency
+
+Detectar:
+performance regression
+memory regression
+token regression
+resource regression
+
+
+34. CONCURRENCY VERIFICATION
+Para sistemas concurrentes:
+race detection
+stress
+repeated execution
+randomized scheduling where available
+
+Go:
+go test -race
+
+También verificar invariantes bajo concurrencia.
+
+35. DISTRIBUTED CONSISTENCY
+Cuando un componente sea concurrente/distribuido, utilizar:
+https://github.com/anishathalye/porcupine
+Porcupine es un checker de linearizability escrito en Go y con licencia MIT.
+Generar:
+concurrent history
+
+y verificar:
+linearizability
+ordering
+state consistency
+
+
+36. FORMAL VERIFICATION
+No intentar formalizar todo el proyecto.
+Seleccionar automáticamente componentes de alto riesgo:
+authentication
+authorization
+cryptographic logic
+consensus
+financial calculations
+state machines
+critical invariants
+resource accounting
+
+Herramientas:
+https://github.com/google/z3
+https://github.com/diffblue/cbmc
+https://github.com/leanprover/lean4
+Z3 y Lean deben tratarse como herramientas de verificación profunda, no como requisito universal.
+
+37. TEST MODEL / STATE MACHINE
+Para sistemas complejos crear:
+Model
+
+que represente estados válidos.
+Ejemplo:
+UNAUTHENTICATED
+ ↓
+AUTHENTICATED
+ ↓
+SESSION_ACTIVE
+ ↓
+REQUEST
+ ↓
+PROCESSING
+ ↓
+SUCCESS / FAILURE
+
+Verificar que nunca ocurra una transición ilegal.
+
+38. FLAKY TEST DETECTOR
+Si un test genera:
+PASS
+PASS
+FAIL
+PASS
+
+marcar:
+FLAKY
+
+Nunca:
+FLAKY = PASS
+
+Crear quarantine temporal pero visible.
+
+39. SECURITY ENGINE
+Combinar:
+Static security
+https://github.com/securego/gosec
+https://github.com/Checkmarx/KICS
+Dependency vulnerability
+https://github.com/google/osv-scanner
+https://github.com/anchore/grype
+SBOM
+https://github.com/anchore/syft
+Secrets
+https://github.com/Yelp/detect-secrets
+Dynamic Web Security
+https://github.com/zaproxy/zaproxy
+ZAP está bajo Apache-2.0.
+
+40. SUPPLY CHAIN SECURITY
+Generar:
+SBOM
+dependency graph
+license graph
+vulnerability graph
+provenance
+artifact hashes
+build metadata
+
+Utilizar:
+https://github.com/sigstore/cosign
+y:
+https://github.com/in-toto/in-toto
+cuando la cadena de suministro lo justifique.
+Cosign y in-toto están bajo Apache-2.0.
+No implementar una infraestructura compleja si el proyecto es pequeño.
+
+41. POLICY ENGINE
+Utilizar:
+https://github.com/open-policy-agent/opa
+Apache-2.0.
+Crear políticas:
+forbidden dependency
+forbidden license
+required test
+required evidence
+maximum resource cost
+required security control
+required approval
+required isolation
+
+
+42. CONTAINER VERIFICATION
+Utilizar:
+https://github.com/containers/podman
+Para:
+build
+run
+inspect
+health
+smoke tests
+resource limits
+
+Para sandbox de mayor riesgo:
+https://github.com/bytecodealliance/wasmtime
+cuando el tipo de workload lo permita.
+Wasmtime es Apache-2.0 y está orientado a ejecución WebAssembly aislada.
+
+43. CHAOS / FAULT INJECTION
+Crear FaultInjectionEngine para:
+timeout
+500
+429
+connection refused
+DB unavailable
+Redis unavailable
+provider unavailable
+malformed response
+expired credentials
+slow dependency
+network failure
+process restart
+
+Para proyectos complejos puede utilizarse:
+https://github.com/litmuschaos/litmus
+pero nunca como requisito de cada proyecto.
+
+44. ADVERSARIAL ENGINE
+Crear un agente separado cuyo único objetivo sea:
+FIND A REASON WHY THIS PROJECT IS NOT CORRECT
+
+Debe atacar:
+invalid input
+missing input
+boundary values
+incorrect permissions
+provider failure
+database failure
+cache failure
+network failure
+timeouts
+retries
+duplicates
+race conditions
+restart
+partial state
+malformed responses
+
+
+45. AI / AGENT VERIFICATION
+Cuando el proyecto contenga LLMs/agentes:
+usar:
+https://github.com/promptfoo/promptfoo
+y:
+https://github.com/UKGovernmentBEIS/inspect_ai
+Promptfoo es MIT y está orientado a evaluación/red teaming de LLM apps, agentes y RAG; Inspect es MIT y soporta tool use, multi-turn y model-graded evaluations.
+Verificar:
+prompt behavior
+tool selection
+tool arguments
+trajectory
+memory
+context usage
+fallback
+termination
+loop detection
+unsafe actions
+permission boundaries
+
+
+46. AGENT TRAJECTORY TESTING
+Cada ejecución importante de un agente debe poder expresarse como:
+Prompt
+ ↓
+Thought/decision representation
+ ↓
+Tool
+ ↓
+Tool input
+ ↓
+Tool output
+ ↓
+Next action
+ ↓
+Final answer
+
+No registrar secretos ni información sensible innecesaria.
+Comparar trayectorias:
+baseline
+vs
+current
+
+y detectar:
+new unsafe tool
+new unnecessary loop
+new excessive calls
+new hallucinated tool
+new invalid parameters
+
+
+47. PROMPT REGRESSION
+Guardar conjuntos de pruebas:
+golden prompts
+adversarial prompts
+edge prompts
+security prompts
+task prompts
+
+Cada cambio importante debe compararse con el baseline.
+
+48. TOOL PERMISSION TESTING
+Para agentes:
+filesystem
+shell
+network
+browser
+MCP
+Git
+credentials
+
+Crear pruebas de:
+allowed action
+denied action
+boundary action
+escalation attempt
+
+El agente nunca debe poder decidir libremente que necesita más permisos.
+Los permisos los define una política externa.
+
+49. PROMPT INJECTION DEFENSE TESTING
+Cuando un agente procese contenido externo, crear ataques de:
+indirect prompt injection
+malicious web content
+malicious repository content
+malicious documents
+tool output injection
+instruction override
+secret exfiltration attempt
+
+Resultado:
+BLOCKED
+or
+SAFE FAILURE
+
+
+50. LOOP DETECTION
+Detectar:
+same action repeated
+same tool repeated
+same error repeated
+same patch repeated
+A → B → A
+
+Crear:
+NoProgressDetector
+OscillationDetector
+RepairLoopDetector
+AgentLoopDetector
+
+
+51. REPAIR ENGINE
+Cuando exista:
+BUG
+MISSING
+PARTIAL
+BROKEN
+REGRESSION
+SECURITY ISSUE
+
+crear:
+RepairTask
+
+con:
+problem
+evidence
+severity
+affected requirements
+affected components
+reproduction
+expected behavior
+suggested repair
+verification criteria
+
+
+52. REPAIR SAFETY
+El Builder no puede:
+delete failing tests
+disable security checks
+reduce coverage thresholds
+hide errors
+change exit codes
+silence exceptions
+exclude files
+disable verification
+
+sin generar un evento de alto riesgo.
+Toda modificación a:
+tests
+CI
+coverage
+security configuration
+verification policy
+quality gate
+
+debe entrar en una revisión especial.
+
+53. BASELINE / DIFFERENTIAL FIREWALL
+Antes de un cambio significativo:
+CAPTURE BASELINE
+
+Después:
+RUN CURRENT
+
+Comparar:
+functionality
+requirements
+tests
+runtime
+API
+DB
+security
+performance
+resources
+agent behavior
+
+Una regresión previamente existente no debe confundirse con una nueva regresión.
+
+54. BUG MEMORY
+Cada bug debe conservar:
+id:
+severity:
+first_seen:
+commit:
+component:
+symptom:
+root_cause:
+reproduction:
+fix:
+regression_test:
+evidence:
+
+Una corrección solamente está completa cuando:
+reproduction passes
++
+regression test exists
+
+
+55. REPRODUCIBILITY
+Cada verification run debe registrar:
+commit SHA
+tool versions
+OS
+runtime versions
+container image digest
+configuration hash
+environment class
+random seed
+test inputs
+
+No guardar secretos.
+Intentar reproducir cualquier failure.
+
+56. CACHE / INCREMENTAL VERIFICATION
+Cache por:
+file hash
+commit
+tool version
+configuration hash
+dependency state
+environment fingerprint
+
+Recalcular únicamente aquello que quedó invalidado.
+Nunca reutilizar un PASS si cambió una dependencia relevante.
+
+57. EVIDENCE STORE
+Crear:
+verification/
+├── runs/
+├── requirements/
+├── traces/
+├── unit/
+├── integration/
+├── e2e/
+├── fuzz/
+├── mutation/
+├── security/
+├── performance/
+├── database/
+├── agent-evals/
+├── screenshots/
+├── logs/
+├── sbom/
+├── provenance/
+├── bugs/
+└── reports/
+
+Cada evidencia debe ser asociable a:
+requirement
+commit
+run
+tool
+timestamp
+
+
+58. EVIDENCE INTEGRITY
+El proyecto bajo prueba NO debe poder modificar silenciosamente el resultado del verificador.
+Por tanto:
+verification process
+
+debe estar separado de:
+project process
+
+Los exit codes, reportes y evidencias deben ser generados desde fuera del proyecto siempre que sea posible.
+
+59. ANTI-GAMING
+Detectar intentos como:
+delete test
+skip test
+xfail everything
+increase timeout
+disable assertion
+change fixture
+alter expected output
+hide errors
+exclude coverage
+alter security config
+modify verifier input
+fake external service
+
+No confiar en archivos de configuración generados por el Builder.
+
+60. SELF-VERIFICATION DEL VERIFIER
+El Verification Engine debe poder auditarse a sí mismo.
+Crear fixtures:
+fixture-placeholder
+fixture-fake-success
+fixture-dead-code
+fixture-broken-api
+fixture-broken-db
+fixture-disconnected-feature
+fixture-hardcoded-success
+fixture-swallowed-exception
+fixture-security-bypass
+fixture-regression
+fixture-flaky
+fixture-performance-regression
+fixture-fake-provider
+fixture-bad-migration
+fixture-broken-contract
+fixture-agent-loop
+fixture-prompt-injection
+
+Para cada fixture:
+expected severity
+expected evidence
+expected final status
+
+
+61. GOLDEN SUITE
+Nunca considerar el Verification Engine correcto simplemente porque su propio código compila.
+Mantener un conjunto de golden fixtures.
+El Verifier debe demostrar:
+TRUE NEGATIVE
+FALSE POSITIVE
+FALSE NEGATIVE
+UNKNOWN
+
+Medirlos.
+
+62. FALSE-POSITIVE / FALSE-NEGATIVE QUALITY
+Registrar:
+TP
+TN
+FP
+FN
+
+Buscar continuamente reducir:
+false positive
+false negative
+
+No convertir todo en warnings para aumentar artificialmente el pass rate.
+
+63. INDEPENDENT AUDITOR
+El Auditor final debe ser independiente del Builder.
+No recibir:
+Builder says complete
+
+como hecho.
+Recibir:
+repository
+requirements
+runtime
+tests
+traces
+artifacts
+configuration
+
+y formar su propio juicio.
+
+64. THREE-PASS AUDIT
+Cada gran proyecto debe pasar:
+PASS A — Continuous
+Durante construcción.
+PASS B — Independent Full Audit
+Cuando Builder dice DONE.
+PASS C — Adversarial Audit
+Intentar romper el sistema después de PASS B.
+Si PASS C encuentra un fallo:
+REPAIR
+→ REGRESSION
+→ FULL AUDIT
+→ ADVERSARIAL AGAIN
+
+
+65. DERIVED REQUIREMENTS
+El auditor debe descubrir requirements implícitos.
+Ejemplo:
+Fallback exists.
+
+Derivar:
+all providers fail
+→ controlled failure
+
+provider changes
+→ state remains consistent
+
+retry
+→ does not duplicate request
+
+Toda derived requirement debe marcarse:
+SYSTEM_DERIVED
+
+y nunca confundirse con una petición explícita del usuario.
+
+66. UNKNOWN IS FIRST-CLASS
+Permitir:
+PASS
+FAIL
+PARTIAL
+MISSING
+BROKEN
+UNCONNECTED
+UNKNOWN
+BLOCKED
+STALLED
+CERTIFIED
+
+Nunca:
+UNKNOWN → PASS
+
+por conveniencia.
+
+67. QUALITY VECTOR
+No usar un único promedio.
+Medir independientemente:
+Requirements
+Implementation
+Integration
+Runtime
+Correctness
+Test Quality
+Security
+Reliability
+Concurrency
+Performance
+Resources
+Maintainability
+Agent Safety
+Evidence
+
+
+68. CRITICALITY
+Cada issue tendrá:
+CRITICAL
+HIGH
+MEDIUM
+LOW
+INFO
+
+Regla:
+CRITICAL > 0
+=
+NO CERTIFICATION
+
+Por defecto:
+HIGH unresolved
+=
+NO CERTIFICATION
+
+
+69. QUALITY GATE
+CERTIFIED solamente cuando:
+all mandatory requirements verified
+AND
+critical issues = 0
+AND
+high issues = 0
+AND
+no fake implementations
+AND
+no unresolved production placeholders
+AND
+required integrations verified
+AND
+required runtime flows verified
+AND
+required E2E verified
+AND
+security gate passed
+AND
+regression gate passed
+AND
+evidence exists
+AND
+no unknown mandatory requirement
+
+
+70. RESOURCE / TOKEN GATE
+El sistema debe considerar:
+token budget
+LLM calls
+verification cost
+runtime cost
+CPU
+RAM
+disk
+
+Una reparación que resuelva funcionalidad pero multiplique drásticamente los recursos debe marcarse como:
+RESOURCE REGRESSION
+
+
+71. SMART VERIFICATION PLANNER
+Orden de ejecución:
+1. file/hash
+2. syntax
+3. AST
+4. type
+5. lint
+6. targeted unit
+7. targeted integration
+8. contracts
+9. runtime
+10. E2E
+11. security
+12. fuzz
+13. mutation
+14. concurrency
+15. adversarial
+16. chaos
+17. deep semantic
+18. formal verification
+
+No ejecutar una prueba cara cuando una prueba barata ya demuestra que el cambio es incorrecto.
+
+72. VERIFICATION MODES
+FAST
+static
+affected tests
+runtime health
+
+STANDARD
+FAST
++
+integration
++
+contracts
++
+E2E
++
+security
+
+DEEP
+STANDARD
++
+fuzz
++
+mutation
++
+semantic audit
++
+agent eval
+
+FORENSIC
+everything
++
+formal methods where applicable
++
+concurrency
++
+fault injection
++
+chaos
++
+supply-chain
++
+full traceability
++
+adversarial
++
+deep independent audit
+
+
+73. AUTOMATIC RISK CLASSIFICATION
+Seleccionar modo automáticamente según:
+project type
+criticality
+network access
+credentials
+agent permissions
+financial operations
+database complexity
+number of services
+concurrency
+external dependencies
+
+Ejemplos:
+CLI
+→ FAST
+
+simple website
+→ STANDARD
+
+multi-service backend
+→ DEEP
+
+AI agent with shell/browser/MCP
+→ FORENSIC
+
+security-sensitive agent
+→ FORENSIC+
+
+
+74. NO PRODUCTION ASSUMPTIONS
+No certificar producción cuando solamente se verificó:
+development environment
+
+Separar:
+LOCAL_VERIFIED
+STAGING_VERIFIED
+PRODUCTION_VERIFIED
+
+
+75. ENVIRONMENT DIFFERENCE
+Comparar:
+local
+CI
+staging
+production-like
+
+Detectar:
+missing env
+different dependency
+different version
+different config
+different database
+different provider
+
+
+76. CONFIGURATION REALITY CHECK
+Recorrer:
+ENV
+config
+Docker
+compose
+CI
+secrets
+database
+provider registry
+runtime flags
+
+Detectar:
+defined but unused
+used but undefined
+incorrect name
+hardcoded override
+wrong default
+ignored config
+
+
+77. DATABASE REALITY CHECK
+Después de ejecutar una operación:
+before state
+operation
+after state
+
+verificar:
+expected row
+expected value
+expected relationship
+transaction state
+cache invalidation
+event emission
+
+No aceptar:
+HTTP 200
+
+como prueba de persistencia.
+
+78. EXTERNAL PROVIDER REALITY CHECK
+Para cada provider:
+health
+authentication
+actual request
+actual response
+error handling
+timeout
+retry
+fallback
+quota behavior
+
+Nunca sustituir ejecución real por:
+provider_mock=true
+
+en la verificación final.
+
+79. TEST DATA ISOLATION
+Cada execution run debe disponer de:
+isolated database
+isolated workspace
+isolated files
+isolated credentials
+
+cuando sea posible.
+Evitar que pruebas se contaminen.
+
+80. TEST ORACLE ENGINE
+Cuando el resultado esperado sea difícil de expresar, utilizar múltiples señales:
+specification
+invariants
+state transitions
+side effects
+contracts
+reference implementation
+baseline
+LLM judge
+
+El LLM judge nunca debe ser la única señal.
+
+81. LLM JUDGE SAFETY
+Cuando se use LLM como judge:
+judge sees evidence
+judge does not control execution
+judge cannot mark PASS directly
+judge output is normalized
+judge confidence is not evidence
+
+El judge genera:
+assessment
+reason
+risk
+recommended verification
+
+El Quality Gate toma la decisión.
+
+82. ADJACENT FAILURE ANALYSIS
+Cuando un bug sea encontrado, analizar también:
+upstream
+downstream
+dependents
+shared state
+related configuration
+related APIs
+related tests
+
+porque corregir un componente puede dejar otros defectos.
+
+83. ROOT-CAUSE ANALYSIS
+No arreglar únicamente el síntoma.
+Clasificar:
+syntax
+logic
+contract
+state
+configuration
+dependency
+concurrency
+security
+architecture
+data
+external service
+test weakness
+
+
+84. REPAIR MINIMALITY
+El Repair Engine debe preferir:
+smallest correct change
+
+sobre:
+large rewrite
+
+Reducir riesgo de regresiones.
+
+85. PATCH VERIFICATION
+Cada patch debe producir:
+changed files
+diff
+reason
+affected requirements
+affected tests
+verification result
+regressions
+
+
+86. NO UNCONTROLLED REFACTOR
+No realizar refactors masivos únicamente para hacer desaparecer problemas de análisis.
+Primero demostrar:
+problem
+necessity
+impact
+
+
+87. HUMAN ESCALATION
+Escalar solamente cuando:
+irreducible ambiguity
+missing external credential
+legal/production approval
+unverifiable external dependency
+verification disagreement
+repair stalled
+
+La escalación debe incluir:
+problem
+evidence
+attempts
+remaining uncertainty
+recommended action
+
+
+88. FINAL CERTIFICATE
+Generar:
+PROJECT
+VERSION
+COMMIT
+VERIFICATION MODE
+REQUIREMENTS
+IMPLEMENTATION STATUS
+INTEGRATION STATUS
+RUNTIME STATUS
+TEST STATUS
+SECURITY STATUS
+PERFORMANCE STATUS
+AGENT SAFETY STATUS
+UNKNOWN COUNT
+CRITICAL COUNT
+HIGH COUNT
+MEDIUM COUNT
+LOW COUNT
+EVIDENCE PATH
+CERTIFICATION STATUS
+
+
+89. EXAMPLE FINAL REPORT
+╔══════════════════════════════════════════════╗
+║       AUTONOMOUS VERIFICATION REPORT        ║
+╠══════════════════════════════════════════════╣
+║ Requirements          87 / 87       ✓       ║
+║ Implemented            87 / 87      ✓       ║
+║ Integrated             42 / 42      ✓       ║
+║ Runtime                76 / 76      ✓       ║
+║ Contracts              31 / 31      ✓       ║
+║ Unit Tests            624 / 624     ✓       ║
+║ Integration Tests      92 / 92      ✓       ║
+║ E2E                    48 / 48      ✓       ║
+║ Fuzzing                             ✓       ║
+║ Mutation                91%         ✓       ║
+║ Security                           PASS      ║
+║ Dependencies                       PASS      ║
+║ SBOM                              GENERATED  ║
+║ Agent Evaluation                   PASS      ║
+║ Adversarial                        PASS      ║
+║ Regression                         PASS      ║
+║ Performance                        PASS      ║
+║ Concurrency                        PASS      ║
+║ Unknown                             0        ║
+║ Critical                            0        ║
+║ High                                0        ║
+╠══════════════════════════════════════════════╣
+║ STATUS: CERTIFIED                           ║
+╚══════════════════════════════════════════════╝
+
+
+90. ABSOLUTE PROHIBITIONS
+Never:
+invent evidence
+invent test results
+invent coverage
+invent runtime success
+hide errors
+downgrade critical errors
+silently skip tests
+silently disable security
+silently disable verification
+silently alter thresholds
+silently modify expected results
+use production mocks as verification
+call HTTP 200 success proof
+call compilation proof of correctness
+call documentation proof of implementation
+call AI confidence proof of correctness
+
+
+91. CORE PHILOSOPHY
+The Builder asks:
+"How do I implement this?"
+
+The Verifier asks:
+"How can I prove this is implemented?"
+
+The Adversarial Auditor asks:
+"How can I prove it is NOT implemented?"
+
+The Repair Engine asks:
+"What is the smallest correct repair?"
+
+The Regression Engine asks:
+"What did the repair break?"
+
+The Final Auditor asks:
+"What is actually true right now?"
+
+The Quality Gate asks:
+"What can we certify based on evidence?"
+
+
+92. FINAL LOOP
+The completed system must implement:
+USER REQUIREMENTS
+       ↓
+TRUTH MODEL
+       ↓
+PLAN
+       ↓
+BUILD
+       ↓
+CONTINUOUS VERIFY
+       ↓
+IMPLEMENTATION AUDIT
+       ↓
+DISCOVER MISSING / BROKEN / FAKE
+       ↓
+REPAIR
+       ↓
+TARGETED VERIFY
+       ↓
+REGRESSION
+       ↓
+FULL AUDIT
+       ↓
+ADVERSARIAL TEST
+       ↓
+CHAOS / FAULT INJECTION
+       ↓
+SECURITY
+       ↓
+FINAL AUDIT
+       ↓
+QUALITY GATE
+       │
+       ├── FAIL → REPAIR
+       │
+       ├── UNKNOWN → ESCALATE / GATHER EVIDENCE
+       │
+       └── PASS → CERTIFIED
+
+Never end at:
+BUILDER = DONE
+
+End only at:
+EVIDENCE = VERIFIED
+QUALITY GATE = PASS
+CERTIFICATION = VALID
+
+
+93. COMPLETE PRIMARY TOOL REPOSITORY LIST
+Core:
+https://go.dev/
+https://github.com/tree-sitter/tree-sitter
+https://github.com/ast-grep/ast-grep
+https://github.com/joernio/joern
+Python:
+https://github.com/astral-sh/ruff
+https://github.com/astral-sh/ty
+https://github.com/pytest-dev/pytest
+https://github.com/coveragepy/coveragepy
+Go:
+https://github.com/securego/gosec
+Rust:
+https://github.com/EmbarkStudios/cargo-deny
+Static analysis:
+https://github.com/facebook/infer
+API:
+https://github.com/OpenAPITools/openapi-diff
+https://github.com/pact-foundation/pact-js
+https://github.com/pact-foundation/pact-python
+Async:
+https://github.com/asyncapi/spec
+https://github.com/asyncapi/generator
+Database:
+https://github.com/pressly/goose
+https://github.com/amacneil/dbmate
+Property:
+https://github.com/dubzzz/fast-check
+E2E:
+https://github.com/microsoft/playwright
+Visual:
+https://github.com/reg-viz/reg-suit
+Web audit:
+https://github.com/GoogleChrome/lighthouse
+Fuzz:
+https://github.com/microsoft/restler-fuzzer
+Mutation:
+https://github.com/stryker-mutator/stryker-js
+Distributed consistency:
+https://github.com/anishathalye/porcupine
+Formal:
+https://github.com/google/z3
+https://github.com/diffblue/cbmc
+https://github.com/leanprover/lean4
+Security:
+https://github.com/google/osv-scanner
+https://github.com/anchore/grype
+https://github.com/anchore/syft
+https://github.com/Yelp/detect-secrets
+https://github.com/securego/gosec
+https://github.com/Checkmarx/KICS
+https://github.com/zaproxy/zaproxy
+Supply chain:
+https://github.com/sigstore/cosign
+https://github.com/in-toto/in-toto
+https://github.com/open-policy-agent/opa
+Containers:
+https://github.com/containers/podman
+https://github.com/bytecodealliance/wasmtime
+Performance:
+https://github.com/sharkdp/hyperfine
+Chaos:
+https://github.com/litmuschaos/litmus
+AI/LLM/Agent evaluation:
+https://github.com/promptfoo/promptfoo
+https://github.com/UKGovernmentBEIS/inspect_ai
+Agent framework where required:
+https://github.com/microsoft/autogen
+https://github.com/langchain-ai/langgraph
+But DO NOT add an agent framework merely because it is available. Reuse Mi Agente's existing orchestration whenever possible.
+
+94. IMPLEMENTATION REQUIREMENT
+Before changing existing Mi Agente code:
+inspect architecture;
+inspect existing execution paths;
+inspect tests;
+inspect current tools;
+inspect dependencies;
+inspect licenses;
+identify current verification gaps;
+preserve working functionality;
+create isolated branch;
+establish baseline verification.
+Never delete working functionality merely to simplify integration.
+Never rewrite functioning components without evidence that the rewrite is necessary.
+
+95. ACCEPTANCE TEST OF THIS ENGINE
+The implementation is NOT complete until the engine itself passes deliberately broken fixtures representing:
+fake implementation
+fake success
+placeholder
+dead feature
+unconnected API
+broken database
+broken migration
+broken event contract
+state inconsistency
+regression
+flaky test
+weak tests
+security vulnerability
+secret
+dependency vulnerability
+performance regression
+concurrency bug
+agent loop
+tool permission violation
+prompt injection
+provider fallback failure
+configuration mismatch
+
+For every fixture the engine must:
+detect
+classify
+produce evidence
+generate diagnosis
+and, where configured,
+repair and re-verify
+
+
+96. END CONDITION
+The final implementation must demonstrate:
+DETECT
++
+EXPLAIN
++
+REPRODUCE
++
+REPAIR
++
+RETEST
++
+REGRESSION CHECK
++
+ADVERSARIAL CHECK
++
+FINAL AUDIT
++
+CERTIFICATION
+
+No component may be marked complete solely because an LLM says that it is complete.
+The fundamental invariant is:
+THE SYSTEM MUST VERIFY REALITY,
+NOT THE BUILDER'S CLAIM ABOUT REALITY.
+
+

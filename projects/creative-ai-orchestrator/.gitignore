@@ -1,0 +1,15 @@
+node_modules/
+data/
+*.db
+*.db-journal
+*.db-wal
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+coverage/
+*.tgz
+*.tar.gz
+dist/
+package.json.gz

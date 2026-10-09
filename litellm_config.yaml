@@ -1,0 +1,171 @@
+# LiteLLM Proxy Configuration — mi-agente
+# ==========================================
+# Multi-provider gateway: one OpenAI-compatible endpoint for ALL models.
+# Admin UI: http://localhost:4000/ui
+# API:      http://localhost:4000 (OpenAI-compatible)
+#
+# No API key required for Ollama (local).
+# Free-tier keys for Groq and OpenRouter — get them at the URLs below.
+
+model_list:
+
+  # ── OLLAMA (local, completely free, no key needed) ─────────────────────────
+  - model_name: ollama/llama3.2
+    litellm_params:
+      model: ollama/llama3.2
+      api_base: "http://host.docker.internal:11434"
+    model_info:
+      description: "Llama 3.2 — local via Ollama"
+      free: true
+      local: true
+
+  - model_name: ollama/mistral
+    litellm_params:
+      model: ollama/mistral
+      api_base: "http://host.docker.internal:11434"
+    model_info:
+      description: "Mistral 7B — local via Ollama"
+      free: true
+      local: true
+
+  - model_name: ollama/gemma2
+    litellm_params:
+      model: ollama/gemma2
+      api_base: "http://host.docker.internal:11434"
+    model_info:
+      description: "Gemma 2 9B — local via Ollama"
+      free: true
+      local: true
+
+  - model_name: ollama/deepseek-r1
+    litellm_params:
+      model: ollama/deepseek-r1
+      api_base: "http://host.docker.internal:11434"
+    model_info:
+      description: "DeepSeek R1 — local reasoning model"
+      free: true
+      local: true
+
+  - model_name: ollama/qwen2.5-coder
+    litellm_params:
+      model: ollama/qwen2.5-coder
+      api_base: "http://host.docker.internal:11434"
+    model_info:
+      description: "Qwen 2.5 Coder — local code model"
+      free: true
+      local: true
+
+  # ── GROQ (free tier, fast inference) ───────────────────────────────────────
+  # Get free key at: https://console.groq.com
+  - model_name: groq/llama-3.3-70b-versatile
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: "os.environ/GROQ_API_KEY"
+    model_info:
+      description: "Llama 3.3 70B via Groq — free, very fast"
+      free: true
+
+  - model_name: groq/llama-3.1-8b-instant
+    litellm_params:
+      model: groq/llama-3.1-8b-instant
+      api_key: "os.environ/GROQ_API_KEY"
+    model_info:
+      description: "Llama 3.1 8B Instant via Groq — ultra fast"
+      free: true
+
+  - model_name: groq/mixtral-8x7b-32768
+    litellm_params:
+      model: groq/mixtral-8x7b-32768
+      api_key: "os.environ/GROQ_API_KEY"
+    model_info:
+      description: "Mixtral 8x7B via Groq — free"
+      free: true
+
+  - model_name: groq/gemma2-9b-it
+    litellm_params:
+      model: groq/gemma2-9b-it
+      api_key: "os.environ/GROQ_API_KEY"
+    model_info:
+      description: "Gemma 2 9B via Groq — free"
+      free: true
+
+  # ── OPENROUTER (free models, :free suffix) ──────────────────────────────────
+  # Get free key at: https://openrouter.ai
+  - model_name: openrouter/meta-llama/llama-3.2-3b-instruct:free
+    litellm_params:
+      model: openrouter/meta-llama/llama-3.2-3b-instruct:free
+      api_key: "os.environ/OPENROUTER_API_KEY"
+      api_base: "https://openrouter.ai/api/v1"
+    model_info:
+      description: "Llama 3.2 3B — free via OpenRouter"
+      free: true
+
+  - model_name: openrouter/mistralai/mistral-7b-instruct:free
+    litellm_params:
+      model: openrouter/mistralai/mistral-7b-instruct:free
+      api_key: "os.environ/OPENROUTER_API_KEY"
+      api_base: "https://openrouter.ai/api/v1"
+    model_info:
+      description: "Mistral 7B — free via OpenRouter"
+      free: true
+
+  - model_name: openrouter/google/gemma-2-9b-it:free
+    litellm_params:
+      model: openrouter/google/gemma-2-9b-it:free
+      api_key: "os.environ/OPENROUTER_API_KEY"
+      api_base: "https://openrouter.ai/api/v1"
+    model_info:
+      description: "Gemma 2 9B — free via OpenRouter"
+      free: true
+
+  # ── OPENAI (when key provided) ──────────────────────────────────────────────
+  - model_name: openai/gpt-4o-mini
+    litellm_params:
+      model: gpt-4o-mini
+      api_key: "os.environ/OPENAI_API_KEY"
+    model_info:
+      description: "GPT-4o Mini — affordable OpenAI"
+      free: false
+
+  - model_name: openai/gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: "os.environ/OPENAI_API_KEY"
+    model_info:
+      description: "GPT-4o — OpenAI flagship"
+      free: false
+
+litellm_settings:
+  # Fallback: if primary fails, try next in the list
+  set_verbose: false
+  success_callback: []
+  failure_callback: []
+
+  # Provider-level fallbacks
+  fallbacks:
+    - groq/llama-3.3-70b-versatile: [groq/llama-3.1-8b-instant, ollama/llama3.2]
+    - groq/llama-3.1-8b-instant: [ollama/llama3.2, openrouter/meta-llama/llama-3.2-3b-instruct:free]
+    - openai/gpt-4o: [openai/gpt-4o-mini, groq/llama-3.3-70b-versatile]
+
+  # Drop unsupported params silently
+  drop_params: true
+
+router_settings:
+  # Routing strategy: simple-shuffle keeps costs low by distributing load
+  routing_strategy: simple-shuffle
+  num_retries: 2
+  timeout: 30
+
+general_settings:
+  master_key: "os.environ/LITELLM_MASTER_KEY"
+  # Disable auth for internal use (behind firewall)
+  # Set to true and configure keys for production
+  disable_spend_logs: false
+
+  # Admin UI
+  ui_access_mode: all
+
+environment_variables:
+  GROQ_API_KEY: "os.environ/GROQ_API_KEY"
+  OPENROUTER_API_KEY: "os.environ/OPENROUTER_API_KEY"
+  OPENAI_API_KEY: "os.environ/OPENAI_API_KEY"

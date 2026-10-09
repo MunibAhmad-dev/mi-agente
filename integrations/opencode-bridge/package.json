@@ -1,0 +1,13 @@
+{
+  "name": "opencode-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Adaptador OpenAI-compatible entre LibreChat y mi-opencode (Session API real).",
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/server.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

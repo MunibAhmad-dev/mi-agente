@@ -1,0 +1,25 @@
+# docker-compose.f12.yml — Fase 12 (verificación de entorno)
+# Override adicional para la verificación E2E:
+#   1. Monta el librechat.yaml del repo dentro del contenedor `api` (el
+#      compose principal no lo monta y la imagen trae el yaml upstream).
+#   2. Inyecta al servicio `mi-opencode` la config E2E que apunta su
+#      proveedor LLM al mock local (OpenAI-compatible en host:9099), vía
+#      OPENCODE_CONFIG (sin tocar .opencode/opencode.jsonc del repo).
+# Uso: docker compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.f12.yml up -d --build
+services:
+  api:
+    # (FASE D) Construir la imagen DESDE nuestro api/ (con las rutas
+    # enterprise/system/metrics/telemetry/panel) en lugar de la imagen
+    # upstream librechat-dev, que no contiene nuestro código custom.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml:ro
+
+  mi-opencode:
+    volumes:
+      - ./e2e-opencode-config.jsonc:/app/e2e-opencode-config.jsonc:ro
+    environment:
+      - OPENCODE_CONFIG=/app/e2e-opencode-config.jsonc
+      - OPENCODE_DISABLE_PROJECT_CONFIG=true
